@@ -1082,6 +1082,170 @@ td { padding: 12px 14px; vertical-align: middle }
 .req-qs-label { font-family: 'DM Mono', monospace; font-size: 7px; color: var(--muted); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 5px }
 .req-qs-val { font-family: 'DM Mono', monospace; font-size: 22px; font-weight: 500; line-height: 1 }
 
+
+/* ══ ROLE SCREEN REDESIGN ════════════════════════════════════════ */
+@keyframes slideGrad { 0%{background-position:0% 0%} 100%{background-position:200% 0%} }
+@keyframes fadeUp { from{opacity:0;transform:translateY(24px)}to{opacity:1;transform:translateY(0)} }
+@keyframes fadeIn { from{opacity:0}to{opacity:1} }
+@keyframes cardIn { from{opacity:0;transform:translateY(32px) scale(.96)}to{opacity:1;transform:translateY(0) scale(1)} }
+@keyframes pulse-red { 0%,100%{box-shadow:0 0 0 0 rgba(228,0,43,.4)}50%{box-shadow:0 0 0 12px rgba(228,0,43,0)} }
+@keyframes float { 0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)} }
+
+#roleScreen {
+  position: fixed; inset: 0;
+  background: linear-gradient(145deg, #0d0d1a 0%, #1a1a2e 40%, #16213e 70%, #0d1117 100%);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+/* Logo lockup */
+.rs-logo-wrap {
+  display: flex; align-items: center; gap: 14px;
+  margin-bottom: 48px;
+  animation: fadeDown .6s ease both;
+}
+@keyframes fadeDown { from{opacity:0;transform:translateY(-16px)}to{opacity:1;transform:translateY(0)} }
+.rs-logo-badge {
+  background: var(--red); color: #fff;
+  font-family: 'DM Mono', monospace; font-size: 13px; font-weight: 700;
+  padding: 8px 18px; letter-spacing: .15em;
+  animation: pulse-red 3s ease infinite;
+}
+.rs-logo-divider { width: 1px; height: 36px; background: rgba(255,255,255,0.15) }
+.rs-logo-name { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 600; color: #fff; letter-spacing: .02em }
+.rs-logo-sub { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: .12em; margin-top: 2px }
+
+/* Headline */
+.rs-headline {
+  display: flex; flex-direction: column; align-items: center;
+  margin-bottom: 12px; text-align: center;
+  animation: fadeUp .7s .1s ease both;
+}
+.rs-headline-line {
+  font-family: 'DM Sans', sans-serif;
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 700; color: #fff; line-height: 1.15;
+  letter-spacing: -.01em;
+}
+.rs-headline-accent {
+  font-size: clamp(28px, 4vw, 46px);
+  font-weight: 800;
+  background: linear-gradient(135deg, #E4002B, #ff6b6b);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.rs-sub {
+  font-size: 14px; color: rgba(255,255,255,0.45);
+  margin-bottom: 48px; text-align: center;
+  animation: fadeUp .7s .2s ease both;
+  letter-spacing: .01em;
+}
+
+/* Cards */
+.rs-cards {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+  max-width: 880px; width: 100%;
+  animation: fadeUp .7s .25s ease both;
+}
+
+.rs-card {
+  position: relative;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 12px;
+  padding: 28px 22px;
+  cursor: pointer;
+  transition: all .25s cubic-bezier(.4,0,.2,1);
+  overflow: hidden;
+  animation: cardIn .5s var(--delay,.05s) ease both;
+}
+.rs-card::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(228,0,43,0.08) 0%, transparent 100%);
+  opacity: 0; transition: opacity .25s;
+}
+.rs-card::after {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, var(--red), #ff6b6b);
+  transform: scaleX(0); transform-origin: left;
+  transition: transform .3s cubic-bezier(.4,0,.2,1);
+}
+.rs-card:hover {
+  background: rgba(255,255,255,0.09);
+  border-color: rgba(228,0,43,0.4);
+  transform: translateY(-4px);
+  box-shadow: 0 16px 40px rgba(0,0,0,0.4), 0 0 0 1px rgba(228,0,43,0.2);
+}
+.rs-card:hover::before { opacity: 1 }
+.rs-card:hover::after { transform: scaleX(1) }
+.rs-card:hover .rs-card-arrow { transform: translateX(4px); opacity: 1 }
+.rs-card:hover .rs-card-icon { animation: float 2s ease infinite }
+
+/* Featured card */
+.rs-card-featured {
+  background: rgba(228,0,43,0.08);
+  border-color: rgba(228,0,43,0.25);
+}
+.rs-card-featured::after { transform: scaleX(1) }
+.rs-card-badge {
+  position: absolute; top: 14px; right: 14px;
+  background: var(--red); color: #fff;
+  font-family: 'DM Mono', monospace; font-size: 7px; font-weight: 700;
+  padding: 3px 8px; letter-spacing: .1em; border-radius: 3px;
+}
+
+.rs-card-icon-wrap {
+  width: 52px; height: 52px;
+  background: rgba(255,255,255,0.07);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  margin-bottom: 16px;
+  transition: background .25s;
+}
+.rs-card:hover .rs-card-icon-wrap { background: rgba(228,0,43,0.15) }
+.rs-card-icon { font-size: 26px }
+.rs-card-label { font-family: 'DM Sans', sans-serif; font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 8px }
+.rs-card-desc { font-size: 12px; color: rgba(255,255,255,0.45); line-height: 1.6; margin-bottom: 16px }
+.rs-card-arrow {
+  font-family: 'DM Mono', monospace; font-size: 16px; color: var(--red);
+  transition: all .25s; opacity: 0.5;
+}
+
+/* Name step */
+.rs-name-header { text-align: center; margin-bottom: 4px }
+.rs-name-role-badge {
+  display: inline-block;
+  background: rgba(228,0,43,0.15);
+  border: 1px solid rgba(228,0,43,0.3);
+  color: var(--red);
+  font-family: 'DM Mono', monospace; font-size: 10px; font-weight: 700;
+  padding: 4px 14px; letter-spacing: .12em;
+  border-radius: 20px; margin-bottom: 12px;
+}
+.rs-name-title {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 22px; font-weight: 700; color: #fff;
+  margin-bottom: 24px; text-align: center;
+}
+.rs-perm-desc {
+  font-size: 12px; color: rgba(255,255,255,0.4);
+  text-align: center; line-height: 1.6;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 8px; padding: 10px 16px;
+  width: 100%;
+}
+
 /* ══ RESPONSIVE ════════════════════════════════════ */
 @media (max-width: 900px) {
   main, .page { padding: 14px }
@@ -1096,38 +1260,81 @@ td { padding: 12px 14px; vertical-align: middle }
 
 <!-- ══ ROLE SELECTOR SCREEN ══ -->
 <div id="roleScreen">
-  <div class="role-logo">DHA DESIGN OPS v9</div>
-  <div class="role-title">เลือก Role ของคุณ</div>
-  <div class="role-sub">ระบบจะแสดงข้อมูลที่เหมาะสมกับสิทธิ์ของแต่ละ Role</div>
-  <div class="role-cards" id="roleCards">
-    <div class="role-card" style="--rc:var(--blue2)" data-role="designer" onclick="handleRoleClick(this)">
-      <div class="role-card-icon">✏️</div>
-      <div class="role-card-name">Designer</div>
-      <div class="role-card-desc">ดูงานและ KPI ของตัวเองเท่านั้น ไม่เห็น Score ของเพื่อน</div>
+
+  <!-- animated background particles -->
+  <canvas id="roleCanvas" style="position:absolute;inset:0;pointer-events:none;z-index:0"></canvas>
+
+  <!-- top bar -->
+  <div style="position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),#ff4d6d,var(--red));background-size:200% 100%;animation:slideGrad 3s linear infinite;z-index:2"></div>
+
+  <!-- content -->
+  <div style="position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;width:100%;padding:0 24px">
+
+    <!-- logo lockup -->
+    <div class="rs-logo-wrap">
+      <div class="rs-logo-badge">DHA</div>
+      <div class="rs-logo-divider"></div>
+      <div>
+        <div class="rs-logo-name">Design Ops System</div>
+        <div class="rs-logo-sub">D.H.A. SIAMWALLA LTD.</div>
+      </div>
     </div>
-    <div class="role-card" style="--rc:var(--teal2)" data-role="requester" onclick="handleRoleClick(this)">
-      <div class="role-card-icon">📋</div>
-      <div class="role-card-name">Requester</div>
-      <div class="role-card-desc">เห็นเฉพาะงานที่ตัวเองเปิด Brand ของตัวเองเท่านั้น</div>
+
+    <!-- headline -->
+    <div class="rs-headline" id="rsHeadline">
+      <span class="rs-headline-line">ระบบบริหารงานออกแบบ</span>
+      <span class="rs-headline-line rs-headline-accent">ระดับองค์กร</span>
     </div>
-    <div class="role-card" style="--rc:var(--gold)" data-role="supervisor" onclick="handleRoleClick(this)">
-      <div class="role-card-icon">👁</div>
-      <div class="role-card-name">Supervisor</div>
-      <div class="role-card-desc">เห็นทั้งทีม + Approval Queue + KPI ทุกคน</div>
+    <div class="rs-sub">เลือก Role เพื่อเข้าสู่ระบบ — ข้อมูลจะแสดงตามสิทธิ์ของคุณ</div>
+
+    <!-- role cards -->
+    <div class="rs-cards" id="roleCards">
+      <div class="rs-card" data-role="designer" onclick="handleRoleClick(this)" style="--delay:.05s">
+        <div class="rs-card-icon-wrap"><div class="rs-card-icon">✏️</div></div>
+        <div class="rs-card-label">Designer</div>
+        <div class="rs-card-desc">ดูงานและ KPI ของตัวเอง ไม่มีการเปรียบเทียบกับผู้อื่น</div>
+        <div class="rs-card-arrow">→</div>
+      </div>
+      <div class="rs-card" data-role="requester" onclick="handleRoleClick(this)" style="--delay:.1s">
+        <div class="rs-card-icon-wrap"><div class="rs-card-icon">📋</div></div>
+        <div class="rs-card-label">Requester</div>
+        <div class="rs-card-desc">เปิดงานใหม่และติดตามสถานะงานของตัวเอง</div>
+        <div class="rs-card-arrow">→</div>
+      </div>
+      <div class="rs-card rs-card-featured" data-role="supervisor" onclick="handleRoleClick(this)" style="--delay:.15s">
+        <div class="rs-card-badge">SUPERVISOR</div>
+        <div class="rs-card-icon-wrap"><div class="rs-card-icon">👁</div></div>
+        <div class="rs-card-label">Supervisor</div>
+        <div class="rs-card-desc">ภาพรวมทีม Approval Queue และ KPI ทุกคน</div>
+        <div class="rs-card-arrow">→</div>
+      </div>
+      <div class="rs-card" data-role="director" onclick="handleRoleClick(this)" style="--delay:.2s">
+        <div class="rs-card-icon-wrap"><div class="rs-card-icon">📊</div></div>
+        <div class="rs-card-label">Director / HR</div>
+        <div class="rs-card-desc">Executive Dashboard และ Quarterly Review ทั้งองค์กร</div>
+        <div class="rs-card-arrow">→</div>
+      </div>
     </div>
-    <div class="role-card" style="--rc:var(--purple2)" data-role="director" onclick="handleRoleClick(this)">
-      <div class="role-card-icon">📊</div>
-      <div class="role-card-name">Director / HR</div>
-      <div class="role-card-desc">Executive view + Quarterly Review ทั้งองค์กร</div>
+
+    <!-- name step -->
+    <div class="role-name-step" id="roleNameStep">
+      <div class="rs-name-header">
+        <div class="rs-name-role-badge" id="rsRoleBadge">DESIGNER</div>
+        <div class="rs-name-title" id="roleNameLabel">คุณคือ Designer คนไหน?</div>
+      </div>
+      <select class="role-name-sel" id="roleNameSel" style="display:none"></select>
+      <input class="role-name-input" id="roleNameInput" placeholder="พิมพ์ชื่อ..." onkeydown="if(event.key==='Enter')enterApp()">
+      <div class="rs-perm-desc" id="rolePermDesc"></div>
+      <button class="role-enter-btn" onclick="enterApp()">เข้าสู่ระบบ  →</button>
+      <button class="role-back" onclick="backToRoles()">← เปลี่ยน Role</button>
     </div>
+
   </div>
-  <div class="role-name-step" id="roleNameStep">
-    <div class="role-name-label" id="roleNameLabel">ชื่อของคุณ</div>
-    <select class="role-name-sel" id="roleNameSel" style="display:none"></select>
-    <input class="role-name-input" id="roleNameInput" placeholder="พิมพ์ชื่อ..." onkeydown="if(event.key==='Enter')enterApp()">
-    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);align-self:flex-start" id="rolePermDesc"></div>
-    <button class="role-enter-btn" onclick="enterApp()">เข้าสู่ระบบ →</button>
-    <button class="role-back" onclick="backToRoles()">← เปลี่ยน Role</button>
+
+  <!-- bottom bar -->
+  <div style="position:absolute;bottom:0;left:0;right:0;padding:16px 32px;display:flex;justify-content:space-between;align-items:center;z-index:1">
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:.08em">SC WORKS v9 · 2026</div>
+    <div style="font-family:'DM Mono',monospace;font-size:10px;color:rgba(255,255,255,0.25);letter-spacing:.08em" id="rsLiveClock">--:--</div>
   </div>
 </div>
 
@@ -1647,6 +1854,99 @@ function showToast(msg){
   t.textContent=msg;t.classList.add('show');
   setTimeout(()=>t.classList.remove('show'),2500);
 }
+
+
+// ══ ROLE SCREEN CANVAS ANIMATION ══════════════════
+function initRoleCanvas(){
+  const canvas = document.getElementById('roleCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  
+  function resize(){ canvas.width=window.innerWidth; canvas.height=window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  
+  // Particles
+  const particles = Array.from({length:50}, ()=>({
+    x: Math.random()*canvas.width,
+    y: Math.random()*canvas.height,
+    r: Math.random()*2 + 0.5,
+    dx: (Math.random()-0.5)*0.4,
+    dy: (Math.random()-0.5)*0.4,
+    opacity: Math.random()*0.4 + 0.05,
+    red: Math.random() > 0.85
+  }));
+  
+  // Grid lines
+  let frame = 0;
+  
+  function draw(){
+    ctx.clearRect(0,0,canvas.width,canvas.height);
+    frame++;
+    
+    // Faint grid
+    ctx.strokeStyle = 'rgba(255,255,255,0.025)';
+    ctx.lineWidth = 1;
+    const gridSize = 60;
+    for(let x=0; x<canvas.width; x+=gridSize){
+      ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,canvas.height); ctx.stroke();
+    }
+    for(let y=0; y<canvas.height; y+=gridSize){
+      ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(canvas.width,y); ctx.stroke();
+    }
+    
+    // Particles
+    particles.forEach(p=>{
+      p.x += p.dx; p.y += p.dy;
+      if(p.x<0) p.x=canvas.width;
+      if(p.x>canvas.width) p.x=0;
+      if(p.y<0) p.y=canvas.height;
+      if(p.y>canvas.height) p.y=0;
+      
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI*2);
+      ctx.fillStyle = p.red
+        ? `rgba(228,0,43,${p.opacity})`
+        : `rgba(255,255,255,${p.opacity})`;
+      ctx.fill();
+    });
+    
+    // Connect nearby particles
+    particles.forEach((a,i)=>{
+      particles.slice(i+1).forEach(b=>{
+        const d = Math.hypot(a.x-b.x, a.y-b.y);
+        if(d < 120){
+          ctx.beginPath();
+          ctx.moveTo(a.x,a.y); ctx.lineTo(b.x,b.y);
+          const alpha = (1-d/120)*0.06;
+          ctx.strokeStyle = `rgba(255,255,255,${alpha})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+      });
+    });
+    
+    // Scanning line
+    const scanY = (frame * 0.5) % canvas.height;
+    const scanGrad = ctx.createLinearGradient(0, scanY-30, 0, scanY+2);
+    scanGrad.addColorStop(0, 'rgba(228,0,43,0)');
+    scanGrad.addColorStop(1, 'rgba(228,0,43,0.04)');
+    ctx.fillStyle = scanGrad;
+    ctx.fillRect(0, scanY-30, canvas.width, 32);
+    
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+
+// Live clock in role screen
+setInterval(()=>{
+  const el=document.getElementById('rsLiveClock');
+  if(el) el.textContent=new Date().toLocaleTimeString('th-TH',{hour12:false});
+},1000);
+
+// Init canvas when role screen is shown
+initRoleCanvas();
 
 // ════════════════════════════════════════════════
 // ROLE SELECTOR
