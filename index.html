@@ -526,7 +526,7 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ══ ROLE SELECTOR SCREEN ══ -->
 <div id="roleScreen">
-  <div class="role-logo">DHA DESIGN OPS v7</div>
+  <div class="role-logo">DHA DESIGN OPS v9</div>
   <div class="role-title">เลือก Role ของคุณ</div>
   <div class="role-sub">ระบบจะแสดงข้อมูลที่เหมาะสมกับสิทธิ์ของแต่ละ Role</div>
   <div class="role-cards" id="roleCards">
@@ -1137,8 +1137,8 @@ function enterApp(){
   } else {
     name=inp.value.trim(); if(!name){showRoleError('กรุณาพิมพ์ชื่อ');return;}
     if(pendingRole==='requester'){
-      const projs=projects.filter(p=>p.requester===name);
-      const brands=[...new Set(projs.map(p=>p.brand).filter(Boolean))];
+      const projs=projects.filter(p=>(p.pmd||p.requester)===name);
+      const brands=[...new Set(projs.map(p=>p.bu||p.brand).filter(Boolean))];
       brand=brands.length===1?brands[0]:null;
     }
   }
@@ -1236,8 +1236,8 @@ function applyRoleUI(){
 // ════════════════════════════════════════════════
 function permFilteredProjects(allPs){
   const {role,id:dId,name,brand}=currentUser;
-  if(role==='designer') return allPs.filter(p=>p.designerId===dId);
-  if(role==='requester') return allPs.filter(p=>p.requester===name);
+  if(role==='designer') return allPs.filter(p=>(p.mc||p.designerId)===dId);
+  if(role==='requester') return allPs.filter(p=>(p.pmd||p.requester)===name);
   return allPs; // supervisor + director see all
 }
 
@@ -1284,7 +1284,7 @@ function updateStatFiltered(){
   const today=new Date();today.setHours(0,0,0,0);
   const od=list.filter(p=>p.status!=='done'&&p.status!=='external'&&p.deadline&&new Date(p.deadline)<today);
   const pts=list.filter(p=>p.status==='done').reduce((s,p)=>s+calcPts(p),0);
-  const reqs=[...new Set(list.map(p=>p.requester).filter(Boolean))];
+  const reqs=[...new Set(list.map(p=>p.pmd||p.requester).filter(Boolean))];
   document.getElementById('s-total').textContent=list.length;
   document.getElementById('s-active').textContent=list.filter(p=>p.status==='active').length;
   document.getElementById('s-review').textContent=list.filter(p=>p.status==='review').length;
@@ -1324,7 +1324,7 @@ function buildAlerts(){
     if(!p.deadline)return;
     const d=new Date(p.deadline);
     const diff=Math.floor((d-today)/864e5);
-    const des=getDes(p.designerId);
+    const des=getDes(p.mc||p.designerId);
     if(diff<0) alerts.push({type:'overdue',proj:p,diff,des});
     else if(diff<=3) alerts.push({type:'soon',proj:p,diff,des});
     else if(p.status==='review') alerts.push({type:'review',proj:p,diff,des});
@@ -1566,7 +1566,7 @@ function renderSupervisor(){
 
   // team summary per designer
   const teamStats=designers.map((d,i)=>{
-    let dp=ps.filter(x=>x.designerId===d.id);
+    let dp=ps.filter(x=>(x.mc||x.designerId)===d.id);
     const ddone=dp.filter(x=>x.status==='done');
     const s=calcDStats(d.id,supQF);
     const gr=gradeOf(s.score);
@@ -1759,7 +1759,7 @@ function renderDirector(){
           {l:'Avg Revision/job',v:avgRev,c:'var(--orange2)'},
           {l:'Brief Quality Avg',v:bqAvg?bqAvg+'★':'N/A',c:'var(--gold)'},
           {l:'Active Projects',v:active.length,c:'var(--blue2)'},
-          {l:'Total Requesters',v:[...new Set(projects.map(p=>p.requester).filter(Boolean))].length,c:'var(--teal2)'},
+          {l:'Total Requesters',v:[...new Set(projects.map(p=>p.pmd||p.requester).filter(Boolean))].length,c:'var(--teal2)'},
           {l:'Total Brands',v:[...new Set(projects.map(p=>p.brand).filter(Boolean))].length,c:'var(--purple2)'},
           {l:'Designers',v:designers.length,c:'var(--text)'},
         ].map(k=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)">
@@ -1812,7 +1812,7 @@ function renderCapacity(){
   const grid=document.getElementById('capGrid');
   const rec=document.getElementById('capRecommend');
   const capData=designers.map((d,i)=>{
-    const active=projects.filter(p=>p.designerId===d.id&&['active','brief','review'].includes(p.status));
+    const active=projects.filter(p=>(p.mc||p.designerId)===d.id&&['active','brief','review'].includes(p.status));
     const totalDays=active.reduce((s,p)=>s+(parseFloat(p.mandays)||1),0);
     const pct=Math.min((totalDays/CAP_MAX)*100,100);
     return {d,i,active,totalDays,pct,col:D_COLORS[i%D_COLORS.length]};
@@ -1859,7 +1859,7 @@ function renderCapacity(){
 // BRIEF QUALITY
 // ════════════════════════════════════════════════
 function renderBriefQuality(){
-  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))].sort();
+  const reqs=[...new Set(projects.map(p=>p.pmd||p.requester).filter(Boolean))].sort();
   const grid=document.getElementById('bqGrid');
   grid.innerHTML=reqs.map(r=>{
     const rated=projects.filter(p=>p.requester===r&&p.status==='done'&&p.briefScore);
@@ -2183,11 +2183,11 @@ function rdashOverdue(od,soon){
 // BRANDS
 // ════════════════════════════════════════════════
 function renderBrands(){
-  const bMap={};projects.forEach(p=>{const b=p.brand||'ไม่ระบุ';if(!bMap[b])bMap[b]=[];bMap[b].push(p);});
+  const bMap={};projects.forEach(p=>{const b=p.bu||p.brand||'ไม่ระบุ';if(!bMap[b])bMap[b]=[];bMap[b].push(p);});
   document.getElementById('brandGrid').innerHTML=Object.entries(bMap).sort((a,b)=>b[1].length-a[1].length).map(([name,ps])=>{
     const done=ps.filter(p=>p.status==='done').length;const active=ps.filter(p=>p.status==='active').length;
     const pts=ps.filter(p=>p.status==='done').reduce((s,p)=>s+calcPts(p),0);
-    const dIds=[...new Set(ps.map(p=>p.designerId).filter(Boolean))];
+    const dIds=[...new Set(ps.map(p=>p.mc||p.designerId).filter(Boolean))];
     return `<div class="bc"><div class="bc-name">${name}</div><div class="bc-cnt">${ps.length} โปรเจกต์</div>
       <div class="bc-stats"><div class="bc-stat"><div class="bc-val" style="color:var(--green2)">${done}</div><div class="bc-lbl">Done</div></div><div class="bc-stat"><div class="bc-val" style="color:var(--blue2)">${active}</div><div class="bc-lbl">Active</div></div><div class="bc-stat"><div class="bc-val" style="color:var(--gold)">${pts.toFixed(1)}</div><div class="bc-lbl">Points</div></div></div>
       <div class="bc-chips">${dIds.map(id=>{const d=getDes(id);const c=dColor(id);return d?`<div class="bc-chip"><div class="d-dot" style="background:${c}"></div>${d.name}</div>`:''}).join('')||'<span style="color:var(--muted);font-size:11px">—</span>'}</div>
@@ -2283,7 +2283,7 @@ function saveTrelloCfg(){trelloCfg={key:document.getElementById('tApiKey').value
 
 function buildCard(d,qf,i){
   const s=calcDStats(d.id,qf);const gr=gradeOf(s.score);
-  let ps=projects.filter(p=>p.designerId===d.id&&p.status==='done');
+  let ps=projects.filter(p=>(p.mc||p.designerId)===d.id&&p.status==='done');
   if(qf!=='all') ps=ps.filter(p=>(p.quarter||getQ(p.deadline))===qf);
   const top=ps.sort((a,b)=>calcPts(b)-calcPts(a)).slice(0,3);
   return{name:`[${qf} ${new Date().getFullYear()}] ${d.name} — Performance Review`,
@@ -2321,7 +2321,7 @@ function renderArchive(){
   years.sort((a,b)=>b-a);
   document.getElementById('expYear').innerHTML='<option value="all">ทุกปี</option>'+years.map(y=>`<option>${y}</option>`).join('');
   document.getElementById('archBody').innerHTML=projects.map(p=>{
-    const d=getDes(p.designerId);const ot=isOT(p);
+    const d=getDes(p.mc||p.designerId);const ot=isOT(p);
     return `<tr><td class="proj-id">${p.id}</td><td>${p.name||'—'}</td><td><span class="tag">${p.brand||'—'}</span></td><td><span class="tag req">${p.requester||'—'}</span></td><td>${d?d.name:'—'}</td><td style="font-size:11px;color:var(--dim)">${p.type}</td><td style="font-family:'IBM Plex Mono',monospace">${p.mandays||1}d</td><td style="font-family:'IBM Plex Mono',monospace;color:var(--gold)">${calcPts(p).toFixed(2)}</td><td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td><td style="font-family:'IBM Plex Mono',monospace;font-size:10px">${fmtD(p.deadline)}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:10px">${fmtD(p.finish)}</td><td style="font-family:'IBM Plex Mono',monospace;color:${ot===null?'var(--muted)':ot?'var(--green2)':'var(--red2)'}">${ot===null?'—':ot?'✓':'✗'}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)">${p.quarter||getQ(p.deadline)||'—'}</td><td style="font-family:'IBM Plex Mono',monospace;color:var(--gold)">${p.briefScore?p.briefScore+'★':'—'}</td></tr>`;
   }).join('');
 }
@@ -2332,7 +2332,7 @@ function exportCSV(){
   if(yr!=='all')list=list.filter(p=>(p.deadline||'').startsWith(yr));
   if(qf!=='all')list=list.filter(p=>(p.quarter||getQ(p.deadline))===qf);
   const rows=[['ID','ชื่องาน','Brand','Requester','Designer','ประเภท','Man-days','Weight','Points','Status','Priority','Deadline','Actual Finish','On-time','Quarter','Progress%','Revision','Brief Score','หมายเหตุ']];
-  list.forEach(p=>{const d=getDes(p.designerId);const ot=isOT(p);rows.push([p.id,p.name,p.brand,p.requester,d?d.name:'',p.type,p.mandays||1,TYPE_W[p.type]||1,calcPts(p).toFixed(2),p.status,p.priority,p.deadline,p.finish,ot===null?'':ot?'Y':'N',p.quarter||getQ(p.deadline),p.progress||0,p.revision||0,p.briefScore||'',(p.note||'').replace(/,/g,'；')]);});
+  list.forEach(p=>{const d=getDes(p.mc||p.designerId);const ot=isOT(p);rows.push([p.id,p.name,p.brand,p.requester,d?d.name:'',p.type,p.mandays||1,TYPE_W[p.type]||1,calcPts(p).toFixed(2),p.status,p.priority,p.deadline,p.finish,ot===null?'':ot?'Y':'N',p.quarter||getQ(p.deadline),p.progress||0,p.revision||0,p.briefScore||'',(p.note||'').replace(/,/g,'；')]);});
   dl('\uFEFF'+rows.map(r=>r.map(c=>`"${c||''}"`).join(',')).join('\n'),`DHA_${yr}_${qf}.csv`,'text/csv');
   showToast('Export CSV สำเร็จ');
 }
