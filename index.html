@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DHA Design Ops v6</title>
+<title>DHA Design Ops v8 — SC Works</title>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -425,12 +425,94 @@ td{padding:10px 13px;vertical-align:middle}
 .file-ver-link{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);text-decoration:none}
 .file-ver-link:hover{text-decoration:underline}
 
+/* ── ROLE SELECTOR SCREEN ── */
+#roleScreen{position:fixed;inset:0;background:var(--bg);z-index:1000;display:flex;align-items:center;justify-content:center;flex-direction:column}
+#roleScreen::before{content:'';position:absolute;top:-20%;left:-10%;width:55%;height:55%;background:radial-gradient(ellipse,rgba(201,162,39,.06) 0%,transparent 70%);pointer-events:none}
+.role-logo{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;color:var(--gold);letter-spacing:.2em;background:var(--gold-dim,rgba(201,162,39,.1));border:1px solid rgba(201,162,39,.3);padding:5px 14px;margin-bottom:32px}
+.role-title{font-size:26px;font-weight:600;margin-bottom:6px;text-align:center}
+.role-sub{font-size:13px;color:var(--dim);margin-bottom:40px;text-align:center}
+.role-cards{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;max-width:800px;width:100%;padding:0 20px}
+.role-card{background:var(--s1);border:1px solid var(--border);padding:24px 16px;text-align:center;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.role-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--rc,var(--gold));transform:scaleX(0);transition:transform .2s;transform-origin:left}
+.role-card:hover{background:var(--s2);border-color:var(--rc,var(--gold))}.role-card:hover::before{transform:scaleX(1)}
+.role-card-icon{font-size:28px;margin-bottom:12px}
+.role-card-name{font-weight:600;font-size:15px;margin-bottom:4px}
+.role-card-desc{font-size:11px;color:var(--dim);line-height:1.5}
+.role-name-step{display:none;flex-direction:column;align-items:center;gap:16px;max-width:400px;width:100%;padding:0 20px}
+.role-name-step.show{display:flex}
+.role-name-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;align-self:flex-start}
+.role-name-input{width:100%;background:var(--s1);border:1px solid var(--border2);color:var(--text);padding:12px 16px;font-family:'Sarabun',sans-serif;font-size:16px;outline:none;border-radius:0}
+.role-name-input:focus{border-color:var(--gold)}
+.role-name-sel{width:100%;background:var(--s1);border:1px solid var(--border2);color:var(--text);padding:12px 16px;font-family:'Sarabun',sans-serif;font-size:15px;outline:none;cursor:pointer}
+.role-name-sel option{background:var(--s1)}
+.role-enter-btn{width:100%;background:var(--gold);border:none;color:#000;padding:12px;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;cursor:pointer;letter-spacing:.06em;transition:background .15s}
+.role-enter-btn:hover{background:var(--gold2)}
+.role-back{background:none;border:none;color:var(--dim);font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;letter-spacing:.06em;margin-top:4px}
+.role-back:hover{color:var(--text)}
+
+/* ── CURRENT USER BADGE ── */
+.user-badge{display:flex;align-items:center;gap:8px;background:var(--s2);border:1px solid var(--border);padding:4px 10px;cursor:pointer;transition:border-color .15s}
+.user-badge:hover{border-color:var(--gold)}
+.user-av{width:22px;height:22px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:#000;flex-shrink:0}
+.user-info-name{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600}
+.user-info-role{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.06em}
+
+/* ── EXTERNAL HOLD STATUS ── */
+.status.external{color:var(--purple2);border-color:var(--purple)}.status.external .sdot{background:var(--purple2)}
+.ext-badge{display:inline-flex;align-items:center;gap:4px;font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 6px;border:1px solid var(--purple);color:var(--purple2);margin-left:4px}
+
+/* ── STAT BAR FILTERS ── */
+.stat-filter-row{display:flex;align-items:center;gap:8px;padding:8px 12px;background:var(--s2);border:1px solid var(--border);border-bottom:none;flex-wrap:wrap}
+.stat-filter-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;flex-shrink:0}
+.stat-filter-sel{background:var(--s1);border:1px solid var(--border);color:var(--text);padding:4px 10px;font-family:'Sarabun',sans-serif;font-size:12px;outline:none;cursor:pointer;transition:border-color .15s}
+.stat-filter-sel:focus{border-color:var(--gold)}
+.stat-filter-sel option{background:var(--s1)}
+.stat-filter-clear{background:none;border:1px solid var(--border);color:var(--dim);padding:4px 10px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all .15s}
+.stat-filter-clear:hover{border-color:var(--red2);color:var(--red2)}
+
 /* TOAST */
 .toast{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid var(--gold);border-left:3px solid var(--gold);color:var(--text);padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;z-index:400;transform:translateX(130%);transition:transform .28s;letter-spacing:.03em}
 .toast.show{transform:translateX(0)}
 </style>
 </head>
 <body>
+
+<!-- ══ ROLE SELECTOR SCREEN ══ -->
+<div id="roleScreen">
+  <div class="role-logo">DHA DESIGN OPS v7</div>
+  <div class="role-title">เลือก Role ของคุณ</div>
+  <div class="role-sub">ระบบจะแสดงข้อมูลที่เหมาะสมกับสิทธิ์ของแต่ละ Role</div>
+  <div class="role-cards" id="roleCards">
+    <div class="role-card" style="--rc:var(--blue2)" data-role="designer" onclick="handleRoleClick(this)">
+      <div class="role-card-icon">✏️</div>
+      <div class="role-card-name">Designer</div>
+      <div class="role-card-desc">ดูงานและ KPI ของตัวเองเท่านั้น ไม่เห็น Score ของเพื่อน</div>
+    </div>
+    <div class="role-card" style="--rc:var(--teal2)" data-role="requester" onclick="handleRoleClick(this)">
+      <div class="role-card-icon">📋</div>
+      <div class="role-card-name">Requester</div>
+      <div class="role-card-desc">เห็นเฉพาะงานที่ตัวเองเปิด Brand ของตัวเองเท่านั้น</div>
+    </div>
+    <div class="role-card" style="--rc:var(--gold)" data-role="supervisor" onclick="handleRoleClick(this)">
+      <div class="role-card-icon">👁</div>
+      <div class="role-card-name">Supervisor</div>
+      <div class="role-card-desc">เห็นทั้งทีม + Approval Queue + KPI ทุกคน</div>
+    </div>
+    <div class="role-card" style="--rc:var(--purple2)" data-role="director" onclick="handleRoleClick(this)">
+      <div class="role-card-icon">📊</div>
+      <div class="role-card-name">Director / HR</div>
+      <div class="role-card-desc">Executive view + Quarterly Review ทั้งองค์กร</div>
+    </div>
+  </div>
+  <div class="role-name-step" id="roleNameStep">
+    <div class="role-name-label" id="roleNameLabel">ชื่อของคุณ</div>
+    <select class="role-name-sel" id="roleNameSel" style="display:none"></select>
+    <input class="role-name-input" id="roleNameInput" placeholder="พิมพ์ชื่อ..." onkeydown="if(event.key==='Enter')enterApp()">
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);align-self:flex-start" id="rolePermDesc"></div>
+    <button class="role-enter-btn" onclick="enterApp()">เข้าสู่ระบบ →</button>
+    <button class="role-back" onclick="backToRoles()">← เปลี่ยน Role</button>
+  </div>
+</div>
 
 <!-- ══ ALERT PANEL ══ -->
 <div class="alert-panel" id="alertPanel">
@@ -444,7 +526,7 @@ td{padding:10px 13px;vertical-align:middle}
 <nav>
   <div class="nav-logo">
     <div class="nav-badge">DHA</div>
-    <div><div class="nav-name">DESIGN OPS</div><div class="nav-sub">v6</div></div>
+    <div><div class="nav-name">DESIGN OPS</div><div class="nav-sub">SC Works v8</div></div>
   </div>
   <div class="nav-tabs">
     <button class="nav-tab active" onclick="goPage('projects',this)">PROJECTS</button>
@@ -461,6 +543,10 @@ td{padding:10px 13px;vertical-align:middle}
   </div>
   <div class="nav-right">
     <div class="nav-clock" id="clock">--:--</div>
+    <div class="user-badge" onclick="switchRole()" title="เปลี่ยน Role">
+      <div class="user-av" id="navUserAv" style="background:var(--gold)">?</div>
+      <div><div class="user-info-name" id="navUserName">—</div><div class="user-info-role" id="navUserRole">—</div></div>
+    </div>
     <button class="bell-btn" onclick="toggleAlert()" id="bellBtn">🔔<span class="bell-count" id="bellCount"></span></button>
     <button class="btn-gold btn-sm" onclick="openModal()">+ PROJECT</button>
   </div>
@@ -468,6 +554,18 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ══ PROJECTS ══ -->
 <div class="page active" id="page-projects">
+  <div class="stat-filter-row">
+    <div class="stat-filter-label">Quick Filter</div>
+    <select class="stat-filter-sel" id="statFilterBrand" onchange="applyStatFilter()"><option value="">— ทุก Brand —</option></select>
+    <select class="stat-filter-sel" id="statFilterDesigner" onchange="applyStatFilter()"><option value="">— ทุก Designer —</option></select>
+    <select class="stat-filter-sel" id="statFilterQ" onchange="applyStatFilter()">
+      <option value="">— ทุก Quarter —</option>
+      <option value="Q1">Q1</option><option value="Q2">Q2</option>
+      <option value="Q3">Q3</option><option value="Q4">Q4</option>
+    </select>
+    <button class="stat-filter-clear" onclick="clearStatFilter()">CLEAR</button>
+    <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim)" id="statFilterInfo"></div>
+  </div>
   <div class="stat-row">
     <div class="stat c-gold"><div class="stat-label">Total</div><div class="stat-val" id="s-total" style="color:var(--gold)">0</div></div>
     <div class="stat c-blue"><div class="stat-label">In Progress</div><div class="stat-val" id="s-active" style="color:var(--blue2)">0</div></div>
@@ -512,7 +610,7 @@ td{padding:10px 13px;vertical-align:middle}
       <button class="q-tab" onclick="setDsvQ('Q4',this)">Q4</button>
     </div>
   </div>
-  <div class="toolbar" style="margin-bottom:20px">
+  <div class="toolbar" style="margin-bottom:20px" id="dsvSelWrap">
     <select class="fsel-inline" id="dsvDesignerSel" onchange="renderDesignerView()" style="font-size:13px;padding:7px 12px">
       <option value="">— เลือก Designer —</option>
     </select>
@@ -668,47 +766,66 @@ td{padding:10px 13px;vertical-align:middle}
   <div class="modal wide">
     <div class="modal-head"><div class="modal-title" id="modalTitle">NEW PROJECT</div><button class="modal-close" onclick="closeModal()">✕</button></div>
     <div class="modal-body">
+      <div style="background:var(--s2);border:1px solid var(--gold);border-left:3px solid var(--gold);padding:12px 16px;margin-bottom:16px">
+        <div class="flabel" style="color:var(--gold);margin-bottom:8px">CODE FILE AUTO GENERATOR</div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:flex-end">
+          <div class="fg" style="min-width:90px"><div class="flabel">BU</div><select class="fsel" id="cfBU" onchange="updateCodeFile()"><option value="">BU</option><option value="AREA3">AREA3</option>
+<option value="QM">QM</option>
+<option value="LC">LC</option>
+<option value="KKU">KKU</option>
+<option value="EP">EP</option>
+<option value="EF">EF</option>
+<option value="OTHER">OTHER</option></select></div>
+          <div class="fg" style="min-width:110px"><div class="flabel">Job Type</div><select class="fsel" id="cfType" onchange="autoFillFromType();updateCodeFile()"><option value="">Type</option><option value="PKB">PKB</option><option value="PD2D">PD2D</option><option value="MRK">MRK</option><option value="LB">LB</option><option value="DP">DP</option><option value="BC">BC</option><option value="RTD">RTD</option><option value="ICN">ICN</option><option value="DWC">DWC</option><option value="LOGO">LOGO</option></select></div>
+          <div class="fg" style="min-width:130px"><div class="flabel">Designer</div><select class="fsel" id="cfDesigner" onchange="updateCodeFile()"><option value="">Designer</option><option value="SC">SC — Somchai Sompiew</option>
+<option value="OR">OR — Pornrat Chantateyanont</option>
+<option value="KTY">KTY — Kittiya Suetao</option>
+<option value="PUI">PUI — Nakarn Charoensuk</option></select></div>
+          <div class="fg" style="min-width:130px"><div class="flabel">Brief Date</div><input class="finput" type="date" id="cfDate" onchange="updateCodeFile()"></div>
+          <div style="flex:1;min-width:200px"><div class="flabel" style="margin-bottom:5px">Code Preview</div><div id="codeFilePreview" style="font-family:IBM Plex Mono,monospace;font-size:12px;font-weight:600;color:var(--gold);background:var(--bg);border:1px solid var(--border);padding:8px 12px">— กรอกข้อมูลด้านบน —</div></div>
+          <button class="btn-gold btn-sm" onclick="applyCodeFile()" style="flex-shrink:0;height:34px;align-self:flex-end">USE ↓</button>
+        </div>
+      </div>
       <div class="form-grid">
-        <div class="fg"><div class="flabel">Project ID</div><input class="finput" id="fId" readonly></div>
-        <div class="fg"><div class="flabel">ประเภทงาน</div>
-          <select class="fsel" id="fType">
-            <option>Packaging Design</option><option>Brand Identity</option><option>Label Design</option>
-            <option>Print Production</option><option>Catalog / Brochure</option><option>Digital Asset</option>
-            <option>Product Design</option><option>อื่นๆ</option>
-          </select>
-        </div>
-        <div class="fg full"><div class="flabel">ชื่อโปรเจกต์</div><input class="finput" id="fName" placeholder="เช่น Packaging Redesign – กล่อง MASTER ART A4"></div>
-        <div class="fg"><div class="flabel">Brand / Client</div><input class="finput" id="fBrand" list="brandList"><datalist id="brandList"></datalist></div>
-        <div class="fg"><div class="flabel">Requested by</div><input class="finput" id="fRequester" list="reqList"><datalist id="reqList"></datalist></div>
-        <div class="fg"><div class="flabel">Designer</div><select class="fsel" id="fDesigner"><option value="">— เลือก —</option></select></div>
-        <div class="fg"><div class="flabel">Status</div>
-          <select class="fsel" id="fStatus"><option value="brief">Brief</option><option value="active">In Progress</option><option value="review">Pending Review</option><option value="done">Done</option><option value="hold">On Hold</option></select>
-        </div>
-        <div class="fg"><div class="flabel">Priority</div>
-          <select class="fsel" id="fPriority"><option value="high">HIGH</option><option value="mid" selected>MID</option><option value="low">LOW</option></select>
-        </div>
-        <div class="fg"><div class="flabel">Deadline</div><input class="finput" type="date" id="fDeadline" onchange="autoQ()"></div>
-        <div class="fg"><div class="flabel">Actual Finish</div><input class="finput" type="date" id="fFinish"></div>
-        <div class="fg"><div class="flabel">Man-days</div><input class="finput" type="number" id="fMandays" min="0.5" step="0.5" value="1"></div>
+        <div class="fg"><div class="flabel">CODE FILE</div><input class="finput" id="fId" placeholder="BU-Type-Code+Date+Seq" style="font-family:IBM Plex Mono,monospace"></div>
+        <div class="fg"><div class="flabel">Job No. (ลำดับปี)</div><input class="finput" id="fNo" type="number" placeholder="001" min="1"></div>
+        <div class="fg full"><div class="flabel">Job Description</div><input class="finput" id="fName" placeholder="ชื่องาน / ลูกค้า / รายละเอียด"></div>
+        <div class="fg full"><div class="flabel">Brief Detail</div><textarea class="ftxt" id="fBriefDetail" style="min-height:52px" placeholder="รายละเอียดบรีฟงาน..."></textarea></div>
+        <div class="fg"><div class="flabel">BU</div><select class="fsel" id="fBU"><option value="AREA3">AREA3</option>
+<option value="QM">QM</option>
+<option value="LC">LC</option>
+<option value="KKU">KKU</option>
+<option value="EP">EP</option>
+<option value="EF">EF</option>
+<option value="OTHER">OTHER</option></select></div>
+        <div class="fg"><div class="flabel">Designer (MC)</div><select class="fsel" id="fDesigner"><option value="">— เลือก —</option><option value="SC">SC — Somchai Sompiew</option>
+<option value="OR">OR — Pornrat Chantateyanont</option>
+<option value="KTY">KTY — Kittiya Suetao</option>
+<option value="PUI">PUI — Nakarn Charoensuk</option></select></div>
+        <div class="fg"><div class="flabel">PMD (ผู้บรีฟ)</div><input class="finput" id="fRequester" list="pmdList" placeholder="YUR, KSM, WRP..."><datalist id="pmdList"><option value="YUR"><option value="KSM"><option value="WRP"><option value="TNT"><option value="PRM"><option value="KTT"><option value="NTN"></datalist></div>
+        <div class="fg"><div class="flabel">Job Type</div><select class="fsel" id="fType" onchange="autoFillFromType2()"><option value="PKB">PKB — Packaging Development</option><option value="PD2D">PD2D — Product Design to Drawing</option><option value="MRK">MRK — Marketing Screen</option><option value="LB">LB — Label / Sticker</option><option value="DP">DP — Display Product</option><option value="BC">BC — Barcode</option><option value="RTD">RTD — Retouching Product</option><option value="ICN">ICN — Icon / UI</option><option value="DWC">DWC — Drawing / Artwork</option><option value="LOGO">LOGO — Logo Design</option></select></div>
+        <div class="fg"><div class="flabel">Design Type</div><select class="fsel" id="fDesignType"><option value="NEW DESIGN">NEW DESIGN</option>
+<option value="REVISED 30%">REVISED 30%</option>
+<option value="REVISED 70%">REVISED 70%</option>
+<option value="URGENT_NEW DESIGN">URGENT_NEW DESIGN</option>
+<option value="URGENT_REV 30%">URGENT_REV 30%</option>
+<option value="UNKNOWN">UNKNOWN</option></select></div>
+        <div class="fg"><div class="flabel">Rank</div><select class="fsel" id="fRank" onchange="updateParTime()"><option value="A">A — Complex (x1.5)</option><option value="B">B — Medium (x1.3)</option><option value="C" selected>C — Standard (x1.0)</option><option value="D">D — Simple (x0.8)</option><option value="E">E — Quick (x0.6)</option></select></div>
+        <div class="fg"><div class="flabel">Status</div><select class="fsel" id="fStatus"><option value="brief">Brief</option><option value="active">In Progress</option><option value="review">Pending Review</option><option value="external">External Hold</option><option value="done">Done</option><option value="hold">On Hold</option></select></div>
+        <div class="fg"><div class="flabel">Priority</div><select class="fsel" id="fPriority"><option value="high">HIGH</option><option value="mid" selected>MID</option><option value="low">LOW</option></select></div>
+        <div class="fg"><div class="flabel">Brief Date</div><input class="finput" type="date" id="fBriefDate" onchange="autoQ2()"></div>
+        <div class="fg"><div class="flabel">Deadline MC-NAS</div><input class="finput" type="date" id="fDeadline"></div>
+        <div class="fg"><div class="flabel">First Draft Date</div><input class="finput" type="date" id="fFirstDraft"></div>
+        <div class="fg"><div class="flabel">Completion Date</div><input class="finput" type="date" id="fFinish"></div>
+        <div class="fg"><div class="flabel">PAR TIME (H)</div><input class="finput" type="number" id="fParTime" min="0.5" step="0.5" value="2"></div>
+        <div class="fg"><div class="flabel">QTY (AW)</div><input class="finput" type="number" id="fQtyAW" min="0" value="3"></div>
         <div class="fg"><div class="flabel">Progress (%)</div><input class="finput" type="number" id="fProgress" min="0" max="100" value="0"></div>
         <div class="fg"><div class="flabel">Revision Rounds</div><input class="finput" type="number" id="fRevision" min="0" value="0"></div>
-        <div class="fg"><div class="flabel">Quarter</div>
-          <select class="fsel" id="fQuarter"><option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option></select>
-        </div>
-        <div class="fg full"><div class="flabel">ลิงก์ไฟล์ล่าสุด (Google Drive)</div><input class="finput" id="fFile" placeholder="https://drive.google.com/..."></div>
-        <div class="fg full">
-          <div class="flabel">File Versions (version:url แต่ละรายการขึ้นบรรทัดใหม่)</div>
-          <textarea class="ftxt" id="fVersions" style="min-height:70px;font-family:'IBM Plex Mono',monospace;font-size:11px" placeholder="v1:https://drive.google.com/...&#10;v2:https://drive.google.com/..."></textarea>
-        </div>
-        <div class="fg full">
-          <div class="flabel">Approval Chain</div>
-          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv1" style="accent-color:var(--gold)"> Designer Done</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv2" style="accent-color:var(--gold)"> Supervisor Approved</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv3" style="accent-color:var(--gold)"> Marketing Approved</label>
-            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv4" style="accent-color:var(--gold)"> Director Approved</label>
-          </div>
-        </div>
+        <div class="fg"><div class="flabel">Quarter</div><select class="fsel" id="fQuarter"><option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option></select></div>
+        <div class="fg"><div class="flabel">External Party</div><input class="finput" id="fExternal" placeholder="Supplier Guangzhou..."></div>
+        <div class="fg full"><div class="flabel">Link Brief / ไฟล์งาน</div><input class="finput" id="fFile" placeholder="https://drive.google.com/..."></div>
+        <div class="fg full"><div class="flabel">File Versions (v1:url บรรทัดละ version)</div><textarea class="ftxt" id="fVersions" style="min-height:52px;font-family:IBM Plex Mono,monospace;font-size:11px" placeholder="v1:https://..."></textarea></div>
+        <div class="fg full"><div class="flabel">Approval Chain</div><div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:4px"><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv1" style="accent-color:var(--gold)"> Designer Done</label><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv2" style="accent-color:var(--gold)"> Supervisor</label><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv3" style="accent-color:var(--gold)"> Marketing</label><label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv4" style="accent-color:var(--gold)"> Director</label></div></div>
         <div class="fg full"><div class="flabel">หมายเหตุ</div><textarea class="ftxt" id="fNote"></textarea></div>
       </div>
     </div>
@@ -779,7 +896,7 @@ td{padding:10px 13px;vertical-align:middle}
 // ════════════════════════════════════════════════
 const TYPE_W={'Packaging Design':1.5,'Brand Identity':1.3,'Catalog / Brochure':1.2,'Product Design':1.2,'Print Production':1.0,'Label Design':1.0,'Digital Asset':0.8,'อื่นๆ':1.0};
 const D_COLORS=['#c9a227','#3a7fd4','#3d9e6a','#c94040','#7a5cc9','#2a8a8a','#c97030','#e05c5c'];
-const STATUS_L={brief:'BRIEF',active:'IN PROGRESS',review:'REVIEW',done:'DONE',hold:'ON HOLD'};
+const STATUS_L={brief:'BRIEF',active:'IN PROGRESS',review:'REVIEW',done:'DONE',hold:'ON HOLD',external:'EXTERNAL HOLD'};
 const TYPE_C={'Packaging Design':'packaging','Brand Identity':'brand','Label Design':'label','Print Production':'print','Catalog / Brochure':'print','Digital Asset':'other','Product Design':'other','อื่นๆ':'other'};
 const CAP_MAX=20; // max man-days per designer per period for capacity
 const STAR_LABELS=['','Brief ไม่ชัดเลย','ต้องปรับเยอะ','พอใช้ได้','ดี มี reference ชัด','ดีมาก ครบถ้วน'];
@@ -787,25 +904,294 @@ const STAR_LABELS=['','Brief ไม่ชัดเลย','ต้องปรั
 // ════════════════════════════════════════════════
 // STATE
 // ════════════════════════════════════════════════
-let projects=JSON.parse(localStorage.getItem('dha_v4_proj')||'null');
-let designers=JSON.parse(localStorage.getItem('dha_v4_des')||'null');
+// ── SC WORKS MASTER DATA ──────────────────────
+const DESIGNERS_MASTER = [
+  {id:'SC', name:'Somchai Sompiew',    role:'Designer Supervisor', dept:'Writing Instruments', code:'SC'},
+  {id:'OR', name:'Pornrat Chantateyanont', role:'Senior Designer',  dept:'Office Supply',       code:'OR'},
+  {id:'KTY',name:'Kittiya Suetao',     role:'Product Designer',    dept:'Office Supply',       code:'KTY'},
+  {id:'PUI',name:'Nakarn Charoensuk',  role:'Senior Designer',     dept:'Art Supply',          code:'PUI'},
+];
+
+const BU_LIST = ['QM','AREA3','LC','KKU','EP','EF'];
+
+const JOB_TYPES = [
+  {code:'PKB', label:'PKB — Packaging Development',     rank:'A', parTime:16},
+  {code:'PD2D',label:'PD2D — Product Design to Drawing',rank:'A', parTime:16},
+  {code:'MRK', label:'MRK — Marketing Screen',          rank:'C', parTime:2},
+  {code:'LB',  label:'LB — Label / Sticker',            rank:'C', parTime:2},
+  {code:'DP',  label:'DP — Display Product',            rank:'A', parTime:16},
+  {code:'BC',  label:'BC — Barcode',                    rank:'E', parTime:1},
+  {code:'RTD', label:'RTD — Retouching Product',        rank:'C', parTime:2},
+  {code:'ICN', label:'ICN — Icon / UI',                 rank:'C', parTime:2},
+  {code:'DWC', label:'DWC — Drawing / Artwork',         rank:'C', parTime:2},
+  {code:'LOGO',label:'LOGO — Logo Design',              rank:'B', parTime:8},
+];
+
+const DESIGN_TYPES = ['NEW DESIGN','REVISED 30%','REVISED 70%','URGENT_NEW DESIGN','URGENT_REV 30%','UNKNOWN'];
+const PMD_LIST = ['YUR','KSM','WRP','TNT','PRM','KTT','NTN','OTHER'];
+
+// TYPE_W mapping for KPI — Rank A=1.5, B=1.3, C=1.0, D=0.8, E=0.6
+const RANK_W = {A:1.5, B:1.3, C:1.0, D:0.8, E:0.6};
+// Designer registry uses DESIGNERS_MASTER (static)
+
+let projects=JSON.parse(localStorage.getItem('dha_v8_proj')||'null');
+let designers=DESIGNERS_MASTER; // Always use master registry
 let trelloCfg=JSON.parse(localStorage.getItem('dha_v4_trello')||'{}');
-if(!designers){designers=[{id:'D001',name:'สมชาย ใจดี',role:'Senior Designer'},{id:'D002',name:'นารี สวัสดี',role:'Packaging Designer'},{id:'D003',name:'วิชัย รักดี',role:'Graphic Designer'},{id:'D004',name:'กมล มีสุข',role:'Jr. Designer'}];localStorage.setItem('dha_v4_des',JSON.stringify(designers));}
+
+// ── CODE FILE GENERATOR ───────────────────────
+function genCodeFile(bu, jobType, designerCode, briefDateStr) {
+  if(!bu||!jobType||!designerCode||!briefDateStr) return '';
+  // Convert to Thai BC YYMMDD
+  const d = new Date(briefDateStr);
+  if(isNaN(d)) return '';
+  const beYear = d.getFullYear() + 543;
+  const yy = String(beYear).slice(-2);
+  const mm = String(d.getMonth()+1).padStart(2,'0');
+  const dd = String(d.getDate()).padStart(2,'0');
+  const dateStr = yy + mm + dd;
+  // Get next sequence for this designer in this year
+  const yearAD = d.getFullYear();
+  const seq = getNextSeq(designerCode, yearAD);
+  return `${bu}-${jobType}-${designerCode}${dateStr}${String(seq).padStart(3,'0')}`;
+}
+
+function getNextSeq(designerCode, yearAD) {
+  // Find max sequence for this designer in this year
+  const yearProjects = (projects||[]).filter(p => {
+    if(!p.codeFile) return false;
+    const briefY = p.briefDate ? new Date(p.briefDate).getFullYear() : null;
+    return p.mc === designerCode && briefY === yearAD;
+  });
+  if(!yearProjects.length) return 1;
+  const seqs = yearProjects.map(p => {
+    const m = p.codeFile.match(/(\d{3})$/);
+    return m ? parseInt(m[1]) : 0;
+  });
+  return Math.max(...seqs) + 1;
+}
+
+function calcPts(p) {
+  const rankW = RANK_W[p.rank] || 1.0;
+  const md = parseFloat(p.mandays||p.parTime||1);
+  return parseFloat((md * rankW).toFixed(2));
+}
+
+// ── CURRENT USER ──────────────────────────────
+let currentUser={role:'supervisor',name:'Supervisor',id:null,brand:null};
+
+const ROLE_COLORS={designer:'var(--blue2)',requester:'var(--teal2)',supervisor:'var(--gold)',director:'var(--purple2)'};
+const ROLE_LABELS={designer:'DESIGNER',requester:'REQUESTER',supervisor:'SUPERVISOR',director:'DIRECTOR'};
+const ROLE_PERMS={
+  designer:{tabs:['projects','designer','export'],canSeeAllPerf:false,canSeeOtherDesigners:false,canEdit:false},
+  requester:{tabs:['projects','requester','export'],canSeeAllPerf:false,canSeeOtherDesigners:false,canEdit:false},
+  supervisor:{tabs:['projects','designer','requester','performance','capacity','briefquality','supervisor','brands','trello','export'],canSeeAllPerf:true,canSeeOtherDesigners:true,canEdit:true},
+  director:{tabs:['projects','performance','supervisor','director','brands','export'],canSeeAllPerf:true,canSeeOtherDesigners:true,canEdit:false},
+};
+
 let editId=null,logProjId=null,bqProjId=null,bqStarVal=0;
 let filterStatus='all',perfQ='all',reqQF='all',dsvQF='all',curLogType='activity';
+let pendingRole='';
 
 // ════════════════════════════════════════════════
 // HELPERS
 // ════════════════════════════════════════════════
-const calcPts=p=>parseFloat(((parseFloat(p.mandays)||1)*(TYPE_W[p.type]||1)).toFixed(2));
 const getQ=s=>{if(!s)return null;const m=new Date(s).getMonth()+1;return m<=3?'Q1':m<=6?'Q2':m<=9?'Q3':'Q4';};
-const isOT=p=>(!p.deadline||!p.finish)?null:new Date(p.finish)<=new Date(p.deadline);
-const dlCls=(dl,st)=>{if(!dl||st==='done')return '';const d=(new Date(dl)-new Date())/864e5;return d<0?'overdue':d<=3?'soon':'';};
+const isOT=p=>{
+  if(p.status==='external'||p.externalParty) return null; // ไม่นับใน KPI
+  if(!p.deadline||!p.finish) return null;
+  return new Date(p.finish)<=new Date(p.deadline);
+};
+const dlCls=(dl,st)=>{if(!dl||st==='done'||st==='external')return '';const d=(new Date(dl)-new Date())/864e5;return d<0?'overdue':d<=3?'soon':'';};
 const fmtD=s=>s?new Date(s).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'}):'—';
-const dColor=id=>{const i=designers.findIndex(d=>d.id===id);return D_COLORS[i%D_COLORS.length]||'#888';};
-const getDes=id=>designers.find(d=>d.id===id);
-const save=()=>localStorage.setItem('dha_v4_proj',JSON.stringify(projects));
-function genId(){const y=new Date().getFullYear();const max=projects.reduce((m,p)=>Math.max(m,parseInt((p.id||'').split('-')[2])||0),0);return `DHA-${y}-${String(max+1).padStart(3,'0')}`;}
+const dColor=id=>{const i=DESIGNERS_MASTER.findIndex(d=>d.id===id||d.code===id);return D_COLORS[i%D_COLORS.length]||'#888';};
+const getDes=id=>DESIGNERS_MASTER.find(d=>d.id===id||d.code===id);
+const save=()=>localStorage.setItem('dha_v8_proj',JSON.stringify(projects));
+function genId(){return 'TMP-'+Date.now();}
+
+// ════════════════════════════════════════════════
+// ROLE SELECTOR
+// ════════════════════════════════════════════════
+function handleRoleClick(el){selectRole(el.getAttribute('data-role'));}
+function selectRole(role){
+  pendingRole=role;
+  const step=document.getElementById('roleNameStep');
+  const cards=document.getElementById('roleCards');
+  const label=document.getElementById('roleNameLabel');
+  const desc=document.getElementById('rolePermDesc');
+  const sel=document.getElementById('roleNameSel');
+  const inp=document.getElementById('roleNameInput');
+  cards.style.display='none';
+  step.classList.add('show');
+  document.querySelector('.role-title').textContent='ยืนยันตัวตน';
+  document.querySelector('.role-sub').textContent='';
+  if(role==='designer'){
+    label.textContent='คุณคือ Designer คนไหน?';
+    desc.textContent='คุณจะเห็นเฉพาะงานและ KPI ของตัวเอง ไม่มีการเปรียบเทียบกับผู้อื่น';
+    sel.style.display='block'; inp.style.display='none';
+    sel.innerHTML='<option value="">— เลือกชื่อ —</option>'+designers.map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+  } else if(role==='requester'){
+    label.textContent='ชื่อและ Brand ของคุณ';
+    desc.textContent='คุณจะเห็นเฉพาะงานที่คุณเปิด ไม่เห็นงานของ Brand อื่น';
+    sel.style.display='none'; inp.style.display='block';
+    inp.placeholder='พิมพ์ชื่อ Requester ของคุณ...';
+    inp.value='';
+  } else if(role==='supervisor'){
+    label.textContent='ชื่อ Supervisor';
+    desc.textContent='คุณเห็นภาพรวมทีมทั้งหมด + Approval Queue';
+    sel.style.display='none'; inp.style.display='block';
+    inp.placeholder='พิมพ์ชื่อ...'; inp.value='';
+  } else {
+    label.textContent='ชื่อ Director / HR';
+    desc.textContent='คุณเห็น Executive Dashboard + KPI ทั้งองค์กร';
+    sel.style.display='none'; inp.style.display='block';
+    inp.placeholder='พิมพ์ชื่อ...'; inp.value='';
+  }
+  setTimeout(()=>{ (sel.style.display==='block'?sel:inp).focus(); },100);
+}
+
+function backToRoles(){
+  pendingRole='';
+  document.getElementById('roleCards').style.display='grid';
+  document.getElementById('roleNameStep').classList.remove('show');
+  document.querySelector('.role-title').textContent='เลือก Role ของคุณ';
+  document.querySelector('.role-sub').textContent='ระบบจะแสดงข้อมูลที่เหมาะสมกับสิทธิ์ของแต่ละ Role';
+}
+
+function enterApp(){
+  const sel=document.getElementById('roleNameSel');
+  const inp=document.getElementById('roleNameInput');
+  let name='',id=null,brand=null;
+  if(pendingRole==='designer'){
+    id=sel.value; if(!id){showRoleError('กรุณาเลือกชื่อ');return;}
+    const d=designers.find(x=>x.id===id); name=d?d.name:'Designer';
+  } else {
+    name=inp.value.trim(); if(!name){showRoleError('กรุณาพิมพ์ชื่อ');return;}
+    if(pendingRole==='requester'){
+      const projs=projects.filter(p=>p.requester===name);
+      const brands=[...new Set(projs.map(p=>p.brand).filter(Boolean))];
+      brand=brands.length===1?brands[0]:null;
+    }
+  }
+  currentUser={role:pendingRole,name,id,brand};
+  applyRoleUI();
+  document.getElementById('roleScreen').style.display='none';
+}
+
+function showRoleError(msg){
+  showToast(msg);
+}
+
+function switchRole(){
+  currentUser={role:'supervisor',name:'',id:null,brand:null};
+  document.getElementById('roleScreen').style.display='flex';
+  document.getElementById('roleCards').style.display='grid';
+  document.getElementById('roleNameStep').classList.remove('show');
+  document.querySelector('.role-title').textContent='เลือก Role ของคุณ';
+  document.querySelector('.role-sub').textContent='ระบบจะแสดงข้อมูลที่เหมาะสมกับสิทธิ์ของแต่ละ Role';
+}
+
+function applyRoleUI(){
+  const {role,name,id} = currentUser;
+  const col=ROLE_COLORS[role]||'var(--gold)';
+  // nav badge
+  document.getElementById('navUserAv').style.background=col;
+  document.getElementById('navUserAv').textContent=name.charAt(0)||'?';
+  document.getElementById('navUserName').textContent=name;
+  document.getElementById('navUserRole').textContent=ROLE_LABELS[role]||role.toUpperCase();
+  // show/hide nav tabs
+  const perms=ROLE_PERMS[role]||ROLE_PERMS.supervisor;
+  document.querySelectorAll('.nav-tab').forEach(btn=>{
+    const pageId=btn.getAttribute('onclick').match(/goPage\('(\w+)'/)?.[1];
+    if(!pageId) return;
+    btn.style.display=perms.tabs.includes(pageId)?'':'none';
+  });
+  // show/hide + PROJECT button
+  document.querySelector('.btn-gold.btn-sm').style.display=
+    (role==='supervisor')?'':'none';
+  // hide designer selector in self-view for designer role
+  const dsvWrap=document.getElementById('dsvSelWrap');
+  if(dsvWrap) dsvWrap.style.display=role==='designer'?'none':'flex';
+  // go to default page for role
+  const defaultPage={designer:'designer',requester:'requester',supervisor:'projects',director:'director'}[role]||'projects';
+  const firstTab=document.querySelector(`.nav-tab[onclick*="goPage('${defaultPage}'"]`);
+  if(firstTab) goPage(defaultPage,firstTab);
+  else renderProjects();
+}
+
+// ════════════════════════════════════════════════
+// PERMISSION FILTER HELPERS
+// ════════════════════════════════════════════════
+function permFilteredProjects(allPs){
+  const {role,id:dId,name,brand}=currentUser;
+  if(role==='designer') return allPs.filter(p=>p.designerId===dId);
+  if(role==='requester') return allPs.filter(p=>p.requester===name);
+  return allPs; // supervisor + director see all
+}
+
+// ════════════════════════════════════════════════
+// STAT BAR QUICK FILTER
+// ════════════════════════════════════════════════
+let statFilterBrand='',statFilterDesigner='',statFilterQ='';
+
+function populateStatFilters(){
+  const brands=[...new Set(projects.map(p=>p.brand).filter(Boolean))].sort();
+  const cur_b=document.getElementById('statFilterBrand').value;
+  const cur_d=document.getElementById('statFilterDesigner').value;
+  document.getElementById('statFilterBrand').innerHTML=
+    '<option value="">— ทุก Brand —</option>'+brands.map(b=>`<option${b===cur_b?' selected':''}>${b}</option>`).join('');
+  document.getElementById('statFilterDesigner').innerHTML=
+    '<option value="">— ทุก Designer —</option>'+designers.map(d=>`<option value="${d.id}"${d.id===cur_d?' selected':''}>${d.name}</option>`).join('');
+}
+
+function applyStatFilter(){
+  statFilterBrand=document.getElementById('statFilterBrand').value;
+  statFilterDesigner=document.getElementById('statFilterDesigner').value;
+  statFilterQ=document.getElementById('statFilterQ').value;
+  updateStatFiltered();
+}
+
+function clearStatFilter(){
+  ['statFilterBrand','statFilterDesigner','statFilterQ'].forEach(id=>{document.getElementById(id).value='';});
+  statFilterBrand=statFilterDesigner=statFilterQ='';
+  updateStatFiltered();
+}
+
+function getFilteredForStats(){
+  let list=permFilteredProjects(projects);
+  if(statFilterBrand) list=list.filter(p=>p.brand===statFilterBrand);
+  if(statFilterDesigner) list=list.filter(p=>p.designerId===statFilterDesigner);
+  if(statFilterQ) list=list.filter(p=>(p.quarter||getQ(p.deadline))===statFilterQ);
+  return list;
+}
+
+function updateStatFiltered(){
+  const list=getFilteredForStats();
+  const today=new Date();today.setHours(0,0,0,0);
+  const od=list.filter(p=>p.status!=='done'&&p.status!=='external'&&p.deadline&&new Date(p.deadline)<today);
+  const pts=list.filter(p=>p.status==='done').reduce((s,p)=>s+calcPts(p),0);
+  const reqs=[...new Set(list.map(p=>p.requester).filter(Boolean))];
+  document.getElementById('s-total').textContent=list.length;
+  document.getElementById('s-active').textContent=list.filter(p=>p.status==='active').length;
+  document.getElementById('s-review').textContent=list.filter(p=>p.status==='review').length;
+  document.getElementById('s-done').textContent=list.filter(p=>p.status==='done').length;
+  document.getElementById('s-overdue').textContent=od.length;
+  document.getElementById('s-pts').textContent=pts.toFixed(1);
+  document.getElementById('s-req').textContent=reqs.length;
+  // info label
+  const active=(statFilterBrand||statFilterDesigner||statFilterQ);
+  const info=document.getElementById('statFilterInfo');
+  if(active){
+    const parts=[];
+    if(statFilterBrand) parts.push(`Brand: ${statFilterBrand}`);
+    if(statFilterDesigner){const d=getDes(statFilterDesigner);parts.push(`Designer: ${d?d.name:statFilterDesigner}`);}
+    if(statFilterQ) parts.push(statFilterQ);
+    info.textContent=`กรอง: ${parts.join(' · ')} (${list.length} projects)`;
+    info.style.color='var(--gold)';
+  } else {
+    info.textContent=''; info.style.color='';
+  }
+  buildAlerts();
+}
 
 // ════════════════════════════════════════════════
 // CLOCK
@@ -882,18 +1268,8 @@ function goPage(id,btn){
 // STATS + FILTERS
 // ════════════════════════════════════════════════
 function updateStats(){
-  const today=new Date();today.setHours(0,0,0,0);
-  const od=projects.filter(p=>p.status!=='done'&&p.deadline&&new Date(p.deadline)<today);
-  const pts=projects.filter(p=>p.status==='done').reduce((s,p)=>s+calcPts(p),0);
-  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))];
-  document.getElementById('s-total').textContent=projects.length;
-  document.getElementById('s-active').textContent=projects.filter(p=>p.status==='active').length;
-  document.getElementById('s-review').textContent=projects.filter(p=>p.status==='review').length;
-  document.getElementById('s-done').textContent=projects.filter(p=>p.status==='done').length;
-  document.getElementById('s-overdue').textContent=od.length;
-  document.getElementById('s-pts').textContent=pts.toFixed(1);
-  document.getElementById('s-req').textContent=reqs.length;
-  buildAlerts();
+  populateStatFilters();
+  updateStatFiltered();
 }
 
 function populateFilters(){
@@ -921,7 +1297,14 @@ function renderProjects(){
   const fr=document.getElementById('filterRequester').value;
   const fd=document.getElementById('filterDesigner').value;
   const fb=document.getElementById('filterBrand').value;
-  let list=projects.filter(p=>{
+  // apply permission first
+  let list=permFilteredProjects(projects);
+  // apply stat bar filters
+  if(statFilterBrand) list=list.filter(p=>p.brand===statFilterBrand);
+  if(statFilterDesigner) list=list.filter(p=>p.designerId===statFilterDesigner);
+  if(statFilterQ) list=list.filter(p=>(p.quarter||getQ(p.deadline))===statFilterQ);
+  // apply toolbar filters
+  list=list.filter(p=>{
     if(filterStatus!=='all'&&p.status!==filterStatus)return false;
     if(fr&&p.requester!==fr)return false;
     if(fd&&p.designerId!==fd)return false;
@@ -938,19 +1321,21 @@ function renderProjects(){
     const pts=calcPts(p);const tc=TYPE_C[p.type]||'other';
     const logCnt=(p.log||[]).length;
     const fh=p.fileUrl?`<a href="${p.fileUrl}" target="_blank" style="color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:9px;text-decoration:none" onclick="event.stopPropagation()">FILE↗</a>`:'';
-    return `<tr onclick="openEdit('${p.id}')">
+    const extBadge=p.externalParty?`<span class="ext-badge">🌐 ${p.externalParty}</span>`:'';
+    const canEdit=ROLE_PERMS[currentUser.role]?.canEdit!==false;
+    return `<tr onclick="${canEdit?`openEdit('${p.id}')`:``}">
       <td><div class="proj-id">${p.id}</div></td>
-      <td><div class="proj-name">${p.name||'—'}</div><div class="proj-type">${p.type} ${fh}</div></td>
+      <td><div class="proj-name">${p.name||'—'}</div><div class="proj-type">${p.type} ${fh}${extBadge}</div></td>
       <td><span class="tag">${p.brand||'—'}</span></td>
       <td><span class="tag req">${p.requester||'—'}</span></td>
       <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'<span style="color:var(--muted)">—</span>'}</td>
       <td><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)">${p.mandays||1}d <span class="wbadge ${tc}">×${TYPE_W[p.type]||1}</span></div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)">${pts} pts</div></td>
-      <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td>
+      <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]||p.status}</span></td>
       <td><span class="pri ${p.priority}">${p.priority.toUpperCase()}</span></td>
-      <td><span class="dl ${dlc}">${fmtD(p.deadline)}${dlc==='overdue'?' ⚠':dlc==='soon'?' !':''}</span></td>
+      <td><span class="dl ${dlc}">${fmtD(p.deadline)}${p.status==='external'?` 🌐`:dlc==='overdue'?' ⚠':dlc==='soon'?' !':''}</span></td>
       <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill ${p.status==='done'?'done':dlc==='overdue'?'ov':''}" style="width:${prog}%"></div></div><div class="prog-pct">${prog}%</div></div></td>
       <td onclick="event.stopPropagation()"><button class="act-btn log" onclick="openLog('${p.id}')">LOG${logCnt?` (${logCnt})`:''}</button></td>
-      <td onclick="event.stopPropagation()"><div class="acts"><button class="act-btn" onclick="openEdit('${p.id}')">EDIT</button><button class="act-btn del" onclick="delProj('${p.id}')">DEL</button></div></td>
+      <td onclick="event.stopPropagation()">${canEdit?`<div class="acts"><button class="act-btn" onclick="openEdit('${p.id}')">EDIT</button><button class="act-btn del" onclick="delProj('${p.id}')">DEL</button></div>`:`<span style="font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted)">READ ONLY</span>`}</td>
     </tr>`;
   }).join('');
   updateStats();populateFilters();
@@ -962,6 +1347,10 @@ function renderProjects(){
 function setDsvQ(q,btn){dsvQF=q;document.querySelectorAll('#dsvQTabs .q-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDesignerView();}
 
 function renderDesignerView(){
+  // auto-select if Designer role
+  if(currentUser.role==='designer'&&currentUser.id){
+    document.getElementById('dsvDesignerSel').value=currentUser.id;
+  }
   const dId=document.getElementById('dsvDesignerSel').value;
   const cont=document.getElementById('dsvContent');
   if(!dId){cont.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-txt">เลือก Designer เพื่อดูข้อมูล</div></div>';return;}
@@ -1387,13 +1776,16 @@ function calcDStats(dId,qf){
   if(qf!=='all') list=list.filter(p=>(p.quarter||getQ(p.deadline))===qf);
   const done=list.filter(p=>p.status==='done');
   const pts=done.reduce((s,p)=>s+calcPts(p),0);
-  const otArr=done.filter(p=>isOT(p)===true);
-  const otr=done.length?otArr.length/done.length:null;
+  // exclude external projects from on-time KPI
+  const otEligible=done.filter(p=>!p.externalParty);
+  const otArr=otEligible.filter(p=>isOT(p)===true);
+  const otr=otEligible.length?otArr.length/otEligible.length:null;
   const score=otr!==null?pts*otr:pts;
   const revAvg=done.length?done.reduce((s,p)=>s+(p.revision||0),0)/done.length:0;
   const bqArr=done.filter(p=>p.briefScore);
   const bqAvg=bqArr.length?(bqArr.reduce((s,p)=>s+p.briefScore,0)/bqArr.length).toFixed(1):null;
-  return {total:list.length,done:done.length,pts,otr,score,revAvg,bqAvg};
+  const extCount=list.filter(p=>p.status==='external'||p.externalParty).length;
+  return {total:list.length,done:done.length,pts,otr,score,revAvg,bqAvg,extCount};
 }
 
 function gradeOf(score){
@@ -1421,7 +1813,7 @@ function renderPerf(){
         <div class="sbar-wrap"><div class="sbar-top"><span>Weighted Points</span><strong style="color:${col}">${s.pts.toFixed(1)}</strong></div><div class="sbar"><div class="sfill" style="width:${Math.min((s.pts/30)*100,100)}%;background:${col}"></div></div></div>
         <div class="sbar-wrap"><div class="sbar-top"><span>On-time Rate</span><strong style="color:${s.otr>=.8?'var(--green2)':'var(--orange2)'}">${otrTxt}</strong></div><div class="sbar"><div class="sfill" style="width:${s.otr!==null?s.otr*100:0}%;background:${s.otr>=.8?'var(--green)':'var(--orange)'}"></div></div></div>
       </div>
-      <div class="dc-foot"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)">Score: <strong style="color:var(--text)">${s.score.toFixed(1)}</strong>${s.bqAvg?` · Brief Avg: <strong style="color:var(--gold)">${s.bqAvg}★</strong>`:''}</span><span class="perf-grade" style="color:${gr.c};border-color:${gr.c}">${gr.g}</span></div>
+      <div class="dc-foot"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)">Score: <strong style="color:var(--text)">${s.score.toFixed(1)}</strong>${s.bqAvg?` · Brief: <strong style="color:var(--gold)">${s.bqAvg}★</strong>`:''} ${s.extCount?`<span style="color:var(--purple2)">· ${s.extCount} ext.</span>`:''}</span><span class="perf-grade" style="color:${gr.c};border-color:${gr.c}">${gr.g}</span></div>
     </div>`;
   }).join('');
   const ranked=designers.map((d,i)=>({...d,s:calcDStats(d.id,perfQ),col:D_COLORS[i%D_COLORS.length]})).sort((a,b)=>b.s.score-a.s.score);
@@ -1440,6 +1832,10 @@ function populateReqDashSel(){
 }
 
 function renderReqDash(){
+  // auto-select if Requester role
+  if(currentUser.role==='requester'&&currentUser.name){
+    document.getElementById('reqDashSel').value=currentUser.name;
+  }
   const r=document.getElementById('reqDashSel').value;
   const cont=document.getElementById('reqDashContent');
   if(!r){cont.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">เลือก Requester เพื่อดู Dashboard</div></div>';return;}
@@ -1797,119 +2193,201 @@ function exportJSON(){dl(JSON.stringify({projects,designers,exportDate:new Date(
 function dl(c,f,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:t}));a.download=f;a.click();}
 function handleImport(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(data.projects)projects=data.projects;if(data.designers)designers=data.designers;save();localStorage.setItem('dha_v4_des',JSON.stringify(designers));renderProjects();showToast('Restore สำเร็จ');}catch{showToast('ไฟล์ไม่ถูกต้อง');}};r.readAsText(file);}
 
+
 // ════════════════════════════════════════════════
-// MODAL: PROJECT
+// CODE FILE GENERATOR FUNCTIONS
+// ════════════════════════════════════════════════
+function updateCodeFile() {
+  const bu = document.getElementById('cfBU').value;
+  const jt = document.getElementById('cfType').value;
+  const des = document.getElementById('cfDesigner').value;
+  const dt = document.getElementById('cfDate').value;
+  const prev = document.getElementById('codeFilePreview');
+  if(!bu||!jt||!des||!dt){ prev.textContent='— กรอกข้อมูลให้ครบ —'; return; }
+  const code = genCodeFile(bu,jt,des,dt);
+  prev.textContent = code;
+  prev.style.color = 'var(--gold2)';
+}
+
+function applyCodeFile() {
+  const code = document.getElementById('codeFilePreview').textContent;
+  if(!code||code.startsWith('—')) { showToast('กรอกข้อมูลให้ครบก่อน'); return; }
+  document.getElementById('fId').value = code;
+  // sync fields
+  document.getElementById('fBU').value = document.getElementById('cfBU').value;
+  document.getElementById('fDesigner').value = document.getElementById('cfDesigner').value;
+  document.getElementById('fType').value = document.getElementById('cfType').value;
+  document.getElementById('fBriefDate').value = document.getElementById('cfDate').value;
+  autoFillFromType2();
+  autoQ2();
+  showToast('Code File ถูกนำไปใช้แล้ว');
+}
+
+function autoFillFromType() {
+  const jt = document.getElementById('cfType').value;
+  const found = JOB_TYPES.find(t=>t.code===jt);
+  if(found) {
+    document.getElementById('cfType').value = found.code;
+  }
+}
+
+function autoFillFromType2() {
+  const jt = document.getElementById('fType').value;
+  const found = JOB_TYPES.find(t=>t.code===jt);
+  if(found) {
+    document.getElementById('fRank').value = found.rank;
+    document.getElementById('fParTime').value = found.parTime;
+    updateParTime();
+  }
+}
+
+function updateParTime() {
+  const rank = document.getElementById('fRank').value;
+  const pt = {A:16,B:8,C:2,D:1,E:1}[rank]||2;
+  document.getElementById('fParTime').value = pt;
+}
+
+function autoQ2() {
+  const d = document.getElementById('fBriefDate').value||document.getElementById('fDeadline').value;
+  if(d) {
+    const q = getQ(d);
+    document.getElementById('fQuarter').value = q||'Q1';
+  }
+}
+
+// ════════════════════════════════════════════════
+// UPDATED openModal / saveProject for SC Works
 // ════════════════════════════════════════════════
 function populateModal(){
-  document.getElementById('fDesigner').innerHTML='<option value="">— เลือก —</option>'+designers.map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
-  const brands=[...new Set(projects.map(p=>p.brand).filter(Boolean))];
-  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))];
-  document.getElementById('brandList').innerHTML=brands.map(b=>`<option value="${b}">`).join('');
-  document.getElementById('reqList').innerHTML=reqs.map(r=>`<option value="${r}">`).join('');
+  // nothing needed — selects are static HTML now
 }
-function autoQ(){const dl=document.getElementById('fDeadline').value;if(dl)document.getElementById('fQuarter').value=getQ(dl)||'Q1';}
-function openModal(id=null){
-  editId=id;populateModal();
-  if(id){
+
+function openModal(id=null) {
+  editId=id;
+  // reset code gen fields
+  ['cfBU','cfType','cfDesigner'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+  document.getElementById('cfDate').value='';
+  document.getElementById('codeFilePreview').textContent='— กรอกข้อมูลด้านบน —';
+
+  if(id) {
     const p=projects.find(x=>x.id===id);
     document.getElementById('modalTitle').textContent=`EDIT — ${p.id}`;
-    document.getElementById('fId').value=p.id;
+    document.getElementById('fId').value=p.id||'';
+    document.getElementById('fNo').value=p.no||'';
     document.getElementById('fName').value=p.name||'';
-    document.getElementById('fType').value=p.type;
-    document.getElementById('fBrand').value=p.brand||'';
-    document.getElementById('fRequester').value=p.requester||'';
-    document.getElementById('fDesigner').value=p.designerId||'';
-    document.getElementById('fStatus').value=p.status;
-    document.getElementById('fPriority').value=p.priority;
+    document.getElementById('fBriefDetail').value=p.briefDetail||'';
+    document.getElementById('fBU').value=p.bu||p.brand||'';
+    document.getElementById('fDesigner').value=p.designerId||p.mc||'';
+    document.getElementById('fRequester').value=p.pmd||p.requester||'';
+    document.getElementById('fType').value=p.jobType||p.type||'';
+    document.getElementById('fDesignType').value=p.designType||'NEW DESIGN';
+    document.getElementById('fRank').value=p.rank||'C';
+    document.getElementById('fStatus').value=p.status||'brief';
+    document.getElementById('fPriority').value=p.priority||'mid';
+    document.getElementById('fBriefDate').value=p.briefDate||'';
     document.getElementById('fDeadline').value=p.deadline||'';
+    document.getElementById('fFirstDraft').value=p.firstDraft||'';
     document.getElementById('fFinish').value=p.finish||'';
-    document.getElementById('fMandays').value=p.mandays||1;
+    document.getElementById('fParTime').value=p.parTime||2;
+    document.getElementById('fQtyAW').value=p.qtyAW||3;
     document.getElementById('fProgress').value=p.progress||0;
     document.getElementById('fRevision').value=p.revision||0;
-    document.getElementById('fQuarter').value=p.quarter||getQ(p.deadline)||'Q1';
-    document.getElementById('fFile').value=p.fileUrl||'';
-    document.getElementById('fNote').value=p.note||'';
-    // file versions
+    document.getElementById('fQuarter').value=p.quarter||'Q1';
+    document.getElementById('fExternal').value=p.externalParty||'';
+    document.getElementById('fFile').value=p.fileUrl||p.linkBrief||'';
+    document.getElementById('fNote').value=p.note||p.briefDetail||'';
     document.getElementById('fVersions').value=(p.fileVersions||[]).map(v=>`${v.ver}:${v.url}`).join('\n');
-    // approval
     const ap=p.approval||[false,false,false,false];
-    ['apv1','apv2','apv3','apv4'].forEach((id,i)=>document.getElementById(id).checked=!!ap[i]);
+    ['apv1','apv2','apv3','apv4'].forEach((aid,i)=>document.getElementById(aid).checked=!!ap[i]);
   } else {
     document.getElementById('modalTitle').textContent='NEW PROJECT';
-    document.getElementById('fId').value=genId();
-    ['fName','fBrand','fRequester','fFile','fNote','fVersions'].forEach(i=>document.getElementById(i).value='');
-    document.getElementById('fType').value='Packaging Design';
+    ['fId','fNo','fName','fBriefDetail','fRequester','fFile','fNote','fVersions','fExternal','fBriefDate','fDeadline','fFirstDraft','fFinish'].forEach(i=>{const el=document.getElementById(i);if(el)el.value='';});
+    document.getElementById('fBU').value='QM';
     document.getElementById('fDesigner').value='';
+    document.getElementById('fType').value='PKB';
+    document.getElementById('fDesignType').value='NEW DESIGN';
+    document.getElementById('fRank').value='C';
     document.getElementById('fStatus').value='brief';
     document.getElementById('fPriority').value='mid';
-    document.getElementById('fDeadline').value='';
-    document.getElementById('fFinish').value='';
-    document.getElementById('fMandays').value=1;
+    document.getElementById('fParTime').value=2;
+    document.getElementById('fQtyAW').value=3;
     document.getElementById('fProgress').value=0;
     document.getElementById('fRevision').value=0;
-    ['apv1','apv2','apv3','apv4'].forEach(id=>document.getElementById(id).checked=false);
     const m=new Date().getMonth()+1;
     document.getElementById('fQuarter').value=m<=3?'Q1':m<=6?'Q2':m<=9?'Q3':'Q4';
+    ['apv1','apv2','apv3','apv4'].forEach(aid=>document.getElementById(aid).checked=false);
   }
   document.getElementById('overlay').classList.add('open');
 }
+
 function openEdit(id){openModal(id);}
 function closeModal(){document.getElementById('overlay').classList.remove('open');editId=null;}
 function closeOverlay(e){if(e.target===document.getElementById('overlay'))closeModal();}
-function saveProject(){
+
+function saveProject() {
   const name=document.getElementById('fName').value.trim();
-  if(!name){showToast('กรุณาใส่ชื่อโปรเจกต์');return;}
-  // parse file versions
+  const codeId=document.getElementById('fId').value.trim();
+  if(!name){showToast('กรุณาใส่ Job Description');return;}
+  if(!codeId){showToast('กรุณาใส่ CODE FILE หรือใช้ Generator');return;}
   const versRaw=document.getElementById('fVersions').value.trim();
-  const fileVersions=versRaw?versRaw.split('\n').map(l=>{const [ver,...rest]=l.split(':');return{ver:ver.trim(),url:rest.join(':').trim()};}).filter(v=>v.ver&&v.url):[];
-  // approval
-  const approval=['apv1','apv2','apv3','apv4'].map(id=>document.getElementById(id).checked);
+  const fileVersions=versRaw?versRaw.split('\n').map(l=>{const[ver,...rest]=l.split(':');return{ver:ver.trim(),url:rest.join(':').trim()};}).filter(v=>v.ver&&v.url):[];
+  const approval=['apv1','apv2','apv3','apv4'].map(aid=>document.getElementById(aid).checked);
+  const bu=document.getElementById('fBU').value;
+  const mc=document.getElementById('fDesigner').value;
+  const parTime=parseFloat(document.getElementById('fParTime').value)||2;
+  const rank=document.getElementById('fRank').value||'C';
   const data={
-    id:document.getElementById('fId').value,name,
-    type:document.getElementById('fType').value,
-    brand:document.getElementById('fBrand').value.trim(),
+    id:codeId, codeFile:codeId,
+    no:document.getElementById('fNo').value||'001',
+    name, briefDetail:document.getElementById('fBriefDetail').value.trim(),
+    bu, mc, designerId:mc, brand:bu,
     requester:document.getElementById('fRequester').value.trim(),
-    designerId:document.getElementById('fDesigner').value,
+    pmd:document.getElementById('fRequester').value.trim(),
+    jobType:document.getElementById('fType').value,
+    type:document.getElementById('fType').value,
+    designType:document.getElementById('fDesignType').value,
+    rank, priority:document.getElementById('fPriority').value,
     status:document.getElementById('fStatus').value,
-    priority:document.getElementById('fPriority').value,
+    briefDate:document.getElementById('fBriefDate').value,
     deadline:document.getElementById('fDeadline').value,
+    firstDraft:document.getElementById('fFirstDraft').value,
     finish:document.getElementById('fFinish').value,
-    mandays:parseFloat(document.getElementById('fMandays').value)||1,
+    parTime, mandays:parTime,
+    qtyAW:parseInt(document.getElementById('fQtyAW').value)||3,
     progress:parseInt(document.getElementById('fProgress').value)||0,
     revision:parseInt(document.getElementById('fRevision').value)||0,
     quarter:document.getElementById('fQuarter').value,
+    externalParty:document.getElementById('fExternal').value.trim(),
     fileUrl:document.getElementById('fFile').value.trim(),
-    fileVersions,approval,
+    linkBrief:document.getElementById('fFile').value.trim(),
     note:document.getElementById('fNote').value.trim(),
-    updatedAt:new Date().toISOString()
+    fileVersions, approval,
+    updatedAt:new Date().toISOString(),
   };
-  if(editId){const idx=projects.findIndex(p=>p.id===editId);projects[idx]={...projects[idx],...data};showToast('บันทึกแล้ว');}
-  else{data.createdAt=data.updatedAt;data.log=[];projects.unshift(data);showToast('เพิ่มโปรเจกต์ใหม่');}
+  if(editId){
+    const idx=projects.findIndex(p=>p.id===editId);
+    projects[idx]={...projects[idx],...data};
+    showToast('บันทึกแล้ว');
+  }else{
+    data.createdAt=data.updatedAt;data.log=[];
+    projects.unshift(data);
+    showToast('เพิ่มโปรเจกต์ใหม่: '+codeId);
+  }
   save();closeModal();renderProjects();
 }
+
 function delProj(id){if(!confirm('ลบโปรเจกต์นี้?'))return;projects=projects.filter(p=>p.id!==id);save();renderProjects();showToast('ลบแล้ว');}
 
-// TOAST
-function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
-
 // ════════════════════════════════════════════════
-// SEED DATA
+// INIT — SC Works v8 with 2026 Excel data
 // ════════════════════════════════════════════════
 if(!projects){
-  projects=[
-    {id:'DHA-2025-001',name:'Packaging Redesign – MASTER ART A4 80g',type:'Packaging Design',brand:'MASTER ART',requester:'กนกวรรณ มาลี',designerId:'D001',status:'active',priority:'high',deadline:'2025-06-10',finish:'',mandays:5,progress:65,fileUrl:'',note:'รอ confirm สีจาก Flexo',revision:2,quarter:'Q2',log:[{ts:'2025-05-10T09:00:00Z',by:'กนกวรรณ มาลี',type:'activity',text:'เปิด Brief แล้ว'},{ts:'2025-05-14T10:00:00Z',by:'สมชาย ใจดี',type:'revision',text:'Revision ครั้งที่ 1',revWho:'กนกวรรณ มาลี',revReason:'สีพื้นหลังไม่ตรง CI'}],createdAt:'2025-05-01T00:00:00Z',updatedAt:'2025-05-14T00:00:00Z'},
-    {id:'DHA-2025-002',name:'Label Update – ปากกา OEM Q3',type:'Label Design',brand:'OEM',requester:'ธนพล วงษ์สุวรรณ',designerId:'D002',status:'review',priority:'mid',deadline:'2025-06-20',finish:'',mandays:2,progress:90,fileUrl:'',note:'ส่ง proof ครั้งที่ 2',revision:3,quarter:'Q2',log:[{ts:'2025-05-15T10:00:00Z',by:'นารี สวัสดี',type:'status',text:'เปลี่ยน Status เป็น Review แล้ว'}],createdAt:'2025-05-05T00:00:00Z',updatedAt:'2025-05-15T00:00:00Z'},
-    {id:'DHA-2025-003',name:'Catalog ครึ่งปีหลัง 2025',type:'Catalog / Brochure',brand:'DHA',requester:'กนกวรรณ มาลี',designerId:'D001',status:'brief',priority:'mid',deadline:'2025-07-01',finish:'',mandays:8,progress:10,fileUrl:'',note:'รอ content',revision:0,quarter:'Q3',log:[],createdAt:'2025-05-10T00:00:00Z',updatedAt:'2025-05-10T00:00:00Z'},
-    {id:'DHA-2025-004',name:'Brand Guidelines Update',type:'Brand Identity',brand:'DHA',requester:'สุภาพ รัตนชัย',designerId:'D003',status:'hold',priority:'low',deadline:'',finish:'',mandays:10,progress:30,fileUrl:'',note:'รอ MD approve',revision:1,quarter:'Q2',log:[{ts:'2025-05-01T00:00:00Z',by:'สุภาพ รัตนชัย',type:'activity',text:'พักไว้ก่อน รอ Director'}],createdAt:'2025-04-20T00:00:00Z',updatedAt:'2025-05-01T00:00:00Z'},
-    {id:'DHA-2025-005',name:'Packaging – กล่องดินสอ 12 แท่ง รีแบรนด์',type:'Packaging Design',brand:'MASTER ART',requester:'ธนพล วงษ์สุวรรณ',designerId:'D002',status:'done',priority:'high',deadline:'2025-05-15',finish:'2025-05-13',mandays:4,progress:100,fileUrl:'',note:'ส่ง Production แล้ว ✓',revision:1,briefScore:4,briefNote:'Brief ดี มี reference ชัด',quarter:'Q2',log:[{ts:'2025-05-13T16:00:00Z',by:'นารี สวัสดี',type:'status',text:'งานเสร็จ ✓'}],createdAt:'2025-04-01T00:00:00Z',updatedAt:'2025-05-13T00:00:00Z'},
-    {id:'DHA-2025-006',name:'Product Label – ไส้ดินสอ HB',type:'Label Design',brand:'MASTER ART',requester:'กนกวรรณ มาลี',designerId:'D004',status:'done',priority:'mid',deadline:'2025-04-30',finish:'2025-04-28',mandays:1.5,progress:100,fileUrl:'',note:'',revision:0,briefScore:3,quarter:'Q2',log:[],createdAt:'2025-04-10T00:00:00Z',updatedAt:'2025-04-28T00:00:00Z'},
-    {id:'DHA-2025-007',name:'นิทรรศการ BIG+BIH – Booth Design',type:'Print Production',brand:'DHA',requester:'สุภาพ รัตนชัย',designerId:'D003',status:'done',priority:'high',deadline:'2025-03-20',finish:'2025-03-18',mandays:6,progress:100,fileUrl:'',note:'',revision:2,briefScore:5,briefNote:'Brief ดีมาก ครบถ้วน',quarter:'Q1',log:[{ts:'2025-03-18T16:00:00Z',by:'วิชัย รักดี',type:'status',text:'งานเสร็จ ส่งแล้ว ✓'}],createdAt:'2025-03-01T00:00:00Z',updatedAt:'2025-03-18T00:00:00Z'},
-  ];
+  projects = [{"id": "AREA3-MRK-SC690107001", "no": "001", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-07", "deadline": "", "finish": "2026-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690107001", "name": "บริษัท ศิลป์ฟ้าอุตสาหกรรมพลาสติก จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-07T00:00:00Z", "updatedAt": "2026-01-07T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "LC-PD2D-SC690107002", "no": "002", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-07", "deadline": "", "finish": "2022-01-07", "pmd": "KSM", "bu": "LC", "mc": "SC", "codeFile": "LC-PD2D-SC690107002", "name": "License Product Development - ออกแบบสินค้าปากกาเจล Rula Bear", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "LC", "requester": "KSM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-07T00:00:00Z", "updatedAt": "2026-01-07T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690107003", "no": "003", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-07", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690107003", "name": "บริษัท เมมเบอร์ พลัส จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-07T00:00:00Z", "updatedAt": "2026-01-07T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690108004", "no": "004", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-08", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690108004", "name": "บริษัท ซิมเจนส์ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-08T00:00:00Z", "updatedAt": "2026-01-08T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690108005", "no": "005", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-08", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690108005", "name": "Quantum Product Development - ออกแบบปากกาเจลแฟนซี Cutio", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-08T00:00:00Z", "updatedAt": "2026-01-08T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-RTD-SC690108006", "no": "006", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-08", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-RTD-SC690108006", "name": "Quantum Retouching Product - Jewal Pastel Colour and Aatron", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "RTD", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "RTD", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-08T00:00:00Z", "updatedAt": "2026-01-08T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690108007", "no": "007", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-08", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690108007", "name": "บริษัท ทีทีที พรีเมี่ยม กรุ๊ป จำกัด (LOFT)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-08T00:00:00Z", "updatedAt": "2026-01-08T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-BC -SC690109008", "no": "008", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-09", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-BC -SC690109008", "name": "Quantum Barcode Display - Barcode Squary", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "BC", "urgency": "", "rank": "E", "priority": "low", "parTime": 1.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 1.0, "type": "BC", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-09T00:00:00Z", "updatedAt": "2026-01-09T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690112009", "no": "009", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-12", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690112009", "name": "บริษัท นิวฟาร์มา (ประเทศไทย) จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-12T00:00:00Z", "updatedAt": "2026-01-12T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-MRK-SC690113010", "no": "010", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-13", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-MRK-SC690113010", "name": "Quantum Screen Product - สหไทย ศึกษาภัณฑ์_Marut Suphadee", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-13T00:00:00Z", "updatedAt": "2026-01-13T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKB-SC690113011", "no": "011", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-13", "deadline": "", "finish": "2022-01-07", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-PKB-SC690113011", "name": "Quantum Packaging Development - อัปเดตสินค้า Refill ink Whiteboard marker", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-13T00:00:00Z", "updatedAt": "2026-01-13T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690116012", "no": "012", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-16", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690116012", "name": "บริษัท เกร๊ตอิสเทอร์นดรั๊ก จํากัด (Decolgen)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-16T00:00:00Z", "updatedAt": "2026-01-16T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690116013", "no": "013", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-16", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690116013", "name": "บริษัท เกร๊ตอิสเทอร์นดรั๊ก จํากัด (Solmax)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-16T00:00:00Z", "updatedAt": "2026-01-16T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690119014", "no": "014", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-19", "deadline": "", "finish": "2022-01-07", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690119014", "name": "Quantum Product Development - QTM Highlighter Aurora Glitter", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-19T00:00:00Z", "updatedAt": "2026-01-19T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690119015", "no": "015", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-19", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690119015", "name": "Quantum Product Development - Cytech Colors Gel 3 Set", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-19T00:00:00Z", "updatedAt": "2026-01-19T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690123016", "no": "016", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-23", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690123016", "name": "Quantum Product Development - CYTECH COLOUR GEL - TROPICAL SET", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-23T00:00:00Z", "updatedAt": "2026-01-23T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690123017", "no": "017", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-23", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690123017", "name": "Quantum Product Development - New Product Clare 0.38 and 0.5", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-23T00:00:00Z", "updatedAt": "2026-01-23T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690128018", "no": "018", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-28", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690128018", "name": "บจก. บี.แอล.ที.แอสโซซิเอทส์ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-28T00:00:00Z", "updatedAt": "2026-01-28T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690128019", "no": "019", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-28", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690128019", "name": "บริษัท โอสถ อินเตอร์ แลบบอราทอรีส์ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-28T00:00:00Z", "updatedAt": "2026-01-28T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690129020", "no": "020", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-29", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690129020", "name": "Quantum Product Development - CYTECH COLOUR GEL - CYTECH METALLIC SET", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-29T00:00:00Z", "updatedAt": "2026-01-29T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690129021", "no": "021", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-29", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690129021", "name": "Quantum Product Development - CYTECH COLOUR GEL - CYTECH GLITTER SET", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-29T00:00:00Z", "updatedAt": "2026-01-29T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690130022", "no": "022", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-30", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690130022", "name": "บริษัท แอปสลาเจน จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-30T00:00:00Z", "updatedAt": "2026-01-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690130023", "no": "023", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-30", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690130023", "name": "บริษัท เกร๊ตอิสเทอร์นดรั๊ก จำกัด (X-Treme น้ำเงินเข้ม)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-30T00:00:00Z", "updatedAt": "2026-01-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690130024", "no": "024", "month": "JAN", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-01-30", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690130024", "name": "Quantum Product Development Consumer Promotion product", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-01-30T00:00:00Z", "updatedAt": "2026-01-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-DP-SC690202025", "no": "025", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-02", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-DP-SC690202025", "name": "Quantum Display Advertising - ออกแบบ Whitecat", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "DP", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "DP", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-02T00:00:00Z", "updatedAt": "2026-02-02T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690202026", "no": "026", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-02", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690202026", "name": "บริษัท ไทยโอซูก้า จํากัด (007 เอ็กซ์ตรีม สีน้ำเงิน)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-02T00:00:00Z", "updatedAt": "2026-02-02T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690202027", "no": "027", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-02", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690202027", "name": "บริษัท สินแพทย์ เทพารักษ์ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-02T00:00:00Z", "updatedAt": "2026-02-02T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690203028", "no": "028", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-03", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690203028", "name": "บริษัท ดีครับ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-03T00:00:00Z", "updatedAt": "2026-02-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690203029", "no": "029", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-03", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690203029", "name": "บริษัท อุยเฮง อินเตอร์เนชั่นแนล เฮลท์แคร์ จำกัด (ดริฟท์ คริสตัล)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-03T00:00:00Z", "updatedAt": "2026-02-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-DP-SC690203030", "no": "030", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-03", "deadline": "", "finish": "2022-01-07", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-DP-SC690203030", "name": "Quantum Display Product - ออกแบบ ​Display Common สินค้ารุ่น Lollipop", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "DP", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "DP", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-03T00:00:00Z", "updatedAt": "2026-02-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKB-SC690204031", "no": "031", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-04", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PKB-SC690204031", "name": "Quantum Consumer Product - ออกแบบกล่องสินค้า Special Pack กล่อง 007 hitz and Pastel", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-04T00:00:00Z", "updatedAt": "2026-02-04T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690205032", "no": "032", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-05", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690205032", "name": "บริษัท โรงแรมกะตะภูเก็ต จํากัด (สํานักงานใหญ่)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-05T00:00:00Z", "updatedAt": "2026-02-05T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-MRK-SC690205033", "no": "033", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-05", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-MRK-SC690205033", "name": "สั่งทำสกรีนปากการ้าน219524 บริษัท สหไทย ศึกษาภัณฑ์ กาฬสินธุ์ จำกัด จ.กาฬสินธุ์", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-05T00:00:00Z", "updatedAt": "2026-02-05T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690206034", "no": "034", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-06", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690206034", "name": "บริษัท ฮีโน่มอเตอร์สเซลล์(ประเทศไทย) จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-06T00:00:00Z", "updatedAt": "2026-02-06T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690206035", "no": "035", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-06", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690206035", "name": "บริษัท ชับบ์ ไลฟ์ แอสชัวรันซ์ จำกัด (มหาชน)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-06T00:00:00Z", "updatedAt": "2026-02-06T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690209036", "no": "036", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-09", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690209036", "name": "บริษัท แคสป้า ฟาร์มาซูติคอล (ประเทศไทย) จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-09T00:00:00Z", "updatedAt": "2026-02-09T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690209037", "no": "037", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-09", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690209037", "name": "บริษัท กรังด์ปรีซ์ อินเตอร์เนชั่นแนล จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-09T00:00:00Z", "updatedAt": "2026-02-09T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690209038", "no": "038", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-09", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690209038", "name": "บริษัท ชับบ์ ไลฟ์ แอสชัวรันซ์ จำกัด  (มหาชน) งานเลเซอร์", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-09T00:00:00Z", "updatedAt": "2026-02-09T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKB-SC690210039", "no": "039", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-10", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PKB-SC690210039", "name": "Quantum Consumer Product - ออกแบบกล่องสินค้า Special Pack กล่อง 007 Rocky and M5 Rocky", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-10T00:00:00Z", "updatedAt": "2026-02-10T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-MRK-SC690210040", "no": "040", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-10", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-MRK-SC690210040", "name": "สกรีนปากการ้าน 221063 ร้านอุบล จ.ลำปาง", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-10T00:00:00Z", "updatedAt": "2026-02-10T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690212041", "no": "041", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-12", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690212041", "name": "บริษัท 168 พรีเมี่ยม จำกัด (LOFT)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-12T00:00:00Z", "updatedAt": "2026-02-12T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690212042", "no": "042", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-12", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690212042", "name": "บริษัท อินเตอร์ คอร์ปอเรชั่น จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-12T00:00:00Z", "updatedAt": "2026-02-12T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690212043", "no": "043", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-12", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690212043", "name": "บริษัท ยัวร์ ฮอลิเดย์ จํากัด (สํานักงานใหญ่)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-12T00:00:00Z", "updatedAt": "2026-02-12T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-AD-SC690213044", "no": "044", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-13", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-AD-SC690213044", "name": "Quantum Display Advertising - ออกแบบ Display Advertising Cytech Acrylic", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "AD", "urgency": "", "rank": "#N/A", "priority": "mid", "parTime": 0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "AD", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-13T00:00:00Z", "updatedAt": "2026-02-13T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-LB-SC690213045", "no": "045", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-13", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-LB-SC690213045", "name": "Sticker Promotion - STICKER PACK SET TANK PRO", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "LB", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "LB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-13T00:00:00Z", "updatedAt": "2026-02-13T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690213046", "no": "046", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-13", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690213046", "name": "ห้างหุ้นส่วนจำกัด เอ็น เค ซัพพลายกรุ๊ป", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-13T00:00:00Z", "updatedAt": "2026-02-13T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKB-SC690216047", "no": "047", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-16", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PKB-SC690216047", "name": "Quantum Product Development - ออกแบบสินค้าใหม่ Aurora Brush Pen", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-16T00:00:00Z", "updatedAt": "2026-02-16T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "KKU-PKB-SC690216048", "no": "048", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-16", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "KKU", "mc": "SC", "codeFile": "KKU-PKB-SC690216048", "name": "Kioku Product Development. - ออกแบบสินค้าปากกาเจล ฮารุ", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "KKU", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-16T00:00:00Z", "updatedAt": "2026-02-16T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690218049", "no": "049", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-18", "deadline": "", "finish": "2022-01-07", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690218049", "name": "บริษัท แอ๊บบอต ลาบอแรตอรีส จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-18T00:00:00Z", "updatedAt": "2026-02-18T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-LB-SC690220050", "no": "050", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-20", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-LB-SC690220050", "name": "Quantum Sticker Promotion - ออกแบบสติ๊กเกอร์ Gevolution POP", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "LB", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "LB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-20T00:00:00Z", "updatedAt": "2026-02-20T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "EP-PKB-SC690223051", "no": "051", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-23", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "EP", "mc": "SC", "codeFile": "EP-PKB-SC690223051", "name": "Elephant Consumer Product - ออกแบบสินค้าใหม่ Consumer Product Torio 05 2 DM", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "EP", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-23T00:00:00Z", "updatedAt": "2026-02-23T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "EP-PKB-SC690224052", "no": "052", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-24", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "EP", "mc": "SC", "codeFile": "EP-PKB-SC690224052", "name": "Elephant Packaging Development - ออกแบบสินค้าใหม่ Marble 6dm and กระบอกน้ำ", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "EP", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-24T00:00:00Z", "updatedAt": "2026-02-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKB-SC690224053", "no": "053", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-24", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PKB-SC690224053", "name": "Quantum Product Development - QTM GELVOLUTION 007 ACE  PASTEL 40+5 / RED", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-24T00:00:00Z", "updatedAt": "2026-02-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690224054", "no": "054", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-24", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690224054", "name": "บริษัท ไอทีพี เอเชีย จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-24T00:00:00Z", "updatedAt": "2026-02-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690224055", "no": "055", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-24", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690224055", "name": "บริษัท ทีทีที พรีเมี่ยม กรุ๊ป จำกัด (พระมงกุฏ)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-24T00:00:00Z", "updatedAt": "2026-02-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690224056", "no": "056", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-24", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690224056", "name": "บริษัท เกร๊ตอิสเทอร์นดรั๊ก จํากัด (Allernix)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-24T00:00:00Z", "updatedAt": "2026-02-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKB-SC690224057", "no": "057", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-24", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PKB-SC690224057", "name": "Quantum Revise Packaging -  Redesign Packaging Box QE600-50 ก้อนดำ และก้อนขาว", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKB", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PKB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-24T00:00:00Z", "updatedAt": "2026-02-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-LB-SC690224058", "no": "058", "month": "FEB", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-02-24", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-LB-SC690224058", "name": "Quantum Sticker Promotion - STICKER Display 6 Slots Gevolution", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "LB", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "LB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-02-24T00:00:00Z", "updatedAt": "2026-02-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690304059", "no": "059", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-04", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690304059", "name": "บริษัท ไพร้ซวอเตอร์เฮาส์คูเปอร์ส เอบีเอเอส จํากัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-04T00:00:00Z", "updatedAt": "2026-03-04T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690304060", "no": "060", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-04", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690304060", "name": "บริษัท ไทยชินเมวา จํากัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-04T00:00:00Z", "updatedAt": "2026-03-04T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-DP-SC690304061", "no": "061", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-04", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-DP-SC690304061", "name": "Quantum Display Product - ออกแบบภาพโฆษณาสินค้า Cytech 3 รุ่น Tropical Metallic and Glitter", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "DP", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "DP", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-04T00:00:00Z", "updatedAt": "2026-03-04T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-RTD-SC690305062", "no": "062", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-05", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-RTD-SC690305062", "name": "Quantum Retouching Prouct - Retouch M5-Pearl New Colour_2026", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "RTD", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "RTD", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-05T00:00:00Z", "updatedAt": "2026-03-05T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690309063", "no": "063", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-09", "deadline": "", "finish": "2022-01-07", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690309063", "name": "Quantum New Product Development - ออกแบบยางลบสินค้าใหม่ PURE/MUTE/AIR", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-09T00:00:00Z", "updatedAt": "2026-03-09T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKC-SC690309064", "no": "064", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-09", "deadline": "", "finish": "2022-01-07", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-PKC-SC690309064", "name": "Quantum Carton Box - Carton Refill Gtin LV2/3", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKC", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "PKC", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-09T00:00:00Z", "updatedAt": "2026-03-09T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690311065", "no": "065", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-11", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690311065", "name": "บริษัท ยัวร์ ฮอลิเดย์ จํากัด (สํานักงานใหญ่)   LOGO fresenius kabi  Oncology", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-11T00:00:00Z", "updatedAt": "2026-03-11T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690311066", "no": "066", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-11", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690311066", "name": "บริษัท ยัวร์ ฮอลิเดย์ จํากัด (สํานักงานใหญ่)   LOGO fresenius kabi", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-11T00:00:00Z", "updatedAt": "2026-03-11T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690311067", "no": "067", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-11", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690311067", "name": "บริษัท แอพพลายด์ฟิสิกส์ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-11T00:00:00Z", "updatedAt": "2026-03-11T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-LB-SC690311068", "no": "068", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-11", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-LB-SC690311068", "name": "Quantum Label product - ทำฉลากสำหรับ CYTECH BALL V2 1x1 งาน 7-11", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "LB", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "LB", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-11T00:00:00Z", "updatedAt": "2026-03-11T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690312069", "no": "069", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-12", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690312069", "name": "Quantum New Product  Development - ออกแบบสินค้าใหม่ Clicky 0.5", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-12T00:00:00Z", "updatedAt": "2026-03-12T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690312070", "no": "070", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-12", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690312070", "name": "Quantum New Product Development - Astron Pastel and Sunny", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 16.0, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-12T00:00:00Z", "updatedAt": "2026-03-12T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-DP-SC690317071", "no": "071", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-17", "deadline": "", "finish": "2022-01-07", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-DP-SC690317071", "name": "Quantum Display Product - ออกแบบภาพโฆษณาสินค้า Display Aurora Brush", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "DP", "urgency": "", "rank": "A", "priority": "high", "parTime": 16.0, "qtyAW": 3, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 16.0, "type": "DP", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-17T00:00:00Z", "updatedAt": "2026-03-17T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690318072", "no": "072", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-18", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690318072", "name": "บริษัท สินแพทย์ เสรีรักษ์ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-18T00:00:00Z", "updatedAt": "2026-03-18T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690320073", "no": "073", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-20", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690320073", "name": "บริษัท เจียไต๋เทคโนโลยีการเพาะปลูก จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-20T00:00:00Z", "updatedAt": "2026-03-20T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690320074", "no": "074", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-20", "deadline": "", "finish": "2022-01-07", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690320074", "name": "โรงพิมพ์โยธิน แอนด์ สเตชั่นเนอรี่", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "C", "priority": "mid", "parTime": 2.0, "qtyAW": 3, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2.0, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-20T00:00:00Z", "updatedAt": "2026-03-20T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690323075", "no": "075", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-23", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690323075", "name": "สำนักเลขาธิการนายกรัฐมนตรี", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-23T00:00:00Z", "updatedAt": "2026-03-23T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "EP-PD2D-SC690323076", "no": "076", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-23", "deadline": "", "finish": "", "pmd": "WRP", "bu": "EP", "mc": "SC", "codeFile": "EP-PD2D-SC690323076", "name": "Elephant Product Development - Hayate V2", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "PD2D", "brand": "EP", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-23T00:00:00Z", "updatedAt": "2026-03-23T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690324077", "no": "077", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-24", "deadline": "", "finish": "", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690324077", "name": "Quantum Product Development - Quantum SOUL Gel Pen", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PD2D", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-24T00:00:00Z", "updatedAt": "2026-03-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PKC-SC690324078", "no": "078", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-24", "deadline": "", "finish": "", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PKC-SC690324078", "name": "Quantum Carton Product - Carton กระบอกน้ำอเนกประสงค์ 800 มล. สีฟ้า", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PKC", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "PKC", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-24T00:00:00Z", "updatedAt": "2026-03-24T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690330079", "no": "079", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-30", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690330079", "name": "บริษัท ไทยโอซูก้า จำกัด (งานสมูท 2 สี)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-30T00:00:00Z", "updatedAt": "2026-03-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690330080", "no": "080", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-30", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690330080", "name": "คุณนรรทยา เจียมจรัสรังษี", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-30T00:00:00Z", "updatedAt": "2026-03-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690330081", "no": "081", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-30", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690330081", "name": "บริษัท ทีอาร์บี เชอร์เม็ดดิก้า (ประเทศไทย) จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-30T00:00:00Z", "updatedAt": "2026-03-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-RTD-SC690330082", "no": "082", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-30", "deadline": "", "finish": "", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-RTD-SC690330082", "name": "Quantum retouchin Product - Packaging Permanent Marker_2026", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "RTD", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "RTD", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-30T00:00:00Z", "updatedAt": "2026-03-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690331083", "no": "083", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-31", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690331083", "name": "โรงพยาบาลสินแพทย์เครือสินแพทย์ทุกสาขา", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-31T00:00:00Z", "updatedAt": "2026-03-31T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690331084", "no": "084", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-31", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690331084", "name": "บริษัท ที.เอส.เค.ฟอร์จิ้ง จํากัด (สํานักงานใหญ่)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-31T00:00:00Z", "updatedAt": "2026-03-31T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690331085", "no": "085", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-31", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690331085", "name": "บริษัท โรงพิมพ์ล้านคำ จํากัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-31T00:00:00Z", "updatedAt": "2026-03-31T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690331086", "no": "086", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-31", "deadline": "", "finish": "", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690331086", "name": "Quantum Product Development - Aurora Permanent Marker", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PD2D", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "PD2D", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-31T00:00:00Z", "updatedAt": "2026-03-31T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690331087", "no": "087", "month": "MAR", "yearBC": "2026", "quarter": "Q1", "briefDate": "2026-03-31", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690331087", "name": "บริษัท แอ๊บบอต ลาบอแรตอรีส จํากัด (SMOOTH)", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-03-31T00:00:00Z", "updatedAt": "2026-03-31T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690403088", "no": "088", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-03", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690403088", "name": "บริษัท วินอัลลายด์ จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-03T00:00:00Z", "updatedAt": "2026-04-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690403089", "no": "089", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-03", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690403089", "name": "บริษัท วีณาอินเตอร์เนชั่นแนล จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-03T00:00:00Z", "updatedAt": "2026-04-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690403090", "no": "090", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-03", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690403090", "name": "บริษัท อินโนเวท แพคเกจจิ้ง จํากัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-03T00:00:00Z", "updatedAt": "2026-04-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690403091", "no": "091", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-03", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690403091", "name": "บริษัท สมิติเวช จำกัด (มหาชน)", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-03T00:00:00Z", "updatedAt": "2026-04-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "EF-PD2D-SC690403092", "no": "092", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-03", "deadline": "", "finish": "", "pmd": "WRP", "bu": "EF", "mc": "SC", "codeFile": "EF-PD2D-SC690403092", "name": "Elfen Product Development - elfen fancy pen 1 x 6", "briefDetail": "", "designType": "NEW DESIGN", "status": "done", "jobType": "PD2D", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 100, "revision": 0, "mandays": 2, "type": "PD2D", "brand": "EF", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-03T00:00:00Z", "updatedAt": "2026-04-03T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690421093", "no": "093", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-21", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690421093", "name": "สำนักงานศาลรัฐธรรมนูญ", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-21T00:00:00Z", "updatedAt": "2026-04-21T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690428094", "no": "094", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-28", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690428094", "name": "โรงเรียน นานาชาติเชียงใหม่", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-28T00:00:00Z", "updatedAt": "2026-04-28T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690429095", "no": "095", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-29", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690429095", "name": "บริษัท อาซาฮี อินเทค คัมปานี ลิมิเต็ด", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-29T00:00:00Z", "updatedAt": "2026-04-29T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "KKU-PD2D-SC690429096", "no": "096", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-29", "deadline": "", "finish": "", "pmd": "PRM", "bu": "KKU", "mc": "SC", "codeFile": "KKU-PD2D-SC690429096", "name": "Kioku New Product Development - Kioku  Cube", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PD2D", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "PD2D", "brand": "KKU", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-29T00:00:00Z", "updatedAt": "2026-04-29T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690430097", "no": "097", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-30", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690430097", "name": "บริษัท บี.เอ็ล.ฮั้ว จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-30T00:00:00Z", "updatedAt": "2026-04-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690430098", "no": "098", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-30", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690430098", "name": "บริษัท ทีทีที พรีเมี่ยม กรุ๊ป จำกัด (X7)", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-30T00:00:00Z", "updatedAt": "2026-04-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690430099", "no": "099", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-04-30", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690430099", "name": "บริษัท ทีทีที พรีเมี่ยม กรุ๊ป จำกัด (ทวิสต์)", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-04-30T00:00:00Z", "updatedAt": "2026-04-30T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-MRK-SC690405100", "no": "100", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-05", "deadline": "", "finish": "", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-MRK-SC690405100", "name": "Quantum Screen Product - Pithak Screen logo drift 99.5 ปปส.", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-05T00:00:00Z", "updatedAt": "2026-05-05T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690406101", "no": "101", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-06", "deadline": "", "finish": "", "pmd": "TNT", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690406101", "name": "บริษัท แสงไทยเมดิคอล จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "TNT", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-06T00:00:00Z", "updatedAt": "2026-05-06T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690407102", "no": "102", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-07", "deadline": "", "finish": "", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690407102", "name": "Quantum Product Development - ออกแบบปากกาแฟนซี Sleepy", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PD2D", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "PD2D", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-07T00:00:00Z", "updatedAt": "2026-05-07T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-RTD-SC690407103", "no": "103", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-07", "deadline": "", "finish": "", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-RTD-SC690407103", "name": "Quantum Retouching Product - QB01", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "RTD", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "RTD", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-07T00:00:00Z", "updatedAt": "2026-05-07T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690407104", "no": "104", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-07", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690407104", "name": "คุณนรรทยา เจียมจรัสรังษี", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-07T00:00:00Z", "updatedAt": "2026-05-07T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690407105", "no": "105", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-07", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690407105", "name": "NSK BEARING MANUFACTURING ( THAILAND ) CO., LTD", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-07T00:00:00Z", "updatedAt": "2026-05-07T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690411106", "no": "106", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-11", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690411106", "name": "บริษัท เอสเอสเอส เซอร์วิส จํากัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-11T00:00:00Z", "updatedAt": "2026-05-11T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690413107", "no": "107", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-13", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690413107", "name": "บริษัท พรีเมี่ยม 360 จำกัด", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-13T00:00:00Z", "updatedAt": "2026-05-13T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-RTD-SC690414108", "no": "108", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-14", "deadline": "", "finish": "", "pmd": "PRM", "bu": "QM", "mc": "SC", "codeFile": "QM-RTD-SC690414108", "name": "Quantum Retouching Product - Retouch Aurora Whiteboard and Permanent", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "RTD", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "RTD", "brand": "QM", "requester": "PRM", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-14T00:00:00Z", "updatedAt": "2026-05-14T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-PD2D-SC690415109", "no": "109", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-15", "deadline": "", "finish": "", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-PD2D-SC690415109", "name": "Quantum Product Development - ออกแบบสินค้าใหม่ Gevolution Hitz", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "PD2D", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "PD2D", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-15T00:00:00Z", "updatedAt": "2026-05-15T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "AREA3-MRK-SC690415110", "no": "110", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-15", "deadline": "", "finish": "", "pmd": "YUR", "bu": "AREA3", "mc": "SC", "codeFile": "AREA3-MRK-SC690415110", "name": "สำนักเลขาธิการนายกรัฐมนตรี (2 ด้าน)", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "MRK", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "MRK", "brand": "AREA3", "requester": "YUR", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-15T00:00:00Z", "updatedAt": "2026-05-15T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}, {"id": "QM-AD-SC690415111", "no": "111", "month": "APR", "yearBC": "2026", "quarter": "Q2", "briefDate": "2026-05-15", "deadline": "", "finish": "", "pmd": "WRP", "bu": "QM", "mc": "SC", "codeFile": "QM-AD-SC690415111", "name": "Quantum Advertising Display - ออกแบบฉลากสำหรับติดชั้นวางสินค้า Gevolution", "briefDetail": "", "designType": "NEW DESIGN", "status": "active", "jobType": "AD", "urgency": "", "rank": "", "priority": "mid", "parTime": 0, "qtyAW": 0, "linkBrief": "", "progress": 50, "revision": 0, "mandays": 2, "type": "AD", "brand": "QM", "requester": "WRP", "designerId": "SC", "fileUrl": "", "note": "", "log": [], "createdAt": "2026-05-15T00:00:00Z", "updatedAt": "2026-05-15T00:00:00Z", "approval": [false, false, false, false], "fileVersions": [], "externalParty": "", "briefScore": null, "firstDraft": ""}];
   save();
 }
+// show role selector
+document.getElementById('roleScreen').style.display='flex';
 
-// INIT
-renderProjects();
 </script>
 </body>
 </html>
