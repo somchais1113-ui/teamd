@@ -1120,7 +1120,7 @@ td { padding: 12px 14px; vertical-align: middle }
 .rs-logo-sub { font-family: 'DM Mono', monospace; font-size: 9px; color: rgba(255,255,255,0.35); letter-spacing: .12em; margin-top: 2px }
 
 /* Headline */
-.rs-headline {
+.rs-headline { transition: opacity .3s ease;
   display: flex; flex-direction: column; align-items: center;
   margin-bottom: 12px; text-align: center;
   animation: fadeUp .7s .1s ease both;
@@ -1139,7 +1139,7 @@ td { padding: 12px 14px; vertical-align: middle }
   background-clip: text;
 }
 
-.rs-sub {
+.rs-sub { transition: opacity .3s ease;
   font-size: 14px; color: rgba(255,255,255,0.45);
   margin-bottom: 48px; text-align: center;
   animation: fadeUp .7s .2s ease both;
@@ -1315,6 +1315,9 @@ td { padding: 12px 14px; vertical-align: middle }
         <div class="rs-card-arrow">→</div>
       </div>
     </div>
+    <!-- hidden aliases for backward compat -->
+    <span class="role-title" style="display:none"></span>
+    <span class="role-sub" style="display:none"></span>
 
     <!-- name step -->
     <div class="role-name-step" id="roleNameStep">
@@ -1962,8 +1965,13 @@ function selectRole(role){
   const inp=document.getElementById('roleNameInput');
   cards.style.display='none';
   step.classList.add('show');
-  document.querySelector('.role-title').textContent='ยืนยันตัวตน';
-  document.querySelector('.role-sub').textContent='';
+  // hide headline/sub when showing name step
+  const ht=document.querySelector('.rs-headline');
+  const sb=document.querySelector('.rs-sub');
+  if(ht) ht.style.opacity='0';
+  if(sb) sb.style.opacity='0';
+  const badge=document.getElementById('rsRoleBadge');
+  if(badge) badge.textContent={'designer':'DESIGNER','requester':'REQUESTER','supervisor':'SUPERVISOR','director':'DIRECTOR'}[role]||role.toUpperCase();
   if(role==='designer'){
     label.textContent='คุณคือ Designer คนไหน?';
     desc.textContent='คุณจะเห็นเฉพาะงานและ KPI ของตัวเอง ไม่มีการเปรียบเทียบกับผู้อื่น';
@@ -1993,8 +2001,11 @@ function backToRoles(){
   pendingRole='';
   document.getElementById('roleCards').style.display='grid';
   document.getElementById('roleNameStep').classList.remove('show');
-  document.querySelector('.role-title').textContent='เลือก Role ของคุณ';
-  document.querySelector('.role-sub').textContent='ระบบจะแสดงข้อมูลที่เหมาะสมกับสิทธิ์ของแต่ละ Role';
+  // restore headline/sub
+  const ht=document.querySelector('.rs-headline');
+  const sb=document.querySelector('.rs-sub');
+  if(ht) ht.style.opacity='1';
+  if(sb) sb.style.opacity='1';
 }
 
 function enterApp(){
@@ -2072,8 +2083,11 @@ function switchRole(){
   document.getElementById('roleScreen').style.display='flex';
   document.getElementById('roleCards').style.display='grid';
   document.getElementById('roleNameStep').classList.remove('show');
-  document.querySelector('.role-title').textContent='เลือก Role ของคุณ';
-  document.querySelector('.role-sub').textContent='ระบบจะแสดงข้อมูลที่เหมาะสมกับสิทธิ์ของแต่ละ Role';
+  // restore headline/sub
+  const ht=document.querySelector('.rs-headline');
+  const sb=document.querySelector('.rs-sub');
+  if(ht) ht.style.opacity='1';
+  if(sb) sb.style.opacity='1';
 }
 
 function applyRoleUI(){
@@ -2155,13 +2169,14 @@ function updateStatFiltered(){
   const od=list.filter(p=>p.status!=='done'&&p.status!=='external'&&p.deadline&&new Date(p.deadline)<today);
   const pts=list.filter(p=>p.status==='done').reduce((s,p)=>s+calcPts(p),0);
   const reqs=[...new Set(list.map(p=>p.pmd||p.requester).filter(Boolean))];
-  document.getElementById('s-total').textContent=list.length;
-  document.getElementById('s-active').textContent=list.filter(p=>p.status==='active').length;
-  document.getElementById('s-review').textContent=list.filter(p=>p.status==='review').length;
-  document.getElementById('s-done').textContent=list.filter(p=>p.status==='done').length;
-  document.getElementById('s-overdue').textContent=od.length;
-  document.getElementById('s-pts').textContent=pts.toFixed(1);
-  document.getElementById('s-req').textContent=reqs.length;
+  const _set=(id,v)=>{const el=document.getElementById(id);if(el)el.textContent=v;};
+  _set('s-total',list.length);
+  _set('s-active',list.filter(p=>p.status==='active').length);
+  _set('s-review',list.filter(p=>p.status==='review').length);
+  _set('s-done',list.filter(p=>p.status==='done').length);
+  _set('s-overdue',od.length);
+  _set('s-pts',pts.toFixed(1));
+  _set('s-req',reqs.length);
   // info label
   const active=(statFilterBrand||statFilterDesigner||statFilterQ);
   const info=document.getElementById('statFilterInfo');
