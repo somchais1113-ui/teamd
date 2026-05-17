@@ -470,6 +470,53 @@ td{padding:10px 13px;vertical-align:middle}
 .stat-filter-clear{background:none;border:1px solid var(--border);color:var(--dim);padding:4px 10px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all .15s}
 .stat-filter-clear:hover{border-color:var(--red2);color:var(--red2)}
 
+
+/* ── ROLE LANDING PAGES ── */
+.landing-wrap{position:relative;z-index:1;padding:0;max-width:1540px;margin:0 auto}
+.landing-hero{background:linear-gradient(135deg,var(--s2) 0%,var(--s1) 100%);border:1px solid var(--border2);padding:28px 32px;margin:22px 26px 0;position:relative;overflow:hidden;display:flex;align-items:center;gap:20px}
+.landing-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--rc1,var(--gold)),var(--rc2,var(--teal2)))}
+.landing-avatar{width:60px;height:60px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;color:#000;flex-shrink:0;box-shadow:0 0 0 3px var(--av-col,var(--gold))}
+.landing-name{font-size:22px;font-weight:700;margin-bottom:3px}
+.landing-role-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:3px 10px;border:1px solid;margin-bottom:8px;display:inline-block}
+.landing-desc{font-size:13px;color:var(--dim);line-height:1.6}
+.landing-actions{margin-left:auto;display:flex;flex-direction:column;gap:8px;flex-shrink:0}
+.btn-hero{padding:12px 28px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.06em;cursor:pointer;border:none;transition:all .15s;white-space:nowrap}
+.btn-hero.primary{background:var(--gold);color:#000}
+.btn-hero.primary:hover{background:var(--gold2)}
+.btn-hero.secondary{background:var(--s3);border:1px solid var(--border2);color:var(--dim)}
+.btn-hero.secondary:hover{border-color:var(--gold);color:var(--gold)}
+
+/* REQUESTER QUICK FORM */
+.req-quick-form{margin:16px 26px;background:var(--s1);border:1px solid var(--border);padding:20px 24px}
+.req-quick-title{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.req-quick-title::after{content:'';flex:1;height:1px;background:var(--border)}
+.req-quick-grid{display:grid;grid-template-columns:1fr 1fr 1fr auto;gap:10px;align-items:flex-end}
+.req-q-fg{display:flex;flex-direction:column;gap:5px}
+.req-q-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.req-quick-status{margin:16px 26px 0;display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border)}
+.req-qs-card{background:var(--s1);padding:12px 14px;cursor:pointer;transition:background .1s;border-bottom:2px solid transparent}
+.req-qs-card:hover{background:var(--s2)}
+.req-qs-card.active-filter{border-bottom-color:var(--gold)}
+.req-qs-label{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.req-qs-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:700;line-height:1}
+
+/* DESIGNER DASHBOARD MINI CHARTS */
+.dsv-chart-row{display:grid;grid-template-columns:160px 1fr 1fr;gap:14px;margin-bottom:16px;padding:0 26px}
+.dsv-chart-panel{background:var(--s1);border:1px solid var(--border);padding:14px}
+.dsv-chart-title{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.mini-donut-wrap{display:flex;flex-direction:column;align-items:center;gap:6px}
+.month-bar-row{display:flex;align-items:flex-end;gap:3px;height:60px}
+.month-bar-col{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1}
+.month-bar{width:100%;background:var(--gold);border-radius:1px 1px 0 0;min-height:2px;transition:height .4s ease}
+.month-bar.done-bar{background:var(--green2)}
+.month-bar-lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim)}
+.type-bar-row{display:flex;flex-direction:column;gap:6px}
+.type-bar-item{display:flex;align-items:center;gap:8px}
+.type-bar-name{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);width:36px;flex-shrink:0;text-align:right}
+.type-bar-track{flex:1;height:12px;background:var(--s3);position:relative;overflow:hidden}
+.type-bar-fill{height:100%;background:var(--gold);transition:width .5s ease}
+.type-bar-cnt{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);width:20px;text-align:right;flex-shrink:0}
+
 /* TOAST */
 .toast{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid var(--gold);border-left:3px solid var(--gold);color:var(--text);padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;z-index:400;transform:translateX(130%);transition:transform .28s;letter-spacing:.03em}
 .toast.show{transform:translateX(0)}
@@ -620,8 +667,21 @@ td{padding:10px 13px;vertical-align:middle}
 
 <!-- ══ REQUESTER DASHBOARD ══ -->
 <div class="page" id="page-requester">
-  <div class="rdash-sel-wrap">
-    <div class="rdash-sel-label">Requester</div>
+  <div id="reqWelcomeBanner" style="display:none">
+    <div style="background:linear-gradient(135deg,var(--s2),var(--s1));border:1px solid var(--border2);border-top:3px solid var(--teal2);padding:20px 26px;margin:22px 26px 0;display:flex;align-items:center;gap:16px">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--teal2);display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:700;color:#000;flex-shrink:0" id="reqWelcomeAv">?</div>
+      <div style="flex:1">
+        <div style="font-size:18px;font-weight:600;margin-bottom:2px" id="reqWelcomeName">—</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--teal2);letter-spacing:.1em">REQUESTER / MARKETING</div>
+      </div>
+      <button class="btn-hero primary" onclick="openModal();setTimeout(()=>{const el=document.getElementById('fRequester');if(el)el.value=currentUser.name;},50)">
+        + เปิดงานใหม่
+      </button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);margin:0 26px" id="reqQuickStats"></div>
+  </div>
+  <div class="rdash-sel-wrap" id="reqSelWrap">
+    <div class="rdash-sel-label">เลือก Requester</div>
     <select class="fsel-inline" id="reqDashSel" onchange="renderReqDash()" style="font-size:13px;padding:7px 14px">
       <option value="">— เลือก Requester —</option>
     </select>
@@ -1009,6 +1069,16 @@ const save=()=>localStorage.setItem('dha_v8_proj',JSON.stringify(projects));
 function genId(){return 'TMP-'+Date.now();}
 
 // ════════════════════════════════════════════════
+// TOAST (defined early so all functions can use it)
+// ════════════════════════════════════════════════
+function showToast(msg){
+  const t=document.getElementById('toast');
+  if(!t){console.log('Toast:',msg);return;}
+  t.textContent=msg;t.classList.add('show');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+// ════════════════════════════════════════════════
 // ROLE SELECTOR
 // ════════════════════════════════════════════════
 function handleRoleClick(el){selectRole(el.getAttribute('data-role'));}
@@ -1077,8 +1147,54 @@ function enterApp(){
   document.getElementById('roleScreen').style.display='none';
 }
 
-function showRoleError(msg){
-  showToast(msg);
+function showRoleError(msg){ showToast(msg); }
+
+
+// ════════════════════════════════════════════════
+// ROLE LANDING PAGES
+// ════════════════════════════════════════════════
+function showRoleLanding(role){
+  const {name,id} = currentUser;
+  const col = ROLE_COLORS[role]||'var(--gold)';
+
+  if(role==='requester'){
+    // Go to requester page but show welcome
+    const tab=document.querySelector(".nav-tab[onclick*=\"goPage('requester'\"]");
+    if(tab) goPage('requester',tab);
+    // pre-select requester in dashboard
+    setTimeout(()=>{
+      const sel=document.getElementById('reqDashSel');
+      if(sel&&name){sel.value=name;renderReqDash();}
+    },100);
+    return;
+  }
+
+  if(role==='designer'){
+    const tab=document.querySelector(".nav-tab[onclick*=\"goPage('designer'\"]");
+    if(tab) goPage('designer',tab);
+    setTimeout(()=>{
+      const sel=document.getElementById('dsvDesignerSel');
+      if(sel&&id){sel.value=id;renderDesignerView();}
+    },100);
+    return;
+  }
+
+  // supervisor / director — go to projects
+  const tab=document.querySelector(".nav-tab[onclick*=\"goPage('projects'\"]");
+  if(tab) goPage('projects',tab);
+  else renderProjects();
+}
+
+// ════════════════════════════════════════════════
+// REQUESTER QUICK ORDER — เปิดงานใหม่แบบเร็ว
+// ════════════════════════════════════════════════
+function openQuickOrder(){
+  // Pre-fill requester
+  openModal();
+  setTimeout(()=>{
+    const el=document.getElementById('fRequester');
+    if(el&&currentUser.name) el.value=currentUser.name;
+  },50);
 }
 
 function switchRole(){
@@ -1111,11 +1227,8 @@ function applyRoleUI(){
   // hide designer selector in self-view for designer role
   const dsvWrap=document.getElementById('dsvSelWrap');
   if(dsvWrap) dsvWrap.style.display=role==='designer'?'none':'flex';
-  // go to default page for role
-  const defaultPage={designer:'designer',requester:'requester',supervisor:'projects',director:'director'}[role]||'projects';
-  const firstTab=document.querySelector(`.nav-tab[onclick*="goPage('${defaultPage}'"]`);
-  if(firstTab) goPage(defaultPage,firstTab);
-  else renderProjects();
+  // show role landing page
+  showRoleLanding(role);
 }
 
 // ════════════════════════════════════════════════
@@ -1137,10 +1250,12 @@ function populateStatFilters(){
   const brands=[...new Set(projects.map(p=>p.brand).filter(Boolean))].sort();
   const cur_b=document.getElementById('statFilterBrand').value;
   const cur_d=document.getElementById('statFilterDesigner').value;
+  const allBrands=[...new Set(projects.map(p=>p.bu||p.brand).filter(Boolean))].sort();
+  const allDes=DESIGNERS_MASTER;
   document.getElementById('statFilterBrand').innerHTML=
-    '<option value="">— ทุก Brand —</option>'+brands.map(b=>`<option${b===cur_b?' selected':''}>${b}</option>`).join('');
+    '<option value="">— ทุก BU/Brand —</option>'+allBrands.map(b=>`<option${b===cur_b?' selected':''}>${b}</option>`).join('');
   document.getElementById('statFilterDesigner').innerHTML=
-    '<option value="">— ทุก Designer —</option>'+designers.map(d=>`<option value="${d.id}"${d.id===cur_d?' selected':''}>${d.name}</option>`).join('');
+    '<option value="">— ทุก Designer —</option>'+allDes.map(d=>`<option value="${d.code}"${d.code===cur_d?' selected':''}>${d.code} — ${d.name}</option>`).join('');
 }
 
 function applyStatFilter(){
@@ -1158,8 +1273,8 @@ function clearStatFilter(){
 
 function getFilteredForStats(){
   let list=permFilteredProjects(projects);
-  if(statFilterBrand) list=list.filter(p=>p.brand===statFilterBrand);
-  if(statFilterDesigner) list=list.filter(p=>p.designerId===statFilterDesigner);
+  if(statFilterBrand) list=list.filter(p=>(p.bu||p.brand)===statFilterBrand);
+  if(statFilterDesigner) list=list.filter(p=>(p.mc||p.designerId)===statFilterDesigner);
   if(statFilterQ) list=list.filter(p=>(p.quarter||getQ(p.deadline))===statFilterQ);
   return list;
 }
@@ -1273,8 +1388,8 @@ function updateStats(){
 }
 
 function populateFilters(){
-  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))].sort();
-  const brands=[...new Set(projects.map(p=>p.brand).filter(Boolean))].sort();
+  const reqs=[...new Set(projects.map(p=>p.pmd||p.requester).filter(Boolean))].sort();
+  const brands=[...new Set(projects.map(p=>p.bu||p.brand).filter(Boolean))].sort();
   const cr=document.getElementById('filterRequester').value;
   const cd=document.getElementById('filterDesigner').value;
   const cb=document.getElementById('filterBrand').value;
@@ -1300,19 +1415,31 @@ function renderProjects(){
   // apply permission first
   let list=permFilteredProjects(projects);
   // apply stat bar filters
-  if(statFilterBrand) list=list.filter(p=>p.brand===statFilterBrand);
-  if(statFilterDesigner) list=list.filter(p=>p.designerId===statFilterDesigner);
+  if(statFilterBrand) list=list.filter(p=>(p.bu||p.brand)===statFilterBrand);
+  if(statFilterDesigner) list=list.filter(p=>(p.mc||p.designerId)===statFilterDesigner);
   if(statFilterQ) list=list.filter(p=>(p.quarter||getQ(p.deadline))===statFilterQ);
   // apply toolbar filters
   list=list.filter(p=>{
     if(filterStatus!=='all'&&p.status!==filterStatus)return false;
-    if(fr&&p.requester!==fr)return false;
-    if(fd&&p.designerId!==fd)return false;
-    if(fb&&p.brand!==fb)return false;
-    if(q&&![p.name,p.id,p.type,p.brand,p.requester].join(' ').toLowerCase().includes(q))return false;
+    // requester = pmd field in SC Works
+    if(fr&&(p.pmd||p.requester)!==fr)return false;
+    // designer = mc or designerId
+    if(fd&&(p.mc||p.designerId)!==fd)return false;
+    // brand = bu in SC Works
+    if(fb&&(p.bu||p.brand)!==fb)return false;
+    // search across all key fields
+    const searchStr=[p.name,p.id,p.codeFile,p.jobType,p.bu||p.brand,p.pmd||p.requester,p.mc,p.briefDetail].join(' ').toLowerCase();
+    if(q&&!searchStr.includes(q))return false;
     return true;
   });
-  list.sort((a,b)=>{const ad=a.deadline?new Date(a.deadline):new Date('9999');const bd=b.deadline?new Date(b.deadline):new Date('9999');return ad-bd;});
+  // sort: active first, then by briefDate desc
+  list.sort((a,b)=>{
+    if(a.status==='done'&&b.status!=='done') return 1;
+    if(a.status!=='done'&&b.status==='done') return -1;
+    const ad=a.briefDate||a.createdAt||'';
+    const bd=b.briefDate||b.createdAt||'';
+    return bd.localeCompare(ad);
+  });
   const tbody=document.getElementById('projBody');
   if(!list.length){tbody.innerHTML=`<tr><td colspan="12"><div class="empty"><div class="empty-icon">◻</div><div class="empty-txt">NO PROJECTS</div></div></td></tr>`;updateStats();populateFilters();return;}
   tbody.innerHTML=list.map(p=>{
@@ -1326,10 +1453,10 @@ function renderProjects(){
     return `<tr onclick="${canEdit?`openEdit('${p.id}')`:``}">
       <td><div class="proj-id">${p.id}</div></td>
       <td><div class="proj-name">${p.name||'—'}</div><div class="proj-type">${p.type} ${fh}${extBadge}</div></td>
-      <td><span class="tag">${p.brand||'—'}</span></td>
-      <td><span class="tag req">${p.requester||'—'}</span></td>
-      <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'<span style="color:var(--muted)">—</span>'}</td>
-      <td><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)">${p.mandays||1}d <span class="wbadge ${tc}">×${TYPE_W[p.type]||1}</span></div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)">${pts} pts</div></td>
+      <td><span class="tag">${p.bu||p.brand||'—'}</span></td>
+      <td><span class="tag req">${p.pmd||p.requester||'—'}</span></td>
+      <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name||d.code}</div>`:'<span style="color:var(--muted)">${p.mc||"—"}</span>'}</td>
+      <td><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)">${p.jobType||p.type||'—'} <span class="wbadge packaging">${p.rank||'C'}</span></div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)">${pts} pts</div></td>
       <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]||p.status}</span></td>
       <td><span class="pri ${p.priority}">${p.priority.toUpperCase()}</span></td>
       <td><span class="dl ${dlc}">${fmtD(p.deadline)}${p.status==='external'?` 🌐`:dlc==='overdue'?' ⚠':dlc==='soon'?' !':''}</span></td>
@@ -1356,7 +1483,7 @@ function renderDesignerView(){
   if(!dId){cont.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-txt">เลือก Designer เพื่อดูข้อมูล</div></div>';return;}
   const d=getDes(dId);if(!d)return;
   const col=dColor(dId);
-  let ps=projects.filter(p=>p.designerId===dId);
+  let ps=projects.filter(p=>(p.mc||p.designerId)===dId);
   if(dsvQF!=='all') ps=ps.filter(p=>(p.quarter||getQ(p.deadline))===dsvQF);
   const done=ps.filter(p=>p.status==='done');
   const active=ps.filter(p=>p.status==='active');
@@ -1400,7 +1527,7 @@ function renderDesignerView(){
         return `<tr onclick="openEdit('${p.id}')">
           <td class="proj-id">${p.id}</td>
           <td><div class="proj-name">${p.name}</div><div class="proj-type">${p.type}</div></td>
-          <td><span class="tag">${p.brand||'—'}</span></td>
+          <td><span class="tag">${p.bu||p.brand||'—'}</span></td>
           <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td>
           <td><span class="dl ${dlc}">${fmtD(p.deadline)}</span></td>
           <td style="font-family:'IBM Plex Mono',monospace">${p.mandays||1}d</td>
@@ -1499,7 +1626,7 @@ function renderSupervisor(){
         return `<tr>
           <td class="proj-id">${p.id}</td>
           <td><div class="proj-name">${p.name}</div><div class="proj-type">${p.type}</div></td>
-          <td><span class="tag">${p.brand||'—'}</span></td>
+          <td><span class="tag">${p.bu||p.brand||'—'}</span></td>
           <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'—'}</td>
           <td>
             <div class="approval-chain">
@@ -1757,7 +1884,7 @@ function renderBriefQuality(){
     return `<tr>
       <td class="proj-id">${p.id}</td>
       <td>${p.name}</td>
-      <td><span class="tag req">${p.requester||'—'}</span></td>
+      <td><span class="tag req">${p.pmd||p.requester||'—'}</span></td>
       <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'—'}</td>
       <td style="font-family:'IBM Plex Mono',monospace;color:var(--orange2)">${p.revision||0} rounds</td>
       <td style="color:var(--muted);font-size:11px">ยังไม่ได้ Rate</td>
@@ -1772,7 +1899,7 @@ function renderBriefQuality(){
 function setPerfQ(q,btn){perfQ=q;document.querySelectorAll('#perfQTabs .q-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderPerf();}
 
 function calcDStats(dId,qf){
-  let list=projects.filter(p=>p.designerId===dId);
+  let list=projects.filter(p=>(p.mc||p.designerId)===dId);
   if(qf!=='all') list=list.filter(p=>(p.quarter||getQ(p.deadline))===qf);
   const done=list.filter(p=>p.status==='done');
   const pts=done.reduce((s,p)=>s+calcPts(p),0);
@@ -1827,19 +1954,29 @@ function renderPerf(){
 // REQUESTER DASHBOARD
 // ════════════════════════════════════════════════
 function populateReqDashSel(){
-  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))].sort();
+  const reqs=[...new Set(projects.map(p=>p.pmd||p.requester).filter(Boolean))].sort();
   document.getElementById('reqDashSel').innerHTML='<option value="">— เลือก Requester —</option>'+reqs.map(r=>`<option value="${r}">${r}</option>`).join('');
 }
 
 function renderReqDash(){
-  // auto-select if Requester role
+  // auto-select if Requester role + show welcome banner
   if(currentUser.role==='requester'&&currentUser.name){
     document.getElementById('reqDashSel').value=currentUser.name;
+    const banner=document.getElementById('reqWelcomeBanner');
+    const selWrap=document.getElementById('reqSelWrap');
+    if(banner){
+      banner.style.display='block';
+      selWrap.style.display='none';
+      const av=document.getElementById('reqWelcomeAv');
+      const nm=document.getElementById('reqWelcomeName');
+      if(av) av.textContent=currentUser.name.charAt(0);
+      if(nm) nm.textContent=currentUser.name;
+    }
   }
   const r=document.getElementById('reqDashSel').value;
   const cont=document.getElementById('reqDashContent');
   if(!r){cont.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">เลือก Requester เพื่อดู Dashboard</div></div>';return;}
-  const ps=projects.filter(p=>p.requester===r);
+  const ps=projects.filter(p=>(p.pmd||p.requester)===r);
   const done=ps.filter(p=>p.status==='done');
   const active=ps.filter(p=>p.status==='active');
   const review=ps.filter(p=>p.status==='review');
@@ -1878,6 +2015,16 @@ function renderReqDash(){
   const logs=[];ps.forEach(p=>{(p.log||[]).forEach(l=>logs.push({...l,pn:p.name,pid:p.id}));});
   logs.sort((a,b)=>new Date(b.ts)-new Date(a.ts));
 
+
+  // Quick stats banner
+  const qsEl=document.getElementById('reqQuickStats');
+  if(qsEl&&r){
+    qsEl.innerHTML=[
+      {l:'Total',v:ps.length,c:'var(--text)'},{l:'Done',v:done.length,c:'var(--green2)'},
+      {l:'Active',v:active.length,c:'var(--blue2)'},{l:'Review',v:review.length,c:'var(--orange2)'},
+      {l:'Overdue',v:od.length,c:od.length?'var(--red2)':'var(--green2)'},
+    ].map(k=>`<div style="background:var(--s1);padding:10px 14px"><div style="font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px">${k.l}</div><div style="font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:${k.c}">${k.v}</div></div>`).join('');
+  }
   cont.innerHTML=`
     <div class="rdash-hero">
       <div class="rdash-av" style="background:${col}">${r.charAt(0)}</div>
@@ -1940,7 +2087,7 @@ function renderReqDash(){
           return `<tr>
             <td><div class="proj-id">${p.id}</div></td>
             <td><div class="proj-name">${p.name}</div><div class="proj-type">${p.type}</div></td>
-            <td><span class="tag">${p.brand||'—'}</span></td>
+            <td><span class="tag">${p.bu||p.brand||'—'}</span></td>
             <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'—'}</td>
             <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td>
             <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:${dlc}">${fmtD(p.deadline)}${p.status!=='done'&&diff<0?' ⚠':p.status!=='done'&&diff<=3?' !':''}</td>
