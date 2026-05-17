@@ -1,0 +1,1915 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DHA Design Ops v6</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Sarabun:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0a0a0a;--s1:#111;--s2:#191919;--s3:#222;
+  --border:#2c2c2c;--border2:#3a3a3a;
+  --gold:#c9a227;--gold2:#e8be45;
+  --text:#e2e2e2;--dim:#888;--muted:#555;
+  --green:#3d9e6a;--green2:#52c68a;
+  --red:#c94040;--red2:#e05c5c;
+  --blue:#3a7fd4;--blue2:#5a9ff0;
+  --orange:#c97030;--orange2:#e89050;
+  --purple:#7a5cc9;--purple2:#9b7fe8;
+  --teal:#2a8a8a;--teal2:#3ab8b8;
+  --trello:#0052cc;--trello2:#2680eb;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:'Sarabun',sans-serif;font-size:14px;min-height:100vh}
+body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(201,162,39,.025) 1px,transparent 1px),linear-gradient(90deg,rgba(201,162,39,.025) 1px,transparent 1px);background-size:48px 48px;pointer-events:none;z-index:0}
+
+/* NAV */
+nav{position:sticky;top:0;z-index:50;background:rgba(10,10,10,.97);backdrop-filter:blur(8px);border-bottom:1px solid var(--border);display:flex;align-items:stretch;height:52px}
+.nav-logo{display:flex;align-items:center;gap:10px;padding:0 20px;border-right:1px solid var(--border);flex-shrink:0}
+.nav-badge{background:var(--gold);color:#000;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;padding:3px 7px;letter-spacing:.1em}
+.nav-name{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.06em}
+.nav-sub{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--muted);letter-spacing:.08em}
+.nav-tabs{display:flex;flex:1;overflow-x:auto}
+.nav-tab{background:none;border:none;border-bottom:2px solid transparent;color:var(--dim);padding:0 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.06em;cursor:pointer;transition:all .15s;white-space:nowrap;flex-shrink:0;position:relative}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.nav-tab .nbadge{position:absolute;top:8px;right:6px;background:var(--red);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;padding:1px 4px;border-radius:2px;min-width:14px;text-align:center;display:none}
+.nav-tab .nbadge.show{display:block}
+.nav-right{display:flex;align-items:center;padding:0 16px;gap:10px;border-left:1px solid var(--border);flex-shrink:0}
+.nav-clock{font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)}
+.btn-gold{background:var(--gold);color:#000;border:none;padding:6px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;letter-spacing:.05em;transition:background .15s}
+.btn-gold:hover{background:var(--gold2)}
+.btn-outline{background:none;border:1px solid var(--border);color:var(--dim);padding:6px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;transition:all .15s}
+.btn-outline:hover{border-color:var(--gold);color:var(--gold)}
+.btn-trello{background:var(--trello);color:#fff;border:none;padding:6px 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-trello:hover{background:var(--trello2)}
+.btn-sm{padding:4px 10px;font-size:9px}
+
+/* PAGE */
+.page{display:none;position:relative;z-index:1;padding:22px 26px;max-width:1540px;margin:0 auto}
+.page.active{display:block}
+.sec-head{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:18px;gap:12px;flex-wrap:wrap}
+.sec-title{font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.1em;color:var(--gold);text-transform:uppercase}
+.sec-sub{font-size:12px;color:var(--dim);margin-top:3px}
+
+/* STATS */
+.stat-row{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:22px}
+.stat{background:var(--s1);padding:13px 16px;position:relative;overflow:hidden}
+.stat::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.stat.c-gold::after{background:var(--gold)}.stat.c-blue::after{background:var(--blue)}
+.stat.c-orange::after{background:var(--orange)}.stat.c-green::after{background:var(--green)}
+.stat.c-red::after{background:var(--red)}.stat.c-purple::after{background:var(--purple)}
+.stat.c-teal::after{background:var(--teal)}
+.stat-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:7px}
+.stat-val{font-family:'IBM Plex Mono',monospace;font-size:24px;font-weight:600;line-height:1}
+
+/* TOOLBAR */
+.toolbar{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap;align-items:center}
+.filter-group{display:flex;gap:1px;background:var(--border)}
+.fbtn{background:var(--s1);border:none;color:var(--dim);padding:6px 11px;font-family:'IBM Plex Mono',monospace;font-size:9px;letter-spacing:.04em;cursor:pointer;transition:all .15s}
+.fbtn:hover{color:var(--text);background:var(--s2)}.fbtn.active{background:var(--gold);color:#000;font-weight:600}
+.search-box{position:relative;width:200px}
+.search-box input{width:100%;background:var(--s1);border:1px solid var(--border);color:var(--text);padding:6px 10px 6px 26px;font-family:'Sarabun',sans-serif;font-size:13px;outline:none;transition:border-color .15s}
+.search-box input:focus{border-color:var(--gold)}
+.si{position:absolute;left:8px;top:50%;transform:translateY(-50%);color:var(--muted);font-size:13px}
+.fsel-inline{background:var(--s1);border:1px solid var(--border);color:var(--text);padding:5px 10px;font-family:'Sarabun',sans-serif;font-size:12px;outline:none;cursor:pointer}
+.fsel-inline:focus{border-color:var(--gold)}
+.fsel-inline option{background:var(--s1)}
+
+/* TABLE */
+.tbl-wrap{border:1px solid var(--border);overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:960px}
+thead tr{background:var(--s2);border-bottom:2px solid var(--gold)}
+th{padding:9px 13px;text-align:left;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--border);transition:background .1s;cursor:pointer}
+tbody tr:hover{background:var(--s2)}
+tbody tr:last-child{border-bottom:none}
+td{padding:10px 13px;vertical-align:middle}
+.proj-id{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)}
+.proj-name{font-weight:500;font-size:14px;margin-bottom:1px}
+.proj-type{font-size:11px;color:var(--dim)}
+.chip{display:inline-flex;align-items:center;gap:5px;font-size:11px}
+.d-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0}
+.tag{display:inline-block;background:var(--s3);border:1px solid var(--border2);color:var(--dim);font-size:10px;padding:1px 6px;font-family:'IBM Plex Mono',monospace}
+.tag.req{border-color:var(--teal);color:var(--teal2)}
+.wbadge{font-family:'IBM Plex Mono',monospace;font-size:9px;padding:2px 5px;border:1px solid}
+.wbadge.packaging{color:var(--gold);border-color:var(--gold)}.wbadge.brand{color:var(--purple2);border-color:var(--purple)}
+.wbadge.label{color:var(--teal2);border-color:var(--teal)}.wbadge.print{color:var(--blue2);border-color:var(--blue)}
+.wbadge.other{color:var(--dim);border-color:var(--muted)}
+.status{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;letter-spacing:.07em;border:1px solid;white-space:nowrap}
+.sdot{width:4px;height:4px;border-radius:50%}
+.status.brief{color:var(--purple2);border-color:var(--purple)}.status.brief .sdot{background:var(--purple2)}
+.status.active{color:var(--blue2);border-color:var(--blue)}.status.active .sdot{background:var(--blue2);animation:pulse 1.5s infinite}
+.status.review{color:var(--orange2);border-color:var(--orange)}.status.review .sdot{background:var(--orange2)}
+.status.done{color:var(--green2);border-color:var(--green)}.status.done .sdot{background:var(--green2)}
+.status.hold{color:var(--dim);border-color:var(--muted)}.status.hold .sdot{background:var(--dim)}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.3}}
+.pri{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600}
+.pri.high{color:var(--red2)}.pri.mid{color:var(--orange2)}.pri.low{color:var(--dim)}
+.dl{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)}
+.dl.overdue{color:var(--red2)}.dl.soon{color:var(--orange2)}
+.prog-wrap{width:64px}
+.prog-bar{height:2px;background:var(--border2);margin-bottom:3px}
+.prog-fill{height:100%;background:var(--gold)}
+.prog-fill.done{background:var(--green)}.prog-fill.ov{background:var(--red)}
+.prog-pct{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim)}
+.act-btn{background:none;border:1px solid var(--border);color:var(--dim);padding:3px 7px;font-size:9px;font-family:'IBM Plex Mono',monospace;cursor:pointer;transition:all .15s}
+.act-btn:hover{border-color:var(--gold);color:var(--gold)}
+.act-btn.log:hover{border-color:var(--blue2);color:var(--blue2)}
+.act-btn.del:hover{border-color:var(--red2);color:var(--red2)}
+.acts{display:flex;gap:4px}
+.empty{text-align:center;padding:50px;color:var(--muted)}
+.empty-icon{font-size:26px;margin-bottom:8px;opacity:.35}
+.empty-txt{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.05em}
+
+/* ── ALERT PANEL ── */
+.alert-panel{position:fixed;top:52px;right:0;width:360px;height:calc(100vh - 52px);background:var(--s1);border-left:1px solid var(--border);z-index:40;transform:translateX(100%);transition:transform .25s ease;overflow-y:auto}
+.alert-panel.open{transform:translateX(0)}
+.alert-head{padding:16px 18px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--s1)}
+.alert-title{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.08em}
+.alert-close{background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer}
+.alert-close:hover{color:var(--text)}
+.alert-item{padding:14px 18px;border-bottom:1px solid var(--border);display:flex;gap:10px;align-items:flex-start;transition:background .1s}
+.alert-item:hover{background:var(--s2)}
+.alert-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;margin-top:4px}
+.alert-item.overdue .alert-dot{background:var(--red2)}
+.alert-item.soon .alert-dot{background:var(--orange2);animation:pulse 2s infinite}
+.alert-item.review .alert-dot{background:var(--orange)}
+.alert-body{flex:1}
+.alert-proj{font-weight:500;font-size:13px;margin-bottom:2px}
+.alert-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.04em}
+.alert-tag{font-family:'IBM Plex Mono',monospace;font-size:8px;padding:1px 6px;border:1px solid;letter-spacing:.05em}
+.alert-tag.overdue{color:var(--red2);border-color:var(--red)}
+.alert-tag.soon{color:var(--orange2);border-color:var(--orange)}
+.alert-tag.review{color:var(--orange2);border-color:var(--orange)}
+.bell-btn{position:relative;background:none;border:1px solid var(--border);color:var(--dim);padding:5px 10px;font-size:14px;cursor:pointer;transition:all .15s}
+.bell-btn:hover{border-color:var(--gold);color:var(--gold)}
+.bell-count{position:absolute;top:-4px;right:-4px;background:var(--red2);color:#fff;font-family:'IBM Plex Mono',monospace;font-size:8px;font-weight:600;padding:1px 4px;border-radius:2px;min-width:14px;text-align:center;display:none}
+.bell-count.show{display:block}
+
+/* ── DESIGNER SELF-VIEW ── */
+.dsv-header{background:var(--s1);border:1px solid var(--border);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:16px}
+.dsv-avatar{width:52px;height:52px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;color:#000;flex-shrink:0}
+.dsv-name{font-size:20px;font-weight:600;margin-bottom:3px}
+.dsv-role{font-size:12px;color:var(--dim)}
+.dsv-kpi-row{display:grid;grid-template-columns:repeat(5,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:20px}
+.dsv-kpi{background:var(--s1);padding:14px 16px;text-align:center}
+.dsv-kpi-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;margin-bottom:4px}
+.dsv-kpi-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+
+/* ── CAPACITY ── */
+.cap-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:24px}
+.cap-card{background:var(--s1);border:1px solid var(--border);padding:16px}
+.cap-head{display:flex;align-items:center;gap:10px;margin-bottom:12px}
+.cap-av{width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;color:#000;flex-shrink:0}
+.cap-name{font-weight:600;font-size:13px}
+.cap-role{font-size:11px;color:var(--dim)}
+.cap-meter{margin-bottom:10px}
+.cap-meter-label{display:flex;justify-content:space-between;margin-bottom:4px}
+.cap-meter-label span{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);text-transform:uppercase;letter-spacing:.06em}
+.cap-meter-label strong{font-family:'IBM Plex Mono',monospace;font-size:10px}
+.cap-bar{height:8px;background:var(--border2);border-radius:0;overflow:hidden}
+.cap-fill{height:100%;transition:width .5s ease;border-radius:0}
+.cap-fill.ok{background:var(--green)}
+.cap-fill.warn{background:var(--orange)}
+.cap-fill.full{background:var(--red)}
+.cap-projects{font-size:11px;color:var(--dim)}
+.cap-proj-item{display:flex;align-items:center;gap:6px;padding:4px 0;border-bottom:1px solid var(--border)}
+.cap-proj-item:last-child{border-bottom:none}
+.cap-proj-name{flex:1;font-size:12px}
+.cap-proj-days{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim)}
+
+/* ── PERFORMANCE ── */
+.perf-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:14px;margin-bottom:24px}
+.dc{background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--border);overflow:hidden;transition:border-top-color .2s}
+.dc:hover{border-top-color:var(--gold)}
+.dc-head{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid var(--border)}
+.dc-av{width:34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:#000;flex-shrink:0}
+.dc-name{font-weight:600;font-size:14px}.dc-role{font-size:11px;color:var(--dim)}
+.dc-body{padding:14px 16px}
+.kpi-row{display:flex;justify-content:space-between;margin-bottom:12px}
+.kpi{text-align:center}
+.kpi-val{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;line-height:1;margin-bottom:2px}
+.kpi-label{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.sbar-wrap{margin-bottom:10px}
+.sbar-top{display:flex;justify-content:space-between;margin-bottom:4px}
+.sbar-top span{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.sbar-top strong{font-family:'IBM Plex Mono',monospace;font-size:8px}
+.sbar{height:3px;background:var(--border2)}
+.sfill{height:100%;transition:width .5s ease}
+.dc-foot{padding:9px 16px;background:var(--s2);border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.perf-grade{font-family:'IBM Plex Mono',monospace;font-size:12px;font-weight:600;padding:2px 8px;border:1px solid}
+
+/* ── BRIEF QUALITY ── */
+.bq-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;margin-bottom:24px}
+.bq-card{background:var(--s1);border:1px solid var(--border);padding:16px}
+.bq-name{font-weight:600;font-size:14px;margin-bottom:2px}
+.bq-role{font-size:11px;color:var(--dim);margin-bottom:12px}
+.bq-score-big{font-family:'IBM Plex Mono',monospace;font-size:36px;font-weight:600;line-height:1;margin-bottom:4px}
+.bq-score-label{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.bq-bar{height:4px;background:var(--border2);margin-bottom:12px}
+.bq-fill{height:100%}
+.star-row{display:flex;gap:4px;margin-bottom:8px}
+.star{font-size:14px;color:var(--muted);cursor:pointer;transition:color .1s;user-select:none}
+.star.active{color:var(--gold)}
+.star:hover{color:var(--gold2)}
+.bq-count{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim)}
+
+/* ── BRANDS ── */
+.brand-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.bc{background:var(--s1);border:1px solid var(--border);padding:16px}
+.bc-name{font-weight:600;font-size:15px;margin-bottom:2px}
+.bc-cnt{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:12px}
+.bc-stats{display:flex;gap:14px;margin-bottom:10px}
+.bc-stat{flex:1;text-align:center}
+.bc-val{font-family:'IBM Plex Mono',monospace;font-size:17px;font-weight:600}
+.bc-lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+.bc-chips{display:flex;gap:5px;flex-wrap:wrap;margin-top:8px}
+.bc-chip{display:flex;align-items:center;gap:4px;font-size:11px;background:var(--s2);padding:2px 8px}
+
+/* ── REQUESTER VIEW ── */
+.req-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;margin-bottom:24px}
+.rc{background:var(--s1);border:1px solid var(--border);border-left:3px solid var(--teal);padding:16px}
+.rc-name{font-weight:600;font-size:15px;margin-bottom:2px}
+.rc-role{font-size:11px;color:var(--dim);margin-bottom:12px}
+.rc-stats{display:flex;gap:12px;margin-bottom:12px}
+.rc-stat{flex:1;text-align:center;background:var(--s2);padding:8px 4px}
+.rc-val{font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600}
+.rc-lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+
+/* Q TABS */
+.q-tabs{display:flex;gap:1px;background:var(--border)}
+.q-tab{background:var(--s1);border:none;color:var(--dim);padding:6px 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;cursor:pointer;transition:all .15s;letter-spacing:.05em}
+.q-tab:hover{color:var(--text)}.q-tab.active{background:var(--gold);color:#000;font-weight:600}
+
+/* ── MODAL ── */
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:200;align-items:center;justify-content:center}
+.overlay.open{display:flex}
+.modal{background:var(--s1);border:1px solid var(--border);border-top:2px solid var(--gold);width:660px;max-width:96vw;max-height:92vh;overflow-y:auto;animation:sIn .2s ease}
+.modal.wide{width:780px}.modal.sm{width:500px}.modal.xs{width:380px}
+@keyframes sIn{from{transform:translateY(-14px);opacity:0}to{transform:translateY(0);opacity:1}}
+.modal-head{padding:16px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;background:var(--s1);z-index:1}
+.modal-title{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:var(--gold);letter-spacing:.06em}
+.modal-close{background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer}
+.modal-close:hover{color:var(--text)}
+.modal-body{padding:20px}
+.modal-foot{padding:13px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:10px}
+.fg{display:flex;flex-direction:column;gap:5px}
+.fg.full{grid-column:1/-1}
+.flabel{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.finput,.fsel,.ftxt{background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 10px;font-family:'Sarabun',sans-serif;font-size:13px;outline:none;width:100%;transition:border-color .15s}
+.finput:focus,.fsel:focus,.ftxt:focus{border-color:var(--gold)}
+.fsel option{background:var(--s1)}.ftxt{resize:vertical;min-height:60px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:13px}
+
+/* ── LOG / REVISION THREAD ── */
+.log-list{max-height:300px;overflow-y:auto;margin-bottom:14px}
+.log-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.log-item:last-child{border-bottom:none}
+.log-left{display:flex;flex-direction:column;align-items:center;gap:4px}
+.log-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.log-dot.activity{background:var(--gold)}
+.log-dot.revision{background:var(--orange2)}
+.log-dot.status{background:var(--blue2)}
+.log-line{width:1px;flex:1;background:var(--border);min-height:16px}
+.log-body{flex:1}
+.log-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:3px;display:flex;gap:8px;align-items:center}
+.log-type-tag{font-family:'IBM Plex Mono',monospace;font-size:7px;padding:1px 5px;border:1px solid;letter-spacing:.05em}
+.log-type-tag.activity{color:var(--gold);border-color:var(--gold)}
+.log-type-tag.revision{color:var(--orange2);border-color:var(--orange)}
+.log-type-tag.status{color:var(--blue2);border-color:var(--blue)}
+.log-text{font-size:13px;line-height:1.5}
+.log-rev-detail{background:var(--s2);border:1px solid var(--border);border-left:2px solid var(--orange);padding:8px 10px;margin-top:6px;font-size:12px;color:var(--dim);line-height:1.5}
+.log-input-area{display:flex;flex-direction:column;gap:8px}
+.log-type-sel{display:flex;gap:6px;margin-bottom:4px}
+.log-type-btn{background:var(--s2);border:1px solid var(--border);color:var(--dim);padding:4px 10px;font-family:'IBM Plex Mono',monospace;font-size:9px;cursor:pointer;transition:all .15s}
+.log-type-btn.active{border-color:var(--gold);color:var(--gold)}
+.log-input-row{display:flex;gap:8px}
+.log-input{flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);padding:8px 11px;font-family:'Sarabun',sans-serif;font-size:13px;outline:none}
+.log-input:focus{border-color:var(--gold)}
+.rev-extra{display:none;flex-direction:column;gap:6px}
+.rev-extra.show{display:flex}
+
+/* EXPORT */
+.export-note{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--gold);padding:12px 16px;font-size:12px;color:var(--dim);margin-bottom:18px;line-height:1.7}
+.export-note strong{color:var(--gold)}
+
+/* TRELLO */
+.trello-setup{background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--trello);padding:14px;margin-bottom:16px;font-size:12px;color:var(--dim);line-height:1.7}
+.trello-setup a{color:var(--blue2)}
+
+/* ── REQUESTER DASHBOARD CHARTS ── */
+.rdash-hero{background:linear-gradient(135deg,var(--s2) 0%,var(--s1) 100%);border:1px solid var(--border2);padding:20px 24px;margin-bottom:20px;display:flex;align-items:center;gap:18px;position:relative;overflow:hidden}
+.rdash-hero::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,var(--gold),var(--teal2),var(--blue2))}
+.rdash-av{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:18px;font-weight:600;color:#000;flex-shrink:0;box-shadow:0 0 0 2px var(--gold)}
+.rdash-info{flex:1}
+.rdash-name{font-size:20px;font-weight:600;margin-bottom:2px}
+.rdash-role{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.1em}
+.rdash-meta{display:flex;gap:18px;margin-top:8px;flex-wrap:wrap}
+.rdash-meta-item{font-size:12px;color:var(--dim)}
+.rdash-meta-item span{color:var(--text);font-weight:600}
+.rdash-grade{text-align:center;background:var(--s3);border:1px solid var(--border2);padding:10px 18px;flex-shrink:0}
+.rdash-grade-val{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:600;line-height:1;margin-bottom:2px}
+.rdash-grade-lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase}
+.rdash-kpi{display:grid;grid-template-columns:repeat(6,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:20px}
+.rdash-kpi-card{background:var(--s1);padding:12px 14px;position:relative}
+.rdash-kpi-card::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.rdash-kpi-card.cg::after{background:var(--gold)}.rdash-kpi-card.cb::after{background:var(--blue)}
+.rdash-kpi-card.cn::after{background:var(--green)}.rdash-kpi-card.co::after{background:var(--orange)}
+.rdash-kpi-card.cr::after{background:var(--red)}.rdash-kpi-card.ct::after{background:var(--teal)}
+.rdash-kpi-lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px}
+.rdash-kpi-val{font-family:'IBM Plex Mono',monospace;font-size:22px;font-weight:600;line-height:1}
+.rdash-kpi-sub{font-size:10px;color:var(--dim);margin-top:3px}
+.rdash-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.rdash-grid-13{display:grid;grid-template-columns:1fr 1.8fr;gap:16px;margin-bottom:16px}
+.rdash-grid-21{display:grid;grid-template-columns:1.8fr 1fr;gap:16px;margin-bottom:16px}
+.rdash-panel{background:var(--s1);border:1px solid var(--border);padding:18px}
+.rdash-panel-title{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.rdash-panel-title::before{content:'';display:inline-block;width:3px;height:12px;flex-shrink:0}
+.rdash-donut-wrap{display:flex;align-items:center;gap:18px}
+.rdash-legend{flex:1}
+.rdash-legend-item{display:flex;align-items:center;gap:7px;padding:5px 0;border-bottom:1px solid var(--border);font-size:12px}
+.rdash-legend-item:last-child{border-bottom:none}
+.rdash-legend-dot{width:7px;height:7px;border-radius:1px;flex-shrink:0}
+.rdash-legend-label{flex:1}
+.rdash-legend-val{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600}
+.rdash-legend-pct{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);width:32px;text-align:right}
+.rdash-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rdash-bar-lbl{font-size:11px;color:var(--dim);width:90px;flex-shrink:0;text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rdash-bar-track{flex:1;height:18px;background:var(--s3);position:relative;overflow:hidden}
+.rdash-bar-fill{height:100%;display:flex;align-items:center;padding-left:6px;transition:width .7s cubic-bezier(.4,0,.2,1)}
+.rdash-bar-txt{font-family:'IBM Plex Mono',monospace;font-size:8px;color:rgba(255,255,255,.7);white-space:nowrap}
+.rdash-bar-cnt{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);width:24px;text-align:right;flex-shrink:0}
+.rdash-line-wrap{position:relative;height:130px}
+.rdash-line-wrap svg{width:100%;height:100%;overflow:visible}
+.rdash-overdue-item{background:rgba(201,64,64,.08);border:1px solid rgba(201,64,64,.18);border-left:3px solid var(--red);padding:9px 12px;margin-bottom:7px;display:flex;justify-content:space-between;align-items:center}
+.rdash-overdue-item.soon{background:rgba(201,112,48,.08);border-color:rgba(201,112,48,.18);border-left-color:var(--orange)}
+.rdash-od-name{font-size:13px;font-weight:500;margin-bottom:2px}
+.rdash-od-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--red)}
+.rdash-od-meta.soon{color:var(--orange)}
+.rdash-od-days{font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600;color:var(--red);white-space:nowrap}
+.rdash-od-days.soon{color:var(--orange)}
+.rdash-feed-item{display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.rdash-feed-item:last-child{border-bottom:none}
+.rdash-feed-icon{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;flex-shrink:0;margin-top:2px}
+.rdash-feed-proj{font-size:13px;font-weight:500;margin-bottom:2px}
+.rdash-feed-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim)}
+.rdash-mini-bar{height:3px;background:var(--border2);margin-top:3px}
+.rdash-mini-fill{height:100%}
+.rdash-proj-table{width:100%;border-collapse:collapse;min-width:800px}
+.rdash-proj-table th{padding:8px 12px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;border-bottom:1px solid var(--border2);text-align:left;white-space:nowrap}
+.rdash-proj-table td{padding:9px 12px;border-bottom:1px solid var(--border);font-size:13px}
+.rdash-proj-table tr:last-child td{border-bottom:none}
+.rdash-proj-table tr:hover td{background:var(--s2)}
+.rdash-ot{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600}
+.rdash-ot.yes{color:var(--green2)}.rdash-ot.no{color:var(--red2)}.rdash-ot.na{color:var(--dim)}
+.rdash-sel-wrap{display:flex;align-items:center;gap:12px;margin-bottom:20px}
+.rdash-sel-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase}
+
+/* ── DESIGNER DASHBOARD (chart version) ── */
+.ddash-grid-kpi{display:grid;grid-template-columns:repeat(8,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:18px}
+.ddash-kpi{background:var(--s1);padding:11px 13px;position:relative}
+.ddash-kpi::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px}
+.ddash-kpi.cg::after{background:var(--gold)}.ddash-kpi.cb::after{background:var(--blue)}
+.ddash-kpi.cn::after{background:var(--green)}.ddash-kpi.co::after{background:var(--orange)}
+.ddash-kpi.cr::after{background:var(--red)}.ddash-kpi.ct::after{background:var(--teal)}
+.ddash-kpi.cp::after{background:var(--purple)}.ddash-kpi.cy::after{background:var(--gold2)}
+.ddash-kpi-lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.1em;text-transform:uppercase;margin-bottom:5px}
+.ddash-kpi-val{font-family:'IBM Plex Mono',monospace;font-size:20px;font-weight:600;line-height:1}
+
+/* ── SUPERVISOR DASHBOARD ── */
+.sup-team-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+.sup-team-card{background:var(--s1);border:1px solid var(--border);border-top:2px solid;padding:14px;cursor:pointer;transition:background .1s}
+.sup-team-card:hover{background:var(--s2)}
+.sup-tc-head{display:flex;align-items:center;gap:10px;margin-bottom:10px}
+.sup-tc-av{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:600;color:#000;flex-shrink:0}
+.sup-tc-name{font-weight:600;font-size:13px}
+.sup-tc-role{font-size:10px;color:var(--dim)}
+.sup-tc-stats{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px}
+.sup-tc-stat{text-align:center;background:var(--s2);padding:5px 2px}
+.sup-tc-val{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:600}
+.sup-tc-lbl{font-family:'IBM Plex Mono',monospace;font-size:7px;color:var(--dim);letter-spacing:.06em;text-transform:uppercase}
+.sup-workload-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)}
+.sup-workload-row:last-child{border-bottom:none}
+
+/* ── DIRECTOR DASHBOARD ── */
+.dir-exec-row{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:20px}
+.dir-exec-card{background:var(--s1);padding:16px 18px;position:relative;overflow:hidden}
+.dir-exec-card::before{content:'';position:absolute;top:0;left:0;bottom:0;width:3px}
+.dir-exec-card.cg::before{background:var(--green)}.dir-exec-card.cb::before{background:var(--blue)}
+.dir-exec-card.co::before{background:var(--orange)}.dir-exec-card.cr::before{background:var(--red)}
+.dir-exec-lbl{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);letter-spacing:.12em;text-transform:uppercase;margin-bottom:8px}
+.dir-exec-val{font-family:'IBM Plex Mono',monospace;font-size:32px;font-weight:600;line-height:1;margin-bottom:4px}
+.dir-exec-sub{font-size:11px;color:var(--dim)}
+.dir-trend-label{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px}
+
+/* ── APPROVAL CHAIN ── */
+.approval-chain{display:flex;align-items:center;gap:0;margin:10px 0;flex-wrap:wrap}
+.approval-step{display:flex;align-items:center;gap:0}
+.approval-node{background:var(--s2);border:1px solid var(--border);padding:6px 12px;font-size:11px;font-weight:500;white-space:nowrap;cursor:pointer;transition:all .15s;position:relative}
+.approval-node.approved{background:rgba(61,158,106,.12);border-color:var(--green);color:var(--green2)}
+.approval-node.pending{background:rgba(201,112,48,.1);border-color:var(--orange);color:var(--orange2);animation:borderPulse 2s infinite}
+.approval-node.waiting{color:var(--muted)}
+@keyframes borderPulse{0%,100%{border-color:var(--orange)}50%{border-color:var(--orange2)}}
+.approval-arrow{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--muted);padding:0 4px}
+.approval-who{font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim);margin-top:2px}
+
+/* ── FILE VERSIONS ── */
+.file-ver-list{display:flex;flex-direction:column;gap:6px}
+.file-ver-item{display:flex;align-items:center;gap:10px;padding:8px 10px;background:var(--s2);border:1px solid var(--border)}
+.file-ver-badge{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;padding:2px 6px;border:1px solid;white-space:nowrap}
+.file-ver-badge.latest{color:var(--green2);border-color:var(--green)}
+.file-ver-badge.old{color:var(--dim);border-color:var(--muted)}
+.file-ver-name{flex:1;font-size:12px}
+.file-ver-meta{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim)}
+.file-ver-link{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--gold);text-decoration:none}
+.file-ver-link:hover{text-decoration:underline}
+
+/* TOAST */
+.toast{position:fixed;bottom:20px;right:20px;background:var(--s2);border:1px solid var(--gold);border-left:3px solid var(--gold);color:var(--text);padding:10px 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;z-index:400;transform:translateX(130%);transition:transform .28s;letter-spacing:.03em}
+.toast.show{transform:translateX(0)}
+</style>
+</head>
+<body>
+
+<!-- ══ ALERT PANEL ══ -->
+<div class="alert-panel" id="alertPanel">
+  <div class="alert-head">
+    <div class="alert-title">🔔 ALERTS</div>
+    <button class="alert-close" onclick="toggleAlert()">✕</button>
+  </div>
+  <div id="alertList"></div>
+</div>
+
+<nav>
+  <div class="nav-logo">
+    <div class="nav-badge">DHA</div>
+    <div><div class="nav-name">DESIGN OPS</div><div class="nav-sub">v6</div></div>
+  </div>
+  <div class="nav-tabs">
+    <button class="nav-tab active" onclick="goPage('projects',this)">PROJECTS</button>
+    <button class="nav-tab" onclick="goPage('designer',this)">MY WORK<span class="nbadge" id="myBadge"></span></button>
+    <button class="nav-tab" onclick="goPage('requester',this)">REQUESTER</button>
+    <button class="nav-tab" onclick="goPage('performance',this)">PERFORMANCE</button>
+    <button class="nav-tab" onclick="goPage('capacity',this)">CAPACITY</button>
+    <button class="nav-tab" onclick="goPage('briefquality',this)">BRIEF QUALITY</button>
+    <button class="nav-tab" onclick="goPage('supervisor',this)">SUPERVISOR</button>
+    <button class="nav-tab" onclick="goPage('director',this)">DIRECTOR</button>
+    <button class="nav-tab" onclick="goPage('brands',this)">BRANDS</button>
+    <button class="nav-tab" onclick="goPage('trello',this)">TRELLO</button>
+    <button class="nav-tab" onclick="goPage('export',this)">ARCHIVE</button>
+  </div>
+  <div class="nav-right">
+    <div class="nav-clock" id="clock">--:--</div>
+    <button class="bell-btn" onclick="toggleAlert()" id="bellBtn">🔔<span class="bell-count" id="bellCount"></span></button>
+    <button class="btn-gold btn-sm" onclick="openModal()">+ PROJECT</button>
+  </div>
+</nav>
+
+<!-- ══ PROJECTS ══ -->
+<div class="page active" id="page-projects">
+  <div class="stat-row">
+    <div class="stat c-gold"><div class="stat-label">Total</div><div class="stat-val" id="s-total" style="color:var(--gold)">0</div></div>
+    <div class="stat c-blue"><div class="stat-label">In Progress</div><div class="stat-val" id="s-active" style="color:var(--blue2)">0</div></div>
+    <div class="stat c-orange"><div class="stat-label">Review</div><div class="stat-val" id="s-review" style="color:var(--orange2)">0</div></div>
+    <div class="stat c-green"><div class="stat-label">Done</div><div class="stat-val" id="s-done" style="color:var(--green2)">0</div></div>
+    <div class="stat c-red"><div class="stat-label">Overdue</div><div class="stat-val" id="s-overdue" style="color:var(--red2)">0</div></div>
+    <div class="stat c-purple"><div class="stat-label">Points (done)</div><div class="stat-val" id="s-pts" style="color:var(--purple2)">0</div></div>
+    <div class="stat c-teal"><div class="stat-label">Requesters</div><div class="stat-val" id="s-req" style="color:var(--teal2)">0</div></div>
+  </div>
+  <div class="toolbar">
+    <div class="filter-group">
+      <button class="fbtn active" onclick="setFilter('all',this)">ALL</button>
+      <button class="fbtn" onclick="setFilter('active',this)">IN PROGRESS</button>
+      <button class="fbtn" onclick="setFilter('review',this)">REVIEW</button>
+      <button class="fbtn" onclick="setFilter('brief',this)">BRIEF</button>
+      <button class="fbtn" onclick="setFilter('done',this)">DONE</button>
+      <button class="fbtn" onclick="setFilter('hold',this)">HOLD</button>
+    </div>
+    <div class="search-box"><span class="si">⌕</span><input type="text" placeholder="ค้นหา..." oninput="renderProjects()" id="searchInput"></div>
+    <select class="fsel-inline" id="filterRequester" onchange="renderProjects()"><option value="">— Requester —</option></select>
+    <select class="fsel-inline" id="filterDesigner" onchange="renderProjects()"><option value="">— Designer —</option></select>
+    <select class="fsel-inline" id="filterBrand" onchange="renderProjects()"><option value="">— Brand —</option></select>
+  </div>
+  <div class="tbl-wrap"><table>
+    <thead><tr>
+      <th>ID</th><th>ชื่องาน / ประเภท</th><th>Brand</th><th>Requester</th><th>Designer</th>
+      <th>Man-days / Pts</th><th>Status</th><th>Priority</th><th>Deadline</th><th>Progress</th><th>Log</th><th></th>
+    </tr></thead>
+    <tbody id="projBody"></tbody>
+  </table></div>
+</div>
+
+<!-- ══ MY WORK (Designer Self-view) ══ -->
+<div class="page" id="page-designer">
+  <div class="sec-head">
+    <div><div class="sec-title">My Work — Designer Self-view</div><div class="sec-sub">เลือก Designer เพื่อดูงานและ KPI ของตัวเอง</div></div>
+    <div class="q-tabs" id="dsvQTabs">
+      <button class="q-tab active" onclick="setDsvQ('all',this)">ALL</button>
+      <button class="q-tab" onclick="setDsvQ('Q1',this)">Q1</button>
+      <button class="q-tab" onclick="setDsvQ('Q2',this)">Q2</button>
+      <button class="q-tab" onclick="setDsvQ('Q3',this)">Q3</button>
+      <button class="q-tab" onclick="setDsvQ('Q4',this)">Q4</button>
+    </div>
+  </div>
+  <div class="toolbar" style="margin-bottom:20px">
+    <select class="fsel-inline" id="dsvDesignerSel" onchange="renderDesignerView()" style="font-size:13px;padding:7px 12px">
+      <option value="">— เลือก Designer —</option>
+    </select>
+  </div>
+  <div id="dsvContent"></div>
+</div>
+
+<!-- ══ REQUESTER DASHBOARD ══ -->
+<div class="page" id="page-requester">
+  <div class="rdash-sel-wrap">
+    <div class="rdash-sel-label">Requester</div>
+    <select class="fsel-inline" id="reqDashSel" onchange="renderReqDash()" style="font-size:13px;padding:7px 14px">
+      <option value="">— เลือก Requester —</option>
+    </select>
+  </div>
+  <div id="reqDashContent">
+    <div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">เลือก Requester เพื่อดู Dashboard</div></div>
+  </div>
+</div>
+
+<!-- ══ PERFORMANCE ══ -->
+<div class="page" id="page-performance">
+  <div class="sec-head">
+    <div><div class="sec-title">Designer Performance</div><div class="sec-sub">KPI = Weighted Points × On-time Rate</div></div>
+    <div class="q-tabs" id="perfQTabs">
+      <button class="q-tab active" onclick="setPerfQ('all',this)">ALL</button>
+      <button class="q-tab" onclick="setPerfQ('Q1',this)">Q1</button>
+      <button class="q-tab" onclick="setPerfQ('Q2',this)">Q2</button>
+      <button class="q-tab" onclick="setPerfQ('Q3',this)">Q3</button>
+      <button class="q-tab" onclick="setPerfQ('Q4',this)">Q4</button>
+    </div>
+  </div>
+  <div class="perf-grid" id="perfGrid"></div>
+  <div class="sec-head"><div class="sec-title">Leaderboard</div></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>#</th><th>Designer</th><th>Done/Total</th><th>Weighted Pts</th><th>On-time %</th><th>Score</th><th>Avg Rev</th><th>Brief Score</th><th>Grade</th></tr></thead>
+    <tbody id="lbBody"></tbody>
+  </table></div>
+</div>
+
+<!-- ══ CAPACITY PLANNING ══ -->
+<div class="page" id="page-capacity">
+  <div class="sec-head">
+    <div><div class="sec-title">Capacity Planning</div><div class="sec-sub">Workload ของแต่ละ Designer — งาน Active ทั้งหมด</div></div>
+    <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)">
+      <span style="color:var(--green2)">■</span> OK (&lt;70%)&nbsp;&nbsp;
+      <span style="color:var(--orange2)">■</span> WARN (70–90%)&nbsp;&nbsp;
+      <span style="color:var(--red2)">■</span> FULL (&gt;90%)
+    </div>
+  </div>
+  <div class="cap-grid" id="capGrid"></div>
+  <div class="sec-head" style="margin-top:8px"><div class="sec-title">แนะนำ — งานถัดไปควรให้ใครรับ</div></div>
+  <div id="capRecommend" style="background:var(--s1);border:1px solid var(--border);border-left:3px solid var(--green);padding:16px;font-size:13px;line-height:1.8"></div>
+</div>
+
+<!-- ══ BRIEF QUALITY ══ -->
+<div class="page" id="page-briefquality">
+  <div class="sec-head">
+    <div><div class="sec-title">Brief Quality Score</div><div class="sec-sub">Designer ประเมิน Brief ของ Requester หลัง project เสร็จ — ช่วยระบุ Brief ที่ต้องปรับปรุง</div></div>
+  </div>
+  <div class="bq-grid" id="bqGrid"></div>
+  <div class="sec-head" style="margin-top:8px"><div class="sec-title">โปรเจกต์ที่รอ Rating Brief</div></div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>ID</th><th>ชื่องาน</th><th>Requester</th><th>Designer</th><th>Revision</th><th>Brief Score</th><th></th></tr></thead>
+    <tbody id="bqPendingBody"></tbody>
+  </table></div>
+</div>
+
+<!-- ══ SUPERVISOR DASHBOARD ══ -->
+<div class="page" id="page-supervisor">
+  <div class="sec-head">
+    <div><div class="sec-title">Supervisor Dashboard</div><div class="sec-sub">ภาพรวมทีม Designer ทั้งหมด + Approval Queue</div></div>
+    <div class="q-tabs" id="supQTabs">
+      <button class="q-tab active" onclick="setSupQ('all',this)">ALL</button>
+      <button class="q-tab" onclick="setSupQ('Q1',this)">Q1</button>
+      <button class="q-tab" onclick="setSupQ('Q2',this)">Q2</button>
+      <button class="q-tab" onclick="setSupQ('Q3',this)">Q3</button>
+      <button class="q-tab" onclick="setSupQ('Q4',this)">Q4</button>
+    </div>
+  </div>
+  <div id="supContent"></div>
+</div>
+
+<!-- ══ DIRECTOR DASHBOARD ══ -->
+<div class="page" id="page-director">
+  <div class="sec-head">
+    <div><div class="sec-title">Director Dashboard</div><div class="sec-sub">Executive KPI Summary — ภาพรวมองค์กร</div></div>
+    <div class="q-tabs" id="dirQTabs">
+      <button class="q-tab active" onclick="setDirQ('all',this)">ALL TIME</button>
+      <button class="q-tab" onclick="setDirQ('Q1',this)">Q1</button>
+      <button class="q-tab" onclick="setDirQ('Q2',this)">Q2</button>
+      <button class="q-tab" onclick="setDirQ('Q3',this)">Q3</button>
+      <button class="q-tab" onclick="setDirQ('Q4',this)">Q4</button>
+    </div>
+  </div>
+  <div id="dirContent"></div>
+</div>
+
+<!-- ══ BRANDS ══ -->
+<div class="page" id="page-brands">
+  <div class="sec-head"><div><div class="sec-title">Brand Overview</div></div></div>
+  <div class="brand-grid" id="brandGrid"></div>
+</div>
+
+<!-- ══ TRELLO ══ -->
+<div class="page" id="page-trello">
+  <div class="sec-head"><div><div class="sec-title">Trello Export — Quarterly Review</div></div></div>
+  <div class="trello-setup">
+    <strong style="color:var(--blue2)">ขั้นตอน:</strong>
+    1. ไปที่ <a href="https://trello.com/power-ups/admin" target="_blank">trello.com/power-ups/admin</a> → สร้าง Power-Up → คัดลอก API Key<br>
+    2. Authorize ที่ <code style="color:var(--gold)">https://trello.com/1/authorize?expiration=never&scope=read,write&response_type=token&key=YOUR_KEY</code><br>
+    3. Board ID จาก URL ของ Board ที่ต้องการ
+  </div>
+  <div class="form-grid" style="margin-bottom:16px;max-width:680px">
+    <div class="fg"><div class="flabel">API Key</div><input class="finput" id="tApiKey" placeholder="xxxx"></div>
+    <div class="fg"><div class="flabel">Token</div><input class="finput" id="tToken" placeholder="xxxx"></div>
+    <div class="fg"><div class="flabel">Board ID</div><input class="finput" id="tBoardId" placeholder="AbCdEfGh"></div>
+    <div class="fg"><div class="flabel">Quarter</div>
+      <select class="fsel" id="tQuarter"><option value="Q1">Q1</option><option value="Q2" selected>Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option></select>
+    </div>
+  </div>
+  <div class="toolbar" style="margin-bottom:16px">
+    <button class="btn-gold" onclick="previewTrello()">PREVIEW</button>
+    <button class="btn-trello" onclick="pushTrello()">PUSH TO TRELLO ↗</button>
+    <button class="btn-outline" onclick="saveTrelloCfg()">SAVE CONFIG</button>
+  </div>
+  <div id="trelloPreviewWrap" style="display:none">
+    <div class="sec-title" style="margin-bottom:10px">PREVIEW</div>
+    <div id="trelloPreview"></div>
+  </div>
+</div>
+
+<!-- ══ ARCHIVE ══ -->
+<div class="page" id="page-export">
+  <div class="sec-head"><div class="sec-title">Archive / Export</div></div>
+  <div class="export-note"><strong>แนวทาง 5–10 ปี:</strong> Export CSV ทุกสิ้น Quarter → Google Sheets แยกตามปี → Master Sheet IMPORTRANGE รวมทุกปี</div>
+  <div class="toolbar" style="margin-bottom:16px">
+    <select class="fsel-inline" id="expYear"><option value="all">ทุกปี</option></select>
+    <select class="fsel-inline" id="expQ"><option value="all">ทุก Q</option><option>Q1</option><option>Q2</option><option>Q3</option><option>Q4</option></select>
+    <button class="btn-gold" onclick="exportCSV()">EXPORT CSV</button>
+    <button class="btn-outline" onclick="exportJSON()">BACKUP JSON</button>
+    <button class="btn-outline" style="color:var(--orange2);border-color:var(--orange)" onclick="document.getElementById('importFile').click()">RESTORE</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="handleImport(event)">
+  </div>
+  <div class="tbl-wrap"><table>
+    <thead><tr><th>ID</th><th>ชื่องาน</th><th>Brand</th><th>Requester</th><th>Designer</th><th>ประเภท</th><th>Man-days</th><th>Pts</th><th>Status</th><th>Deadline</th><th>Finish</th><th>On-time</th><th>Q</th><th>Brief Score</th></tr></thead>
+    <tbody id="archBody"></tbody>
+  </table></div>
+</div>
+
+<!-- ══ MODAL: PROJECT ══ -->
+<div class="overlay" id="overlay" onclick="closeOverlay(event)">
+  <div class="modal wide">
+    <div class="modal-head"><div class="modal-title" id="modalTitle">NEW PROJECT</div><button class="modal-close" onclick="closeModal()">✕</button></div>
+    <div class="modal-body">
+      <div class="form-grid">
+        <div class="fg"><div class="flabel">Project ID</div><input class="finput" id="fId" readonly></div>
+        <div class="fg"><div class="flabel">ประเภทงาน</div>
+          <select class="fsel" id="fType">
+            <option>Packaging Design</option><option>Brand Identity</option><option>Label Design</option>
+            <option>Print Production</option><option>Catalog / Brochure</option><option>Digital Asset</option>
+            <option>Product Design</option><option>อื่นๆ</option>
+          </select>
+        </div>
+        <div class="fg full"><div class="flabel">ชื่อโปรเจกต์</div><input class="finput" id="fName" placeholder="เช่น Packaging Redesign – กล่อง MASTER ART A4"></div>
+        <div class="fg"><div class="flabel">Brand / Client</div><input class="finput" id="fBrand" list="brandList"><datalist id="brandList"></datalist></div>
+        <div class="fg"><div class="flabel">Requested by</div><input class="finput" id="fRequester" list="reqList"><datalist id="reqList"></datalist></div>
+        <div class="fg"><div class="flabel">Designer</div><select class="fsel" id="fDesigner"><option value="">— เลือก —</option></select></div>
+        <div class="fg"><div class="flabel">Status</div>
+          <select class="fsel" id="fStatus"><option value="brief">Brief</option><option value="active">In Progress</option><option value="review">Pending Review</option><option value="done">Done</option><option value="hold">On Hold</option></select>
+        </div>
+        <div class="fg"><div class="flabel">Priority</div>
+          <select class="fsel" id="fPriority"><option value="high">HIGH</option><option value="mid" selected>MID</option><option value="low">LOW</option></select>
+        </div>
+        <div class="fg"><div class="flabel">Deadline</div><input class="finput" type="date" id="fDeadline" onchange="autoQ()"></div>
+        <div class="fg"><div class="flabel">Actual Finish</div><input class="finput" type="date" id="fFinish"></div>
+        <div class="fg"><div class="flabel">Man-days</div><input class="finput" type="number" id="fMandays" min="0.5" step="0.5" value="1"></div>
+        <div class="fg"><div class="flabel">Progress (%)</div><input class="finput" type="number" id="fProgress" min="0" max="100" value="0"></div>
+        <div class="fg"><div class="flabel">Revision Rounds</div><input class="finput" type="number" id="fRevision" min="0" value="0"></div>
+        <div class="fg"><div class="flabel">Quarter</div>
+          <select class="fsel" id="fQuarter"><option value="Q1">Q1</option><option value="Q2">Q2</option><option value="Q3">Q3</option><option value="Q4">Q4</option></select>
+        </div>
+        <div class="fg full"><div class="flabel">ลิงก์ไฟล์ล่าสุด (Google Drive)</div><input class="finput" id="fFile" placeholder="https://drive.google.com/..."></div>
+        <div class="fg full">
+          <div class="flabel">File Versions (version:url แต่ละรายการขึ้นบรรทัดใหม่)</div>
+          <textarea class="ftxt" id="fVersions" style="min-height:70px;font-family:'IBM Plex Mono',monospace;font-size:11px" placeholder="v1:https://drive.google.com/...&#10;v2:https://drive.google.com/..."></textarea>
+        </div>
+        <div class="fg full">
+          <div class="flabel">Approval Chain</div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:4px">
+            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv1" style="accent-color:var(--gold)"> Designer Done</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv2" style="accent-color:var(--gold)"> Supervisor Approved</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv3" style="accent-color:var(--gold)"> Marketing Approved</label>
+            <label style="display:flex;align-items:center;gap:5px;font-size:12px;cursor:pointer"><input type="checkbox" id="apv4" style="accent-color:var(--gold)"> Director Approved</label>
+          </div>
+        </div>
+        <div class="fg full"><div class="flabel">หมายเหตุ</div><textarea class="ftxt" id="fNote"></textarea></div>
+      </div>
+    </div>
+    <div class="modal-foot"><button class="btn-outline" onclick="closeModal()">CANCEL</button><button class="btn-gold" onclick="saveProject()">SAVE</button></div>
+  </div>
+</div>
+
+<!-- ══ MODAL: LOG + REVISION THREAD ══ -->
+<div class="overlay" id="logOverlay" onclick="closeLogOv(event)">
+  <div class="modal sm">
+    <div class="modal-head"><div class="modal-title" id="logTitle">ACTIVITY LOG</div><button class="modal-close" onclick="closeLog()">✕</button></div>
+    <div class="modal-body">
+      <div class="log-list" id="logList"></div>
+      <div class="log-input-area">
+        <div class="log-type-sel">
+          <button class="log-type-btn active" onclick="setLogType('activity',this)">ACTIVITY</button>
+          <button class="log-type-btn" onclick="setLogType('revision',this)">REVISION</button>
+          <button class="log-type-btn" onclick="setLogType('status',this)">STATUS UPDATE</button>
+        </div>
+        <div class="rev-extra" id="revExtra">
+          <input class="finput" id="revWho" placeholder="สั่งโดย (Requester / Supervisor)">
+          <input class="finput" id="revReason" placeholder="เหตุผลที่ revise เช่น สีไม่ตรง, layout เปลี่ยน...">
+        </div>
+        <div class="log-input-row">
+          <input class="log-input" id="logText" placeholder="เพิ่ม comment..." onkeydown="if(event.key==='Enter'&&!event.shiftKey)addLog()">
+          <button class="btn-gold" onclick="addLog()">ADD</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ MODAL: BRIEF RATING ══ -->
+<div class="overlay" id="bqOverlay" onclick="closeBqOv(event)">
+  <div class="modal xs">
+    <div class="modal-head"><div class="modal-title" id="bqModalTitle">RATE BRIEF</div><button class="modal-close" onclick="closeBq()">✕</button></div>
+    <div class="modal-body">
+      <div style="margin-bottom:12px;font-size:13px;color:var(--dim)" id="bqProjName"></div>
+      <div class="flabel" style="margin-bottom:8px">ให้คะแนน Brief ของ Requester (1–5 ดาว)</div>
+      <div class="star-row" id="bqStars">
+        <span class="star" onclick="setBqStar(1)">★</span>
+        <span class="star" onclick="setBqStar(2)">★</span>
+        <span class="star" onclick="setBqStar(3)">★</span>
+        <span class="star" onclick="setBqStar(4)">★</span>
+        <span class="star" onclick="setBqStar(5)">★</span>
+      </div>
+      <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);margin-bottom:14px" id="bqStarLabel">เลือกดาว</div>
+      <div class="fg"><div class="flabel">หมายเหตุ (optional)</div><textarea class="ftxt" id="bqNote" style="min-height:52px" placeholder="Brief ไม่ชัดเรื่องสี, ขาด reference..."></textarea></div>
+    </div>
+    <div class="modal-foot"><button class="btn-outline" onclick="closeBq()">CANCEL</button><button class="btn-gold" onclick="saveBqRating()">SAVE RATING</button></div>
+  </div>
+</div>
+
+<!-- TRELLO RESULT -->
+<div class="overlay" id="trelloResOv" onclick="this.classList.remove('open')">
+  <div class="modal sm">
+    <div class="modal-head"><div class="modal-title" id="trelloResTitle">RESULT</div><button class="modal-close" onclick="document.getElementById('trelloResOv').classList.remove('open')">✕</button></div>
+    <div class="modal-body" id="trelloResBody"></div>
+    <div class="modal-foot"><button class="btn-gold" onclick="document.getElementById('trelloResOv').classList.remove('open')">CLOSE</button></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════
+// CONSTANTS
+// ════════════════════════════════════════════════
+const TYPE_W={'Packaging Design':1.5,'Brand Identity':1.3,'Catalog / Brochure':1.2,'Product Design':1.2,'Print Production':1.0,'Label Design':1.0,'Digital Asset':0.8,'อื่นๆ':1.0};
+const D_COLORS=['#c9a227','#3a7fd4','#3d9e6a','#c94040','#7a5cc9','#2a8a8a','#c97030','#e05c5c'];
+const STATUS_L={brief:'BRIEF',active:'IN PROGRESS',review:'REVIEW',done:'DONE',hold:'ON HOLD'};
+const TYPE_C={'Packaging Design':'packaging','Brand Identity':'brand','Label Design':'label','Print Production':'print','Catalog / Brochure':'print','Digital Asset':'other','Product Design':'other','อื่นๆ':'other'};
+const CAP_MAX=20; // max man-days per designer per period for capacity
+const STAR_LABELS=['','Brief ไม่ชัดเลย','ต้องปรับเยอะ','พอใช้ได้','ดี มี reference ชัด','ดีมาก ครบถ้วน'];
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let projects=JSON.parse(localStorage.getItem('dha_v4_proj')||'null');
+let designers=JSON.parse(localStorage.getItem('dha_v4_des')||'null');
+let trelloCfg=JSON.parse(localStorage.getItem('dha_v4_trello')||'{}');
+if(!designers){designers=[{id:'D001',name:'สมชาย ใจดี',role:'Senior Designer'},{id:'D002',name:'นารี สวัสดี',role:'Packaging Designer'},{id:'D003',name:'วิชัย รักดี',role:'Graphic Designer'},{id:'D004',name:'กมล มีสุข',role:'Jr. Designer'}];localStorage.setItem('dha_v4_des',JSON.stringify(designers));}
+let editId=null,logProjId=null,bqProjId=null,bqStarVal=0;
+let filterStatus='all',perfQ='all',reqQF='all',dsvQF='all',curLogType='activity';
+
+// ════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════
+const calcPts=p=>parseFloat(((parseFloat(p.mandays)||1)*(TYPE_W[p.type]||1)).toFixed(2));
+const getQ=s=>{if(!s)return null;const m=new Date(s).getMonth()+1;return m<=3?'Q1':m<=6?'Q2':m<=9?'Q3':'Q4';};
+const isOT=p=>(!p.deadline||!p.finish)?null:new Date(p.finish)<=new Date(p.deadline);
+const dlCls=(dl,st)=>{if(!dl||st==='done')return '';const d=(new Date(dl)-new Date())/864e5;return d<0?'overdue':d<=3?'soon':'';};
+const fmtD=s=>s?new Date(s).toLocaleDateString('th-TH',{day:'numeric',month:'short',year:'2-digit'}):'—';
+const dColor=id=>{const i=designers.findIndex(d=>d.id===id);return D_COLORS[i%D_COLORS.length]||'#888';};
+const getDes=id=>designers.find(d=>d.id===id);
+const save=()=>localStorage.setItem('dha_v4_proj',JSON.stringify(projects));
+function genId(){const y=new Date().getFullYear();const max=projects.reduce((m,p)=>Math.max(m,parseInt((p.id||'').split('-')[2])||0),0);return `DHA-${y}-${String(max+1).padStart(3,'0')}`;}
+
+// ════════════════════════════════════════════════
+// CLOCK
+// ════════════════════════════════════════════════
+setInterval(()=>{document.getElementById('clock').textContent=new Date().toLocaleTimeString('th-TH',{hour12:false,hour:'2-digit',minute:'2-digit'});},1000);
+
+// ════════════════════════════════════════════════
+// ALERTS
+// ════════════════════════════════════════════════
+function buildAlerts(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const alerts=[];
+  projects.forEach(p=>{
+    if(p.status==='done'||p.status==='hold')return;
+    if(!p.deadline)return;
+    const d=new Date(p.deadline);
+    const diff=Math.floor((d-today)/864e5);
+    const des=getDes(p.designerId);
+    if(diff<0) alerts.push({type:'overdue',proj:p,diff,des});
+    else if(diff<=3) alerts.push({type:'soon',proj:p,diff,des});
+    else if(p.status==='review') alerts.push({type:'review',proj:p,diff,des});
+  });
+  alerts.sort((a,b)=>a.diff-b.diff);
+  // bell
+  const cnt=alerts.filter(a=>a.type==='overdue'||a.type==='soon').length;
+  const bc=document.getElementById('bellCount');
+  bc.textContent=cnt||'';
+  cnt>0?bc.classList.add('show'):bc.classList.remove('show');
+  // render list
+  const el=document.getElementById('alertList');
+  if(!alerts.length){el.innerHTML='<div style="padding:20px;text-align:center;color:var(--muted);font-family:\'IBM Plex Mono\',monospace;font-size:10px">ไม่มี Alert ✓</div>';return;}
+  el.innerHTML=alerts.map(a=>{
+    const diffTxt=a.diff<0?`เกิน ${Math.abs(a.diff)} วัน`:a.diff===0?'วันนี้':`อีก ${a.diff} วัน`;
+    const label=a.type==='overdue'?'OVERDUE':a.type==='soon'?'DUE SOON':'PENDING REVIEW';
+    return `<div class="alert-item ${a.type}" onclick="openEdit('${a.proj.id}');toggleAlert()">
+      <div class="alert-dot"></div>
+      <div class="alert-body">
+        <div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">
+          <span class="alert-tag ${a.type}">${label}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim)">${diffTxt}</span>
+        </div>
+        <div class="alert-proj">${a.proj.name}</div>
+        <div class="alert-meta">${a.proj.id} · ${a.des?a.des.name:'—'} · ${fmtD(a.proj.deadline)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleAlert(){
+  document.getElementById('alertPanel').classList.toggle('open');
+}
+
+// ════════════════════════════════════════════════
+// NAV
+// ════════════════════════════════════════════════
+function goPage(id,btn){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  btn.classList.add('active');
+  if(id==='performance')renderPerf();
+  if(id==='brands')renderBrands();
+  if(id==='requester'){populateReqDashSel();renderReqDash();}
+  if(id==='export')renderArchive();
+  if(id==='capacity')renderCapacity();
+  if(id==='briefquality')renderBriefQuality();
+  if(id==='designer')renderDesignerView();
+  if(id==='supervisor')renderSupervisor();
+  if(id==='director')renderDirector();
+  if(id==='trello')loadTrelloCfg();
+}
+
+// ════════════════════════════════════════════════
+// STATS + FILTERS
+// ════════════════════════════════════════════════
+function updateStats(){
+  const today=new Date();today.setHours(0,0,0,0);
+  const od=projects.filter(p=>p.status!=='done'&&p.deadline&&new Date(p.deadline)<today);
+  const pts=projects.filter(p=>p.status==='done').reduce((s,p)=>s+calcPts(p),0);
+  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))];
+  document.getElementById('s-total').textContent=projects.length;
+  document.getElementById('s-active').textContent=projects.filter(p=>p.status==='active').length;
+  document.getElementById('s-review').textContent=projects.filter(p=>p.status==='review').length;
+  document.getElementById('s-done').textContent=projects.filter(p=>p.status==='done').length;
+  document.getElementById('s-overdue').textContent=od.length;
+  document.getElementById('s-pts').textContent=pts.toFixed(1);
+  document.getElementById('s-req').textContent=reqs.length;
+  buildAlerts();
+}
+
+function populateFilters(){
+  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))].sort();
+  const brands=[...new Set(projects.map(p=>p.brand).filter(Boolean))].sort();
+  const cr=document.getElementById('filterRequester').value;
+  const cd=document.getElementById('filterDesigner').value;
+  const cb=document.getElementById('filterBrand').value;
+  document.getElementById('filterRequester').innerHTML='<option value="">— Requester —</option>'+reqs.map(r=>`<option${r===cr?' selected':''}>${r}</option>`).join('');
+  document.getElementById('filterDesigner').innerHTML='<option value="">— Designer —</option>'+designers.map(d=>`<option value="${d.id}"${d.id===cd?' selected':''}>${d.name}</option>`).join('');
+  document.getElementById('filterBrand').innerHTML='<option value="">— Brand —</option>'+brands.map(b=>`<option${b===cb?' selected':''}>${b}</option>`).join('');
+  // sync reqDashSel
+  const curRD=document.getElementById('reqDashSel').value;
+  document.getElementById('reqDashSel').innerHTML='<option value="">— เลือก Requester —</option>'+reqs.map(r=>`<option value="${r}"${r===curRD?' selected':''}>${r}</option>`).join('');
+  document.getElementById('dsvDesignerSel').innerHTML='<option value="">— เลือก Designer —</option>'+designers.map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+}
+
+function setFilter(f,btn){filterStatus=f;document.querySelectorAll('#page-projects .fbtn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderProjects();}
+
+// ════════════════════════════════════════════════
+// PROJECT TABLE
+// ════════════════════════════════════════════════
+function renderProjects(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  const fr=document.getElementById('filterRequester').value;
+  const fd=document.getElementById('filterDesigner').value;
+  const fb=document.getElementById('filterBrand').value;
+  let list=projects.filter(p=>{
+    if(filterStatus!=='all'&&p.status!==filterStatus)return false;
+    if(fr&&p.requester!==fr)return false;
+    if(fd&&p.designerId!==fd)return false;
+    if(fb&&p.brand!==fb)return false;
+    if(q&&![p.name,p.id,p.type,p.brand,p.requester].join(' ').toLowerCase().includes(q))return false;
+    return true;
+  });
+  list.sort((a,b)=>{const ad=a.deadline?new Date(a.deadline):new Date('9999');const bd=b.deadline?new Date(b.deadline):new Date('9999');return ad-bd;});
+  const tbody=document.getElementById('projBody');
+  if(!list.length){tbody.innerHTML=`<tr><td colspan="12"><div class="empty"><div class="empty-icon">◻</div><div class="empty-txt">NO PROJECTS</div></div></td></tr>`;updateStats();populateFilters();return;}
+  tbody.innerHTML=list.map(p=>{
+    const d=getDes(p.designerId);const dc=dColor(p.designerId);
+    const dlc=dlCls(p.deadline,p.status);const prog=parseInt(p.progress)||0;
+    const pts=calcPts(p);const tc=TYPE_C[p.type]||'other';
+    const logCnt=(p.log||[]).length;
+    const fh=p.fileUrl?`<a href="${p.fileUrl}" target="_blank" style="color:var(--gold);font-family:'IBM Plex Mono',monospace;font-size:9px;text-decoration:none" onclick="event.stopPropagation()">FILE↗</a>`:'';
+    return `<tr onclick="openEdit('${p.id}')">
+      <td><div class="proj-id">${p.id}</div></td>
+      <td><div class="proj-name">${p.name||'—'}</div><div class="proj-type">${p.type} ${fh}</div></td>
+      <td><span class="tag">${p.brand||'—'}</span></td>
+      <td><span class="tag req">${p.requester||'—'}</span></td>
+      <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'<span style="color:var(--muted)">—</span>'}</td>
+      <td><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim)">${p.mandays||1}d <span class="wbadge ${tc}">×${TYPE_W[p.type]||1}</span></div><div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--gold)">${pts} pts</div></td>
+      <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td>
+      <td><span class="pri ${p.priority}">${p.priority.toUpperCase()}</span></td>
+      <td><span class="dl ${dlc}">${fmtD(p.deadline)}${dlc==='overdue'?' ⚠':dlc==='soon'?' !':''}</span></td>
+      <td><div class="prog-wrap"><div class="prog-bar"><div class="prog-fill ${p.status==='done'?'done':dlc==='overdue'?'ov':''}" style="width:${prog}%"></div></div><div class="prog-pct">${prog}%</div></div></td>
+      <td onclick="event.stopPropagation()"><button class="act-btn log" onclick="openLog('${p.id}')">LOG${logCnt?` (${logCnt})`:''}</button></td>
+      <td onclick="event.stopPropagation()"><div class="acts"><button class="act-btn" onclick="openEdit('${p.id}')">EDIT</button><button class="act-btn del" onclick="delProj('${p.id}')">DEL</button></div></td>
+    </tr>`;
+  }).join('');
+  updateStats();populateFilters();
+}
+
+// ════════════════════════════════════════════════
+// DESIGNER SELF-VIEW
+// ════════════════════════════════════════════════
+function setDsvQ(q,btn){dsvQF=q;document.querySelectorAll('#dsvQTabs .q-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDesignerView();}
+
+function renderDesignerView(){
+  const dId=document.getElementById('dsvDesignerSel').value;
+  const cont=document.getElementById('dsvContent');
+  if(!dId){cont.innerHTML='<div class="empty"><div class="empty-icon">👤</div><div class="empty-txt">เลือก Designer เพื่อดูข้อมูล</div></div>';return;}
+  const d=getDes(dId);if(!d)return;
+  const col=dColor(dId);
+  let ps=projects.filter(p=>p.designerId===dId);
+  if(dsvQF!=='all') ps=ps.filter(p=>(p.quarter||getQ(p.deadline))===dsvQF);
+  const done=ps.filter(p=>p.status==='done');
+  const active=ps.filter(p=>p.status==='active');
+  const review=ps.filter(p=>p.status==='review');
+  const today=new Date();today.setHours(0,0,0,0);
+  const od=ps.filter(p=>p.status!=='done'&&p.deadline&&new Date(p.deadline)<today);
+  const pts=done.reduce((s,p)=>s+calcPts(p),0);
+  const otArr=done.filter(p=>isOT(p)===true);
+  const otr=done.length?((otArr.length/done.length)*100).toFixed(0)+'%':'N/A';
+  const score=done.length?(pts*(otArr.length/done.length)).toFixed(1):pts.toFixed(1);
+  const gr=gradeOf(parseFloat(score));
+  const revAvg=done.length?(done.reduce((s,p)=>s+(p.revision||0),0)/done.length).toFixed(1):'—';
+  cont.innerHTML=`
+    <div class="dsv-header">
+      <div class="dsv-avatar" style="background:${col}">${d.name.charAt(0)}</div>
+      <div>
+        <div class="dsv-name">${d.name}</div>
+        <div class="dsv-role">${d.role} · ${dsvQF==='all'?'ทุก Quarter':dsvQF}</div>
+      </div>
+      <div style="margin-left:auto;text-align:right">
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:600;color:${gr.c}">${gr.g}</div>
+        <div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);letter-spacing:.08em">GRADE</div>
+      </div>
+    </div>
+    <div class="dsv-kpi-row">
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:var(--text)">${ps.length}</div><div class="dsv-kpi-label">Total</div></div>
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:var(--blue2)">${active.length}</div><div class="dsv-kpi-label">Active</div></div>
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:var(--green2)">${done.length}</div><div class="dsv-kpi-label">Done</div></div>
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:${col}">${pts.toFixed(1)}</div><div class="dsv-kpi-label">Points</div></div>
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:${od.length?'var(--red2)':'var(--green2)'}">${od.length}</div><div class="dsv-kpi-label">Overdue</div></div>
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:var(--orange2)">${revAvg}</div><div class="dsv-kpi-label">Rev/job</div></div>
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:${parseFloat(otr)>=80?'var(--green2)':'var(--orange2)'}">${otr}</div><div class="dsv-kpi-label">On-time %</div></div>
+      <div class="dsv-kpi"><div class="dsv-kpi-val" style="color:var(--orange2)">${review.length}</div><div class="dsv-kpi-label">In Review</div></div>
+    </div>
+    <div class="sec-title" style="margin-bottom:12px">งานทั้งหมด</div>
+    <div class="tbl-wrap"><table>
+      <thead><tr><th>ID</th><th>ชื่องาน</th><th>Brand</th><th>Status</th><th>Deadline</th><th>Man-days</th><th>Points</th><th>Revision</th><th>On-time</th></tr></thead>
+      <tbody>${ps.map(p=>{
+        const dlc=dlCls(p.deadline,p.status);
+        const ot=isOT(p);
+        return `<tr onclick="openEdit('${p.id}')">
+          <td class="proj-id">${p.id}</td>
+          <td><div class="proj-name">${p.name}</div><div class="proj-type">${p.type}</div></td>
+          <td><span class="tag">${p.brand||'—'}</span></td>
+          <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td>
+          <td><span class="dl ${dlc}">${fmtD(p.deadline)}</span></td>
+          <td style="font-family:'IBM Plex Mono',monospace">${p.mandays||1}d</td>
+          <td style="font-family:'IBM Plex Mono',monospace;color:${col}">${calcPts(p).toFixed(2)}</td>
+          <td style="font-family:'IBM Plex Mono',monospace;color:var(--orange2)">${p.revision||0}</td>
+          <td style="font-family:'IBM Plex Mono',monospace;color:${ot===null?'var(--muted)':ot?'var(--green2)':'var(--red2)'}">${ot===null?'—':ot?'✓':'✗'}</td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`;
+}
+
+// ════════════════════════════════════════════════
+// SUPERVISOR DASHBOARD
+// ════════════════════════════════════════════════
+let supQF='all';
+function setSupQ(q,btn){supQF=q;document.querySelectorAll('#supQTabs .q-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderSupervisor();}
+
+function renderSupervisor(){
+  const cont=document.getElementById('supContent');
+  const today=new Date();today.setHours(0,0,0,0);
+
+  let ps=projects;
+  if(supQF!=='all') ps=ps.filter(p=>(p.quarter||getQ(p.deadline))===supQF);
+
+  const done=ps.filter(p=>p.status==='done');
+  const active=ps.filter(p=>p.status==='active');
+  const review=ps.filter(p=>p.status==='review');
+  const od=ps.filter(p=>p.status!=='done'&&p.deadline&&new Date(p.deadline)<today);
+  const pts=done.reduce((s,p)=>s+calcPts(p),0);
+  const otArr=done.filter(p=>isOT(p)===true);
+  const otr=done.length?Math.round((otArr.length/done.length)*100):0;
+
+  // pending approval
+  const needsApproval=projects.filter(p=>p.status==='review'||
+    (p.approval&&(!p.approval[1]||!p.approval[2]||!p.approval[3])));
+
+  // team summary per designer
+  const teamStats=designers.map((d,i)=>{
+    let dp=ps.filter(x=>x.designerId===d.id);
+    const ddone=dp.filter(x=>x.status==='done');
+    const s=calcDStats(d.id,supQF);
+    const gr=gradeOf(s.score);
+    return {...d,dp,ddone,s,gr,col:D_COLORS[i%D_COLORS.length]};
+  });
+
+  // donut for team
+  const statusCounts={active:active.length,review:review.length,done:done.length,brief:ps.filter(p=>p.status==='brief').length,hold:ps.filter(p=>p.status==='hold').length};
+
+  cont.innerHTML=`
+    <!-- EXEC STRIP -->
+    <div style="display:grid;grid-template-columns:repeat(7,1fr);gap:1px;background:var(--border);border:1px solid var(--border);margin-bottom:20px">
+      ${[
+        {l:'Total Projects',v:ps.length,c:'var(--gold)',cls:'c-gold'},
+        {l:'In Progress',v:active.length,c:'var(--blue2)',cls:'c-blue'},
+        {l:'Pending Review',v:review.length,c:'var(--orange2)',cls:'c-orange'},
+        {l:'Done',v:done.length,c:'var(--green2)',cls:'c-green'},
+        {l:'Overdue',v:od.length,c:od.length?'var(--red2)':'var(--green2)',cls:'c-red'},
+        {l:'Team Points',v:pts.toFixed(1),c:'var(--purple2)',cls:'c-purple'},
+        {l:'On-time Rate',v:otr+'%',c:otr>=80?'var(--green2)':'var(--orange2)',cls:'c-teal'},
+      ].map(k=>`<div class="stat ${k.cls}"><div class="stat-label">${k.l}</div><div class="stat-val" style="color:${k.c}">${k.v}</div></div>`).join('')}
+    </div>
+
+    <!-- TEAM GRID -->
+    <div class="sec-title" style="margin-bottom:12px">Team Overview</div>
+    <div class="sup-team-grid" style="margin-bottom:20px">
+      ${teamStats.map(t=>{
+        const cap=Math.min(((t.dp.filter(p=>['active','brief','review'].includes(p.status)).reduce((s,p)=>s+(parseFloat(p.mandays)||1),0))/CAP_MAX)*100,100);
+        const capC=cap<70?'var(--green2)':cap<90?'var(--orange2)':'var(--red2)';
+        return `<div class="sup-team-card" style="border-top-color:${t.col}" onclick="document.getElementById('dsvDesignerSel').value='${t.id}';goPage('designer',document.querySelector('.nav-tab:nth-child(2)'))">
+          <div class="sup-tc-head">
+            <div class="sup-tc-av" style="background:${t.col}">${t.d.name.charAt(0)}</div>
+            <div><div class="sup-tc-name">${t.d.name}</div><div class="sup-tc-role">${t.d.role}</div></div>
+            <span class="perf-grade" style="color:${t.gr.c};border-color:${t.gr.c};margin-left:auto">${t.gr.g}</span>
+          </div>
+          <div class="sup-tc-stats">
+            <div class="sup-tc-stat"><div class="sup-tc-val" style="color:var(--green2)">${t.ddone.length}</div><div class="sup-tc-lbl">Done</div></div>
+            <div class="sup-tc-stat"><div class="sup-tc-val" style="color:${t.col}">${t.s.pts.toFixed(1)}</div><div class="sup-tc-lbl">Pts</div></div>
+            <div class="sup-tc-stat"><div class="sup-tc-val" style="color:${t.s.otr>=.8?'var(--green2)':'var(--orange2)'}">${t.s.otr!==null?(t.s.otr*100).toFixed(0)+'%':'—'}</div><div class="sup-tc-lbl">OT%</div></div>
+          </div>
+          <div style="margin-top:10px">
+            <div style="display:flex;justify-content:space-between;margin-bottom:3px;font-family:'IBM Plex Mono',monospace;font-size:8px;color:var(--dim)"><span>Workload</span><span style="color:${capC}">${cap.toFixed(0)}%</span></div>
+            <div class="cap-bar"><div class="cap-fill ${cap<70?'ok':cap<90?'warn':'full'}" style="width:${cap}%"></div></div>
+          </div>
+        </div>`;
+      }).join('')}
+    </div>
+
+    <!-- APPROVAL QUEUE -->
+    <div class="sec-title" style="margin-bottom:12px">Approval Queue (${needsApproval.length} รายการ)</div>
+    <div class="tbl-wrap" style="margin-bottom:20px"><table>
+      <thead><tr><th>ID</th><th>ชื่องาน</th><th>Brand</th><th>Designer</th><th>Approval Chain</th><th>Status</th><th>Deadline</th><th></th></tr></thead>
+      <tbody>${needsApproval.length?needsApproval.map(p=>{
+        const d=getDes(p.designerId);const dc=dColor(p.designerId);
+        const ap=p.approval||[false,false,false,false];
+        const steps=['Designer','Supervisor','Marketing','Director'];
+        return `<tr>
+          <td class="proj-id">${p.id}</td>
+          <td><div class="proj-name">${p.name}</div><div class="proj-type">${p.type}</div></td>
+          <td><span class="tag">${p.brand||'—'}</span></td>
+          <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'—'}</td>
+          <td>
+            <div class="approval-chain">
+              ${steps.map((s,i)=>`
+                <div class="approval-step">
+                  <div class="approval-node ${ap[i]?'approved':i===ap.filter(Boolean).length?'pending':'waiting'}" onclick="event.stopPropagation();toggleApproval('${p.id}',${i})">
+                    ${ap[i]?'✓ ':''} ${s}
+                  </div>
+                  ${i<steps.length-1?'<div class="approval-arrow">→</div>':''}
+                </div>`).join('')}
+            </div>
+          </td>
+          <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td>
+          <td class="dl ${dlCls(p.deadline,p.status)}">${fmtD(p.deadline)}</td>
+          <td><button class="act-btn" onclick="openEdit('${p.id}')">EDIT</button></td>
+        </tr>`;
+      }).join(''):`<tr><td colspan="8"><div class="empty"><div class="empty-icon">✓</div><div class="empty-txt">ไม่มีรายการรอ Approve</div></div></td></tr>`}
+      </tbody>
+    </table></div>
+
+    <!-- WORKLOAD BAR -->
+    <div class="sec-title" style="margin-bottom:12px">Workload Balance</div>
+    <div class="rdash-panel" style="margin-bottom:0">
+      ${teamStats.map(t=>{
+        const cap=t.dp.filter(p=>['active','brief','review'].includes(p.status)).reduce((s,p)=>s+(parseFloat(p.mandays)||1),0);
+        const pct=Math.min((cap/CAP_MAX)*100,100);
+        const cc=pct<70?'var(--green)':pct<90?'var(--orange)':'var(--red)';
+        return `<div class="sup-workload-row">
+          <div class="chip" style="width:140px;flex-shrink:0"><div class="d-dot" style="background:${t.col}"></div>${t.d.name}</div>
+          <div style="flex:1;background:var(--border2);height:14px;position:relative">
+            <div style="width:${pct}%;height:100%;background:${cc};transition:width .5s"></div>
+          </div>
+          <div style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);width:80px;text-align:right;flex-shrink:0">${cap.toFixed(1)}d / ${pct.toFixed(0)}%</div>
+          <span class="perf-grade" style="color:${t.gr.c};border-color:${t.gr.c};margin-left:8px">${t.gr.g}</span>
+        </div>`;
+      }).join('')}
+    </div>
+  `;
+}
+
+function toggleApproval(id,idx){
+  const p=projects.find(x=>x.id===id);
+  if(!p.approval) p.approval=[false,false,false,false];
+  p.approval[idx]=!p.approval[idx];
+  save();renderSupervisor();showToast(`${['Designer','Supervisor','Marketing','Director'][idx]} ${p.approval[idx]?'✓ Approved':'→ Revoked'}`);
+}
+
+// ════════════════════════════════════════════════
+// DIRECTOR DASHBOARD
+// ════════════════════════════════════════════════
+let dirQF='all';
+function setDirQ(q,btn){dirQF=q;document.querySelectorAll('#dirQTabs .q-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderDirector();}
+
+function renderDirector(){
+  const cont=document.getElementById('dirContent');
+  let ps=dirQF==='all'?projects:projects.filter(p=>(p.quarter||getQ(p.deadline))===dirQF);
+  const done=ps.filter(p=>p.status==='done');
+  const active=ps.filter(p=>['active','brief','review'].includes(p.status));
+  const today=new Date();today.setHours(0,0,0,0);
+  const od=ps.filter(p=>p.status!=='done'&&p.deadline&&new Date(p.deadline)<today);
+  const pts=done.reduce((s,p)=>s+calcPts(p),0);
+  const otArr=done.filter(p=>isOT(p)===true);
+  const otr=done.length?Math.round((otArr.length/done.length)*100):0;
+  const comp=ps.length?Math.round((done.length/ps.length)*100):0;
+  const avgRev=ps.length?(ps.reduce((s,p)=>s+(p.revision||0),0)/ps.length).toFixed(1):'—';
+  const rated=ps.filter(p=>p.briefScore);
+  const bqAvg=rated.length?(rated.reduce((s,p)=>s+p.briefScore,0)/rated.length).toFixed(1):null;
+
+  // designer ranking
+  const ranking=designers.map((d,i)=>{const s=calcDStats(d.id,dirQF);return {...d,s,gr:gradeOf(s.score),col:D_COLORS[i%D_COLORS.length]};}).sort((a,b)=>b.s.score-a.s.score);
+
+  // brand output
+  const bMap={};ps.forEach(p=>{const b=p.brand||'ไม่ระบุ';if(!bMap[b])bMap[b]={t:0,d:0,pts:0};bMap[b].t++;if(p.status==='done'){bMap[b].d++;bMap[b].pts+=calcPts(p);}});
+  const brands=Object.entries(bMap).sort((a,b)=>b[1].pts-a[1].pts).slice(0,6);
+  const maxPts=Math.max(...brands.map(([,v])=>v.pts),1);
+
+  // quarter trend
+  const qMap={Q1:0,Q2:0,Q3:0,Q4:0};projects.forEach(p=>{const q=p.quarter||'Q1';if(qMap[q]!==undefined)qMap[q]++;});
+
+  cont.innerHTML=`
+    <!-- EXEC ROW -->
+    <div class="dir-exec-row">
+      <div class="dir-exec-card cg">
+        <div class="dir-exec-lbl">Completion Rate</div>
+        <div class="dir-exec-val" style="color:var(--green2)">${comp}%</div>
+        <div class="dir-exec-sub">${done.length} / ${ps.length} projects</div>
+      </div>
+      <div class="dir-exec-card cb">
+        <div class="dir-exec-lbl">On-time Delivery</div>
+        <div class="dir-exec-val" style="color:${otr>=80?'var(--green2)':'var(--orange2)'}">${otr}%</div>
+        <div class="dir-exec-sub">${otArr.length} of ${done.length} on time</div>
+      </div>
+      <div class="dir-exec-card co">
+        <div class="dir-exec-lbl">Total Output (pts)</div>
+        <div class="dir-exec-val" style="color:var(--gold)">${pts.toFixed(1)}</div>
+        <div class="dir-exec-sub">Weighted man-days</div>
+      </div>
+      <div class="dir-exec-card cr">
+        <div class="dir-exec-lbl">Overdue Projects</div>
+        <div class="dir-exec-val" style="color:${od.length?'var(--red2)':'var(--green2)'}">${od.length}</div>
+        <div class="dir-exec-sub">${od.length?'ต้องติดตาม':'ทุกอย่างตรงเวลา ✓'}</div>
+      </div>
+    </div>
+
+    <div class="rdash-grid-21" style="margin-bottom:16px">
+      <!-- Designer Ranking -->
+      <div class="rdash-panel">
+        <div class="rdash-panel-title"><span style="background:var(--gold);width:3px;height:12px;display:inline-block;margin-right:8px"></span>Designer Ranking — Score</div>
+        ${ranking.map((d,i)=>{
+          const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'';
+          const maxS=ranking[0].s.score||1;
+          const pct=Math.min((d.s.score/maxS)*100,100);
+          return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:13px;width:20px;text-align:center">${medal||'#'+(i+1)}</span>
+            <div class="d-dot" style="background:${d.col}"></div>
+            <span style="width:110px;font-size:12px;font-weight:500">${d.name}</span>
+            <div style="flex:1;background:var(--border2);height:10px">
+              <div style="width:${pct}%;height:100%;background:${d.col};transition:width .6s"></div>
+            </div>
+            <span style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:${d.col};width:40px;text-align:right">${d.s.score.toFixed(1)}</span>
+            <span class="perf-grade" style="color:${d.gr.c};border-color:${d.gr.c}">${d.gr.g}</span>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- KPI Summary -->
+      <div class="rdash-panel">
+        <div class="rdash-panel-title"><span style="background:var(--teal2);width:3px;height:12px;display:inline-block;margin-right:8px"></span>KPI Highlights</div>
+        ${[
+          {l:'Avg Revision/job',v:avgRev,c:'var(--orange2)'},
+          {l:'Brief Quality Avg',v:bqAvg?bqAvg+'★':'N/A',c:'var(--gold)'},
+          {l:'Active Projects',v:active.length,c:'var(--blue2)'},
+          {l:'Total Requesters',v:[...new Set(projects.map(p=>p.requester).filter(Boolean))].length,c:'var(--teal2)'},
+          {l:'Total Brands',v:[...new Set(projects.map(p=>p.brand).filter(Boolean))].length,c:'var(--purple2)'},
+          {l:'Designers',v:designers.length,c:'var(--text)'},
+        ].map(k=>`<div style="display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border)">
+          <span style="font-size:12px;color:var(--dim)">${k.l}</span>
+          <span style="font-family:'IBM Plex Mono',monospace;font-size:13px;font-weight:600;color:${k.c}">${k.v}</span>
+        </div>`).join('')}
+      </div>
+    </div>
+
+    <!-- Brand Output Chart -->
+    <div class="rdash-grid-2" style="margin-bottom:16px">
+      <div class="rdash-panel">
+        <div class="rdash-panel-title"><span style="background:var(--blue2);width:3px;height:12px;display:inline-block;margin-right:8px"></span>Brand Output (Weighted Points)</div>
+        ${brands.map(([name,v],i)=>{
+          const c=['var(--gold)','var(--blue2)','var(--teal2)','var(--purple2)','var(--orange2)','var(--green2)'][i%6];
+          return `<div class="rdash-bar-row">
+            <div class="rdash-bar-lbl">${name}</div>
+            <div class="rdash-bar-track"><div class="rdash-bar-fill" style="width:${(v.pts/maxPts)*100}%;background:${c}20;border-left:3px solid ${c}">
+              <div class="rdash-bar-txt">${v.pts.toFixed(1)} pts · ${v.d}/${v.t} done</div>
+            </div></div>
+            <div class="rdash-bar-cnt">${v.t}</div>
+          </div>`;
+        }).join('')}
+      </div>
+
+      <!-- Quarter Trend -->
+      <div class="rdash-panel">
+        <div class="rdash-panel-title"><span style="background:var(--green2);width:3px;height:12px;display:inline-block;margin-right:8px"></span>โปรเจกต์ตาม Quarter (All time)</div>
+        ${rdashLineChart(qMap)}
+      </div>
+    </div>
+
+    <!-- Overdue list -->
+    ${od.length?`
+    <div class="sec-title" style="margin-bottom:12px">⚠ Overdue — ต้องติดตาม (${od.length} รายการ)</div>
+    <div class="rdash-panel" style="margin-bottom:0">
+      ${od.map(p=>{const d=getDes(p.designerId);const diff=dlDiff(p.deadline);
+        return `<div class="rdash-overdue-item">
+          <div><div class="rdash-od-name">${p.name}</div><div class="rdash-od-meta">${p.id} · ${d?d.name:'—'} · ${p.brand||'—'}</div></div>
+          <div class="rdash-od-days">เกิน ${Math.abs(diff)} วัน</div>
+        </div>`;}).join('')}
+    </div>`:''}
+  `;
+}
+
+// ════════════════════════════════════════════════
+// CAPACITY PLANNING
+// ════════════════════════════════════════════════
+function renderCapacity(){
+  const grid=document.getElementById('capGrid');
+  const rec=document.getElementById('capRecommend');
+  const capData=designers.map((d,i)=>{
+    const active=projects.filter(p=>p.designerId===d.id&&['active','brief','review'].includes(p.status));
+    const totalDays=active.reduce((s,p)=>s+(parseFloat(p.mandays)||1),0);
+    const pct=Math.min((totalDays/CAP_MAX)*100,100);
+    return {d,i,active,totalDays,pct,col:D_COLORS[i%D_COLORS.length]};
+  });
+  grid.innerHTML=capData.map(({d,i,active,totalDays,pct,col})=>{
+    const cls=pct<70?'ok':pct<90?'warn':'full';
+    const clsColor=pct<70?'var(--green2)':pct<90?'var(--orange2)':'var(--red2)';
+    return `<div class="cap-card">
+      <div class="cap-head">
+        <div class="cap-av" style="background:${col}">${d.name.charAt(0)}</div>
+        <div><div class="cap-name">${d.name}</div><div class="cap-role">${d.role}</div></div>
+        <div style="margin-left:auto;font-family:'IBM Plex Mono',monospace;font-size:11px;color:${clsColor};font-weight:600">${totalDays.toFixed(1)}d</div>
+      </div>
+      <div class="cap-meter">
+        <div class="cap-meter-label"><span>Workload (${CAP_MAX}d = 100%)</span><strong style="color:${clsColor}">${pct.toFixed(0)}%</strong></div>
+        <div class="cap-bar"><div class="cap-fill ${cls}" style="width:${pct}%"></div></div>
+      </div>
+      <div class="cap-projects">
+        ${active.length?active.map(p=>`
+          <div class="cap-proj-item">
+            <span class="status ${p.status}" style="font-size:7px;padding:1px 5px"><span class="sdot"></span>${STATUS_L[p.status]}</span>
+            <span class="cap-proj-name">${p.name.length>25?p.name.slice(0,25)+'…':p.name}</span>
+            <span class="cap-proj-days">${p.mandays||1}d</span>
+          </div>`).join('')
+        :'<div style="color:var(--muted);font-size:12px;padding:8px 0">ว่าง — รับงานได้</div>'}
+      </div>
+    </div>`;
+  }).join('');
+  // Recommend
+  const sorted=capData.sort((a,b)=>a.totalDays-b.totalDays);
+  const best=sorted[0];
+  rec.innerHTML=`
+    <div style="margin-bottom:8px">👍 <strong style="color:${best.col}">${best.d.name}</strong> มี workload น้อยที่สุด (${best.totalDays.toFixed(1)} man-days / ${best.pct.toFixed(0)}%) — แนะนำให้รับงานถัดไป</div>
+    ${sorted.map(({d,totalDays,pct,col})=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:4px 0;border-bottom:1px solid var(--border)">
+        <div class="d-dot" style="background:${col}"></div>
+        <span style="width:140px">${d.name}</span>
+        <div style="flex:1;background:var(--border2);height:4px"><div style="width:${pct}%;height:100%;background:${pct<70?'var(--green)':pct<90?'var(--orange)':'var(--red)'}"></div></div>
+        <span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);width:80px;text-align:right">${totalDays.toFixed(1)}d / ${pct.toFixed(0)}%</span>
+      </div>`).join('')}`;
+}
+
+// ════════════════════════════════════════════════
+// BRIEF QUALITY
+// ════════════════════════════════════════════════
+function renderBriefQuality(){
+  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))].sort();
+  const grid=document.getElementById('bqGrid');
+  grid.innerHTML=reqs.map(r=>{
+    const rated=projects.filter(p=>p.requester===r&&p.status==='done'&&p.briefScore);
+    const avg=rated.length?(rated.reduce((s,p)=>s+p.briefScore,0)/rated.length).toFixed(1):null;
+    const col=avg===null?'var(--muted)':avg>=4?'var(--green2)':avg>=3?'var(--gold)':'var(--red2)';
+    const barW=avg?((parseFloat(avg)/5)*100).toFixed(0):0;
+    return `<div class="bq-card">
+      <div class="bq-name">${r}</div>
+      <div class="bq-role">Marketing / Requester · ${rated.length} projects rated</div>
+      <div class="bq-score-big" style="color:${col}">${avg||'—'}</div>
+      <div class="bq-score-label">/ 5.0 Brief Quality Score</div>
+      <div class="bq-bar"><div class="bq-fill" style="width:${barW}%;background:${col}"></div></div>
+      <div style="font-size:11px;color:var(--dim)">${avg>=4?'Brief ดี มี reference ชัด':avg>=3?'Brief พอใช้ได้':avg?'Brief ต้องปรับปรุง':'ยังไม่มีข้อมูล'}</div>
+    </div>`;
+  }).join('')||'<div class="empty"><div class="empty-txt">ยังไม่มีข้อมูล Requester</div></div>';
+
+  // Pending rating
+  const pending=projects.filter(p=>p.status==='done'&&!p.briefScore&&p.requester);
+  const tbody=document.getElementById('bqPendingBody');
+  tbody.innerHTML=pending.map(p=>{
+    const d=getDes(p.designerId);const dc=dColor(p.designerId);
+    return `<tr>
+      <td class="proj-id">${p.id}</td>
+      <td>${p.name}</td>
+      <td><span class="tag req">${p.requester||'—'}</span></td>
+      <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'—'}</td>
+      <td style="font-family:'IBM Plex Mono',monospace;color:var(--orange2)">${p.revision||0} rounds</td>
+      <td style="color:var(--muted);font-size:11px">ยังไม่ได้ Rate</td>
+      <td><button class="act-btn" onclick="openBq('${p.id}')">RATE BRIEF</button></td>
+    </tr>`;
+  }).join('')||`<tr><td colspan="7"><div class="empty"><div class="empty-txt">ทุก project ถูก rate แล้ว ✓</div></div></td></tr>`;
+}
+
+// ════════════════════════════════════════════════
+// PERFORMANCE
+// ════════════════════════════════════════════════
+function setPerfQ(q,btn){perfQ=q;document.querySelectorAll('#perfQTabs .q-tab').forEach(b=>b.classList.remove('active'));btn.classList.add('active');renderPerf();}
+
+function calcDStats(dId,qf){
+  let list=projects.filter(p=>p.designerId===dId);
+  if(qf!=='all') list=list.filter(p=>(p.quarter||getQ(p.deadline))===qf);
+  const done=list.filter(p=>p.status==='done');
+  const pts=done.reduce((s,p)=>s+calcPts(p),0);
+  const otArr=done.filter(p=>isOT(p)===true);
+  const otr=done.length?otArr.length/done.length:null;
+  const score=otr!==null?pts*otr:pts;
+  const revAvg=done.length?done.reduce((s,p)=>s+(p.revision||0),0)/done.length:0;
+  const bqArr=done.filter(p=>p.briefScore);
+  const bqAvg=bqArr.length?(bqArr.reduce((s,p)=>s+p.briefScore,0)/bqArr.length).toFixed(1):null;
+  return {total:list.length,done:done.length,pts,otr,score,revAvg,bqAvg};
+}
+
+function gradeOf(score){
+  if(score>=20)return{g:'S',c:'var(--gold)'};
+  if(score>=12)return{g:'A',c:'var(--green2)'};
+  if(score>=7) return{g:'B',c:'var(--blue2)'};
+  if(score>=3) return{g:'C',c:'var(--orange2)'};
+  return{g:'D',c:'var(--red2)'};
+}
+
+function renderPerf(){
+  const grid=document.getElementById('perfGrid');
+  grid.innerHTML=designers.map((d,i)=>{
+    const s=calcDStats(d.id,perfQ);const col=D_COLORS[i%D_COLORS.length];const gr=gradeOf(s.score);
+    const otrTxt=s.otr!==null?(s.otr*100).toFixed(0)+'%':'N/A';
+    return `<div class="dc">
+      <div class="dc-head"><div class="dc-av" style="background:${col}">${d.name.charAt(0)}</div><div><div class="dc-name">${d.name}</div><div class="dc-role">${d.role}</div></div></div>
+      <div class="dc-body">
+        <div class="kpi-row">
+          <div class="kpi"><div class="kpi-val" style="color:var(--text)">${s.total}</div><div class="kpi-label">Total</div></div>
+          <div class="kpi"><div class="kpi-val" style="color:var(--green2)">${s.done}</div><div class="kpi-label">Done</div></div>
+          <div class="kpi"><div class="kpi-val" style="color:${col}">${s.pts.toFixed(1)}</div><div class="kpi-label">Points</div></div>
+          <div class="kpi"><div class="kpi-val" style="color:var(--orange2)">${s.revAvg.toFixed(1)}</div><div class="kpi-label">Rev/job</div></div>
+        </div>
+        <div class="sbar-wrap"><div class="sbar-top"><span>Weighted Points</span><strong style="color:${col}">${s.pts.toFixed(1)}</strong></div><div class="sbar"><div class="sfill" style="width:${Math.min((s.pts/30)*100,100)}%;background:${col}"></div></div></div>
+        <div class="sbar-wrap"><div class="sbar-top"><span>On-time Rate</span><strong style="color:${s.otr>=.8?'var(--green2)':'var(--orange2)'}">${otrTxt}</strong></div><div class="sbar"><div class="sfill" style="width:${s.otr!==null?s.otr*100:0}%;background:${s.otr>=.8?'var(--green)':'var(--orange)'}"></div></div></div>
+      </div>
+      <div class="dc-foot"><span style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)">Score: <strong style="color:var(--text)">${s.score.toFixed(1)}</strong>${s.bqAvg?` · Brief Avg: <strong style="color:var(--gold)">${s.bqAvg}★</strong>`:''}</span><span class="perf-grade" style="color:${gr.c};border-color:${gr.c}">${gr.g}</span></div>
+    </div>`;
+  }).join('');
+  const ranked=designers.map((d,i)=>({...d,s:calcDStats(d.id,perfQ),col:D_COLORS[i%D_COLORS.length]})).sort((a,b)=>b.s.score-a.s.score);
+  document.getElementById('lbBody').innerHTML=ranked.map((d,i)=>{
+    const gr=gradeOf(d.s.score);const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1);
+    return `<tr><td style="font-size:14px">${medal}</td><td><div class="chip"><div class="d-dot" style="background:${d.col}"></div>${d.name}</div><div style="font-size:11px;color:var(--muted)">${d.role}</div></td><td style="font-family:'IBM Plex Mono',monospace;color:var(--green2)">${d.s.done}/${d.s.total}</td><td style="font-family:'IBM Plex Mono',monospace;color:${d.col}">${d.s.pts.toFixed(1)}</td><td style="font-family:'IBM Plex Mono',monospace;color:${d.s.otr>=.8?'var(--green2)':'var(--orange2)'}">${d.s.otr!==null?(d.s.otr*100).toFixed(0)+'%':'—'}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:16px;font-weight:600">${d.s.score.toFixed(1)}</td><td style="font-family:'IBM Plex Mono',monospace;color:var(--dim)">${d.s.revAvg.toFixed(1)}</td><td style="font-family:'IBM Plex Mono',monospace;color:var(--gold)">${d.s.bqAvg?d.s.bqAvg+'★':'—'}</td><td><span class="perf-grade" style="color:${gr.c};border-color:${gr.c}">${gr.g}</span></td></tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// REQUESTER DASHBOARD
+// ════════════════════════════════════════════════
+function populateReqDashSel(){
+  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))].sort();
+  document.getElementById('reqDashSel').innerHTML='<option value="">— เลือก Requester —</option>'+reqs.map(r=>`<option value="${r}">${r}</option>`).join('');
+}
+
+function renderReqDash(){
+  const r=document.getElementById('reqDashSel').value;
+  const cont=document.getElementById('reqDashContent');
+  if(!r){cont.innerHTML='<div class="empty"><div class="empty-icon">📋</div><div class="empty-txt">เลือก Requester เพื่อดู Dashboard</div></div>';return;}
+  const ps=projects.filter(p=>p.requester===r);
+  const done=ps.filter(p=>p.status==='done');
+  const active=ps.filter(p=>p.status==='active');
+  const review=ps.filter(p=>p.status==='review');
+  const brief=ps.filter(p=>p.status==='brief');
+  const hold=ps.filter(p=>p.status==='hold');
+  const today=new Date();today.setHours(0,0,0,0);
+  const od=ps.filter(p=>p.status!=='done'&&p.deadline&&new Date(p.deadline)<today);
+  const soon=ps.filter(p=>p.status!=='done'&&p.deadline&&dlDiff(p.deadline)>=0&&dlDiff(p.deadline)<=5);
+  const otArr=done.filter(p=>isOT(p)===true);
+  const otr=done.length?Math.round((otArr.length/done.length)*100):null;
+  const pts=done.reduce((s,p)=>s+calcPts(p),0);
+  const rated=ps.filter(p=>p.briefScore);
+  const bqAvg=rated.length?(rated.reduce((s,p)=>s+p.briefScore,0)/rated.length).toFixed(1):null;
+  const comp=ps.length?Math.round((done.length/ps.length)*100):0;
+  const gr=comp>=80?{g:'A',c:'var(--green)'}:comp>=60?{g:'B',c:'var(--blue)'}:comp>=40?{g:'C',c:'var(--orange)'}:{g:'D',c:'var(--red)'};
+  const col=D_COLORS[r.length%D_COLORS.length];
+
+  // donut data
+  const dData=[
+    {l:'In Progress',v:active.length,c:'var(--blue2)'},
+    {l:'Review',v:review.length,c:'var(--orange2)'},
+    {l:'Done',v:done.length,c:'var(--green2)'},
+    {l:'Brief',v:brief.length,c:'var(--purple2)'},
+    {l:'On Hold',v:hold.length,c:'var(--muted)'},
+  ].filter(d=>d.v>0);
+  const tot=ps.length||1;
+
+  // brand breakdown
+  const bMap={};ps.forEach(p=>{const b=p.brand||'ไม่ระบุ';if(!bMap[b])bMap[b]={t:0,d:0};bMap[b].t++;if(p.status==='done')bMap[b].d++;});
+  const brands=Object.entries(bMap).sort((a,b)=>b[1].t-a[1].t);
+
+  // quarter data
+  const qMap={Q1:0,Q2:0,Q3:0,Q4:0};ps.forEach(p=>{const q=p.quarter||'Q1';if(qMap[q]!==undefined)qMap[q]++;});
+
+  // logs
+  const logs=[];ps.forEach(p=>{(p.log||[]).forEach(l=>logs.push({...l,pn:p.name,pid:p.id}));});
+  logs.sort((a,b)=>new Date(b.ts)-new Date(a.ts));
+
+  cont.innerHTML=`
+    <div class="rdash-hero">
+      <div class="rdash-av" style="background:${col}">${r.charAt(0)}</div>
+      <div class="rdash-info">
+        <div class="rdash-name">${r}</div>
+        <div class="rdash-role">REQUESTER / MARKETING</div>
+        <div class="rdash-meta">
+          <div class="rdash-meta-item">โปรเจกต์ <span>${ps.length}</span></div>
+          <div class="rdash-meta-item">Completion <span>${comp}%</span></div>
+          <div class="rdash-meta-item">On-time <span>${otr!==null?otr+'%':'N/A'}</span></div>
+          ${bqAvg?`<div class="rdash-meta-item">Brief Score <span>${bqAvg}★</span></div>`:''}
+        </div>
+      </div>
+      <div class="rdash-grade">
+        <div class="rdash-grade-val" style="color:${gr.c}">${gr.g}</div>
+        <div class="rdash-grade-lbl">Completion<br>Grade</div>
+      </div>
+    </div>
+
+    <div class="rdash-kpi">
+      <div class="rdash-kpi-card cg"><div class="rdash-kpi-lbl">Total</div><div class="rdash-kpi-val" style="color:var(--gold)">${ps.length}</div></div>
+      <div class="rdash-kpi-card cn"><div class="rdash-kpi-lbl">Done</div><div class="rdash-kpi-val" style="color:var(--green2)">${done.length}</div><div class="rdash-kpi-sub">${comp}%</div></div>
+      <div class="rdash-kpi-card cb"><div class="rdash-kpi-lbl">Active</div><div class="rdash-kpi-val" style="color:var(--blue2)">${active.length}</div></div>
+      <div class="rdash-kpi-card co"><div class="rdash-kpi-lbl">Review</div><div class="rdash-kpi-val" style="color:var(--orange2)">${review.length}</div></div>
+      <div class="rdash-kpi-card cr"><div class="rdash-kpi-lbl">Overdue</div><div class="rdash-kpi-val" style="color:${od.length?'var(--red2)':'var(--green2)'}">${od.length}</div></div>
+      <div class="rdash-kpi-card ct"><div class="rdash-kpi-lbl">Total Pts</div><div class="rdash-kpi-val" style="color:var(--teal2)">${pts.toFixed(1)}</div></div>
+    </div>
+
+    <div class="rdash-grid-13">
+      <div class="rdash-panel">
+        <div class="rdash-panel-title" style="--ac:var(--gold)"><span style="background:var(--gold);width:3px;height:12px;display:inline-block"></span>Status Breakdown</div>
+        ${rdashDonut(dData,tot)}
+      </div>
+      <div class="rdash-panel">
+        <div class="rdash-panel-title"><span style="background:var(--blue2);width:3px;height:12px;display:inline-block"></span>งานแยกตาม Brand</div>
+        ${rdashBrandBar(brands)}
+      </div>
+    </div>
+
+    <div class="rdash-grid-21">
+      <div class="rdash-panel">
+        <div class="rdash-panel-title"><span style="background:var(--teal2);width:3px;height:12px;display:inline-block"></span>โปรเจกต์ตาม Quarter</div>
+        ${rdashLineChart(qMap)}
+      </div>
+      <div class="rdash-panel">
+        <div class="rdash-panel-title"><span style="background:var(--red2);width:3px;height:12px;display:inline-block"></span>Overdue / ใกล้ Deadline</div>
+        ${rdashOverdue(od,soon)}
+      </div>
+    </div>
+
+    <div class="sec-title" style="margin-bottom:12px">ALL PROJECTS</div>
+    <div class="tbl-wrap rdash-panel" style="padding:0;margin-bottom:16px">
+      <table class="rdash-proj-table">
+        <thead><tr><th>ID</th><th>ชื่องาน</th><th>Brand</th><th>Designer</th><th>Status</th><th>Deadline</th><th>Progress</th><th>Pts</th><th>On-time</th></tr></thead>
+        <tbody>${ps.sort((a,b)=>{const ad=a.deadline?new Date(a.deadline):new Date('9999');const bd=b.deadline?new Date(b.deadline):new Date('9999');return ad-bd;}).map(p=>{
+          const d=getDes(p.designerId);const dc=dColor(p.designerId);const ot=isOT(p);
+          const prog=parseInt(p.progress)||0;const diff=dlDiff(p.deadline);
+          const dlc=p.status==='done'?'var(--dim)':diff<0?'var(--red2)':diff<=3?'var(--orange2)':'var(--dim)';
+          const pc=p.status==='done'?'var(--green2)':diff<0?'var(--red2)':'var(--blue2)';
+          return `<tr>
+            <td><div class="proj-id">${p.id}</div></td>
+            <td><div class="proj-name">${p.name}</div><div class="proj-type">${p.type}</div></td>
+            <td><span class="tag">${p.brand||'—'}</span></td>
+            <td>${d?`<div class="chip"><div class="d-dot" style="background:${dc}"></div>${d.name}</div>`:'—'}</td>
+            <td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td>
+            <td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:${dlc}">${fmtD(p.deadline)}${p.status!=='done'&&diff<0?' ⚠':p.status!=='done'&&diff<=3?' !':''}</td>
+            <td><div style="font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--dim);margin-bottom:3px">${prog}%</div><div class="rdash-mini-bar"><div class="rdash-mini-fill" style="width:${prog}%;background:${pc}"></div></div></td>
+            <td style="font-family:'IBM Plex Mono',monospace;color:var(--gold);font-size:11px">${calcPts(p).toFixed(1)}</td>
+            <td><span class="rdash-ot ${ot===null?'na':ot?'yes':'no'}">${ot===null?'—':ot?'✓ On-time':'✗ Late'}</span></td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>
+    </div>
+
+    <div class="sec-title" style="margin-bottom:12px">ACTIVITY LOG</div>
+    <div class="rdash-panel">
+      ${logs.slice(0,8).map((l,i)=>{
+        const ic={activity:'💬',revision:'🔄',status:'📌'}[l.type]||'💬';
+        const bc={activity:'rgba(201,162,39,.1)',revision:'rgba(201,112,48,.1)',status:'rgba(58,127,212,.1)'}[l.type]||'rgba(201,162,39,.1)';
+        const bc2={activity:'var(--gold)',revision:'var(--orange)',status:'var(--blue)'}[l.type]||'var(--gold)';
+        return `<div class="rdash-feed-item">
+          <div class="rdash-feed-icon" style="background:${bc};border:1px solid ${bc2}">${ic}</div>
+          <div style="flex:1;padding-top:2px">
+            <div class="rdash-feed-proj">${l.text}</div>
+            <div class="rdash-feed-meta">${l.pid} · ${l.pn.length>32?l.pn.slice(0,32)+'…':l.pn} · ${l.by||'System'} · ${new Date(l.ts).toLocaleString('th-TH',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'})}</div>
+          </div>
+        </div>`;
+      }).join('')||'<div class="empty"><div class="empty-txt">ยังไม่มี Activity</div></div>'}
+    </div>
+  `;
+}
+
+function dlDiff(dl){if(!dl)return null;return Math.floor((new Date(dl)-new Date())/864e5);}
+
+function rdashDonut(data,total){
+  if(!data.length)return'<div class="empty"><div class="empty-txt">ไม่มีข้อมูล</div></div>';
+  const r=58,cx=72,cy=72,sw=16,circ=2*Math.PI*r;
+  let off=0;
+  const slices=data.map(d=>{const pct=d.v/total;const dash=pct*circ;const s={...d,dash,gap:circ-dash,off};off+=dash;return s;});
+  return `<div class="rdash-donut-wrap">
+    <svg style="flex-shrink:0;width:144px;height:144px" viewBox="0 0 144 144">
+      <circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="var(--s3)" stroke-width="${sw}"/>
+      ${slices.map(s=>`<circle cx="${cx}" cy="${cy}" r="${r}" fill="none" stroke="${s.c}" stroke-width="${sw}" stroke-dasharray="${s.dash} ${s.gap}" stroke-dashoffset="${-s.off+circ/4}"/>`).join('')}
+      <text x="${cx}" y="${cy-5}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="20" font-weight="600" fill="var(--text)">${total}</text>
+      <text x="${cx}" y="${cy+10}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="8" fill="var(--dim)" letter-spacing="1">TOTAL</text>
+    </svg>
+    <div class="rdash-legend">${data.map(d=>`<div class="rdash-legend-item"><div class="rdash-legend-dot" style="background:${d.c}"></div><div class="rdash-legend-label">${d.l}</div><div class="rdash-legend-val" style="color:${d.c}">${d.v}</div><div class="rdash-legend-pct">${Math.round((d.v/total)*100)}%</div></div>`).join('')}</div>
+  </div>`;
+}
+
+function rdashBrandBar(brands){
+  if(!brands.length)return'<div class="empty"><div class="empty-txt">ไม่มีข้อมูล</div></div>';
+  const maxV=Math.max(...brands.map(([,v])=>v.t));
+  const colors=['var(--gold)','var(--blue2)','var(--teal2)','var(--purple2)','var(--orange2)','var(--green2)'];
+  return brands.map(([name,v],i)=>`<div class="rdash-bar-row">
+    <div class="rdash-bar-lbl">${name}</div>
+    <div class="rdash-bar-track">
+      <div class="rdash-bar-fill" style="width:${(v.t/maxV)*100}%;background:${colors[i%colors.length]}20;border-left:3px solid ${colors[i%colors.length]}">
+        <div class="rdash-bar-txt">${v.t} jobs · ${v.t?Math.round((v.d/v.t)*100):0}% done</div>
+      </div>
+    </div>
+    <div class="rdash-bar-cnt">${v.t}</div>
+  </div>`).join('');
+}
+
+function rdashLineChart(qMap){
+  const keys=Object.keys(qMap),vals=Object.values(qMap);
+  const maxV=Math.max(...vals,1);
+  const w=380,h=90,pad=18;
+  const pts=keys.map((k,i)=>({x:pad+i*((w-pad*2)/(keys.length-1||1)),y:h-pad-(vals[i]/maxV)*(h-pad*2),v:vals[i],k}));
+  const path=pts.map((p,i)=>`${i===0?'M':'L'}${p.x},${p.y}`).join(' ');
+  const area=`${path} L${pts[pts.length-1].x},${h-pad} L${pts[0].x},${h-pad} Z`;
+  return `<div class="rdash-line-wrap">
+    <svg viewBox="0 0 ${w} ${h}" preserveAspectRatio="none" style="width:100%;height:130px">
+      ${[0,1,2].map(i=>`<line x1="${pad}" y1="${pad+(i*(h-pad*2)/2)}" x2="${w-pad}" y2="${pad+(i*(h-pad*2)/2)}" stroke="var(--border2)" stroke-width="1" stroke-dasharray="3,3"/>`).join('')}
+      <defs><linearGradient id="rdlg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="var(--teal2)" stop-opacity=".25"/><stop offset="100%" stop-color="var(--teal2)" stop-opacity="0"/></linearGradient></defs>
+      <path d="${area}" fill="url(#rdlg)"/>
+      <path d="${path}" fill="none" stroke="var(--teal2)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      ${pts.map(p=>`<circle cx="${p.x}" cy="${p.y}" r="3.5" fill="var(--bg)" stroke="var(--teal2)" stroke-width="2"/>
+        <text x="${p.x}" y="${p.y-8}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="10" fill="var(--teal2)" font-weight="700">${p.v}</text>
+        <text x="${p.x}" y="${h-3}" text-anchor="middle" font-family="IBM Plex Mono,monospace" font-size="9" fill="var(--dim)">${p.k}</text>`).join('')}
+    </svg>
+  </div>`;
+}
+
+function rdashOverdue(od,soon){
+  const items=[...od.map(p=>({p,type:'overdue',diff:dlDiff(p.deadline)})),...soon.map(p=>({p,type:'soon',diff:dlDiff(p.deadline)}))];
+  if(!items.length)return`<div class="empty"><div class="empty-icon">✓</div><div class="empty-txt">ไม่มี Overdue</div></div>`;
+  return items.slice(0,5).map(({p,type,diff})=>`<div class="rdash-overdue-item ${type}">
+    <div><div class="rdash-od-name">${p.name.length>22?p.name.slice(0,22)+'…':p.name}</div><div class="rdash-od-meta ${type}">${fmtD(p.deadline)}</div></div>
+    <div class="rdash-od-days ${type}">${type==='overdue'?`เกิน ${Math.abs(diff)} วัน`:`อีก ${diff} วัน`}</div>
+  </div>`).join('');
+}
+
+// ════════════════════════════════════════════════
+// BRANDS
+// ════════════════════════════════════════════════
+function renderBrands(){
+  const bMap={};projects.forEach(p=>{const b=p.brand||'ไม่ระบุ';if(!bMap[b])bMap[b]=[];bMap[b].push(p);});
+  document.getElementById('brandGrid').innerHTML=Object.entries(bMap).sort((a,b)=>b[1].length-a[1].length).map(([name,ps])=>{
+    const done=ps.filter(p=>p.status==='done').length;const active=ps.filter(p=>p.status==='active').length;
+    const pts=ps.filter(p=>p.status==='done').reduce((s,p)=>s+calcPts(p),0);
+    const dIds=[...new Set(ps.map(p=>p.designerId).filter(Boolean))];
+    return `<div class="bc"><div class="bc-name">${name}</div><div class="bc-cnt">${ps.length} โปรเจกต์</div>
+      <div class="bc-stats"><div class="bc-stat"><div class="bc-val" style="color:var(--green2)">${done}</div><div class="bc-lbl">Done</div></div><div class="bc-stat"><div class="bc-val" style="color:var(--blue2)">${active}</div><div class="bc-lbl">Active</div></div><div class="bc-stat"><div class="bc-val" style="color:var(--gold)">${pts.toFixed(1)}</div><div class="bc-lbl">Points</div></div></div>
+      <div class="bc-chips">${dIds.map(id=>{const d=getDes(id);const c=dColor(id);return d?`<div class="bc-chip"><div class="d-dot" style="background:${c}"></div>${d.name}</div>`:''}).join('')||'<span style="color:var(--muted);font-size:11px">—</span>'}</div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// ACTIVITY LOG + REVISION THREAD
+// ════════════════════════════════════════════════
+function setLogType(t,btn){curLogType=t;document.querySelectorAll('.log-type-btn').forEach(b=>b.classList.remove('active'));btn.classList.add('active');document.getElementById('revExtra').className='rev-extra'+(t==='revision'?' show':'');}
+
+function openLog(id){
+  logProjId=id;const p=projects.find(x=>x.id===id);
+  document.getElementById('logTitle').textContent=`LOG — ${p.id}`;
+  renderLogList(p);document.getElementById('logText').value='';
+  document.getElementById('logOverlay').classList.add('open');
+}
+function closeLog(){document.getElementById('logOverlay').classList.remove('open');logProjId=null;}
+function closeLogOv(e){if(e.target===document.getElementById('logOverlay'))closeLog();}
+
+function renderLogList(p){
+  const logs=(p.log||[]).slice().reverse();
+  const el=document.getElementById('logList');
+  if(!logs.length){el.innerHTML='<div style="color:var(--muted);font-size:12px;font-family:\'IBM Plex Mono\',monospace;padding:10px 0">ยังไม่มี activity</div>';return;}
+  el.innerHTML=logs.map((l,i)=>`
+    <div class="log-item">
+      <div class="log-left">
+        <div class="log-dot ${l.type||'activity'}"></div>
+        ${i<logs.length-1?'<div class="log-line"></div>':''}
+      </div>
+      <div class="log-body">
+        <div class="log-meta">
+          <span class="log-type-tag ${l.type||'activity'}">${(l.type||'ACTIVITY').toUpperCase()}</span>
+          <span>${new Date(l.ts).toLocaleString('th-TH',{day:'numeric',month:'short',year:'2-digit',hour:'2-digit',minute:'2-digit'})}</span>
+          <span>· ${l.by||'System'}</span>
+        </div>
+        <div class="log-text">${l.text}</div>
+        ${l.type==='revision'&&(l.revWho||l.revReason)?`<div class="log-rev-detail">${l.revWho?'<strong>สั่งโดย:</strong> '+l.revWho+'<br>':''}${l.revReason?'<strong>เหตุผล:</strong> '+l.revReason:''}</div>`:''}
+      </div>
+    </div>`).join('');
+}
+
+function addLog(){
+  const txt=document.getElementById('logText').value.trim();
+  if(!txt||!logProjId)return;
+  const idx=projects.findIndex(p=>p.id===logProjId);
+  if(!projects[idx].log)projects[idx].log=[];
+  const entry={ts:new Date().toISOString(),by:'Supervisor',type:curLogType,text:txt};
+  if(curLogType==='revision'){
+    entry.revWho=document.getElementById('revWho').value.trim();
+    entry.revReason=document.getElementById('revReason').value.trim();
+    // auto-increment revision count
+    projects[idx].revision=(projects[idx].revision||0)+1;
+  }
+  projects[idx].log.push(entry);
+  save();renderLogList(projects[idx]);renderProjects();
+  document.getElementById('logText').value='';
+  if(curLogType==='revision'){document.getElementById('revWho').value='';document.getElementById('revReason').value='';}
+}
+
+// ════════════════════════════════════════════════
+// BRIEF QUALITY RATING
+// ════════════════════════════════════════════════
+function openBq(id){
+  bqProjId=id;bqStarVal=0;
+  const p=projects.find(x=>x.id===id);
+  document.getElementById('bqModalTitle').textContent=`RATE BRIEF — ${p.id}`;
+  document.getElementById('bqProjName').textContent=`${p.name} · Requester: ${p.requester||'—'}`;
+  document.getElementById('bqNote').value='';
+  renderStars(0);
+  document.getElementById('bqOverlay').classList.add('open');
+}
+function closeBq(){document.getElementById('bqOverlay').classList.remove('open');bqProjId=null;}
+function closeBqOv(e){if(e.target===document.getElementById('bqOverlay'))closeBq();}
+
+function setBqStar(n){bqStarVal=n;renderStars(n);document.getElementById('bqStarLabel').textContent=STAR_LABELS[n];}
+function renderStars(n){document.querySelectorAll('#bqStars .star').forEach((s,i)=>s.classList.toggle('active',i<n));}
+
+function saveBqRating(){
+  if(!bqStarVal){showToast('กรุณาเลือกดาวก่อน');return;}
+  const idx=projects.findIndex(p=>p.id===bqProjId);
+  projects[idx].briefScore=bqStarVal;
+  projects[idx].briefNote=document.getElementById('bqNote').value.trim();
+  save();closeBq();renderBriefQuality();showToast('บันทึก Brief Score แล้ว');
+}
+
+// ════════════════════════════════════════════════
+// TRELLO
+// ════════════════════════════════════════════════
+function loadTrelloCfg(){if(trelloCfg.key)document.getElementById('tApiKey').value=trelloCfg.key;if(trelloCfg.token)document.getElementById('tToken').value=trelloCfg.token;if(trelloCfg.boardId)document.getElementById('tBoardId').value=trelloCfg.boardId;}
+function saveTrelloCfg(){trelloCfg={key:document.getElementById('tApiKey').value.trim(),token:document.getElementById('tToken').value.trim(),boardId:document.getElementById('tBoardId').value.trim()};localStorage.setItem('dha_v4_trello',JSON.stringify(trelloCfg));showToast('บันทึก config แล้ว');}
+
+function buildCard(d,qf,i){
+  const s=calcDStats(d.id,qf);const gr=gradeOf(s.score);
+  let ps=projects.filter(p=>p.designerId===d.id&&p.status==='done');
+  if(qf!=='all') ps=ps.filter(p=>(p.quarter||getQ(p.deadline))===qf);
+  const top=ps.sort((a,b)=>calcPts(b)-calcPts(a)).slice(0,3);
+  return{name:`[${qf} ${new Date().getFullYear()}] ${d.name} — Performance Review`,
+    desc:`## ${d.name} | ${d.role}\n**Quarter:** ${qf} ${new Date().getFullYear()}\n\n---\n### KPI Summary\n- Projects Done: **${s.done}** / ${s.total}\n- Weighted Points: **${s.pts.toFixed(1)}**\n- On-time Rate: **${s.otr!==null?(s.otr*100).toFixed(0)+'%':'N/A'}**\n- Performance Score: **${s.score.toFixed(1)}**\n- Grade: **${gr.g}**\n- Avg Revision/job: **${s.revAvg.toFixed(1)}**\n${s.bqAvg?`- Brief Quality Score ที่รับมา: **${s.bqAvg}★**`:''}\n\n---\n### Top Projects\n${top.map(p=>`• ${p.name}\n  ${p.mandays}d × ${TYPE_W[p.type]||1} = ${calcPts(p).toFixed(2)} pts | ${isOT(p)===null?'—':isOT(p)?'✓ On-time':'✗ Late'}`).join('\n')||'—'}\n\n*Generated by DHA Design Ops System v4*`};
+}
+
+function previewTrello(){
+  const qf=document.getElementById('tQuarter').value;
+  const wrap=document.getElementById('trelloPreviewWrap');const prev=document.getElementById('trelloPreview');
+  prev.innerHTML=designers.map((d,i)=>{const c=buildCard(d,qf,i);return `<div style="background:var(--s2);border:1px solid var(--border);border-left:3px solid var(--trello);padding:14px;margin-bottom:12px"><div style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--blue2);margin-bottom:8px">${c.name}</div><pre style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim);white-space:pre-wrap;line-height:1.7">${c.desc}</pre></div>`;}).join('');
+  wrap.style.display='block';showToast('Preview พร้อมแล้ว');
+}
+
+async function pushTrello(){
+  const key=document.getElementById('tApiKey').value.trim();const token=document.getElementById('tToken').value.trim();const boardId=document.getElementById('tBoardId').value.trim();const qf=document.getElementById('tQuarter').value;
+  if(!key||!token||!boardId){showToast('กรุณากรอก API Key, Token, Board ID');return;}
+  showToast('กำลัง connect...');
+  let listId='';
+  try{const r=await fetch(`https://api.trello.com/1/boards/${boardId}/lists?key=${key}&token=${token}`);if(!r.ok)throw new Error('Board หรือ credentials ผิด');const lists=await r.json();const pl=lists.find(l=>l.name.toLowerCase().includes('performance')||l.name.toLowerCase().includes('review'));listId=pl?pl.id:lists[0]?.id;if(!listId)throw new Error('ไม่พบ List');}
+  catch(e){showRes('❌ Connect ไม่สำเร็จ',`Error: ${e.message}`);return;}
+  const results=[];
+  for(let i=0;i<designers.length;i++){const d=designers[i];const card=buildCard(d,qf,i);try{const r=await fetch(`https://api.trello.com/1/cards?key=${key}&token=${token}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:card.name,desc:card.desc,idList:listId,pos:'top'})});if(!r.ok)throw new Error(`HTTP ${r.status}`);const cr=await r.json();results.push({name:d.name,ok:true,url:cr.url});}catch(e){results.push({name:d.name,ok:false,err:e.message});}}
+  showRes(`Push ${results.filter(r=>r.ok).length}/${results.length} cards`,results.map(r=>r.ok?`✓ ${r.name}\n  ${r.url}`:`✗ ${r.name}: ${r.err}`).join('\n\n'));
+  showToast(`Push ${results.filter(r=>r.ok).length}/${results.length} สำเร็จ`);
+}
+
+function showRes(title,body){document.getElementById('trelloResTitle').textContent=title;document.getElementById('trelloResBody').innerHTML=`<pre style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--dim);white-space:pre-wrap;line-height:1.8">${body}</pre>`;document.getElementById('trelloResOv').classList.add('open');}
+
+// ════════════════════════════════════════════════
+// ARCHIVE
+// ════════════════════════════════════════════════
+function renderArchive(){
+  const years=[...new Set(projects.map(p=>(p.deadline||'').split('-')[0]).filter(Boolean))];
+  if(!years.includes(String(new Date().getFullYear())))years.push(String(new Date().getFullYear()));
+  years.sort((a,b)=>b-a);
+  document.getElementById('expYear').innerHTML='<option value="all">ทุกปี</option>'+years.map(y=>`<option>${y}</option>`).join('');
+  document.getElementById('archBody').innerHTML=projects.map(p=>{
+    const d=getDes(p.designerId);const ot=isOT(p);
+    return `<tr><td class="proj-id">${p.id}</td><td>${p.name||'—'}</td><td><span class="tag">${p.brand||'—'}</span></td><td><span class="tag req">${p.requester||'—'}</span></td><td>${d?d.name:'—'}</td><td style="font-size:11px;color:var(--dim)">${p.type}</td><td style="font-family:'IBM Plex Mono',monospace">${p.mandays||1}d</td><td style="font-family:'IBM Plex Mono',monospace;color:var(--gold)">${calcPts(p).toFixed(2)}</td><td><span class="status ${p.status}"><span class="sdot"></span>${STATUS_L[p.status]}</span></td><td style="font-family:'IBM Plex Mono',monospace;font-size:10px">${fmtD(p.deadline)}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:10px">${fmtD(p.finish)}</td><td style="font-family:'IBM Plex Mono',monospace;color:${ot===null?'var(--muted)':ot?'var(--green2)':'var(--red2)'}">${ot===null?'—':ot?'✓':'✗'}</td><td style="font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--dim)">${p.quarter||getQ(p.deadline)||'—'}</td><td style="font-family:'IBM Plex Mono',monospace;color:var(--gold)">${p.briefScore?p.briefScore+'★':'—'}</td></tr>`;
+  }).join('');
+}
+
+function exportCSV(){
+  const yr=document.getElementById('expYear').value;const qf=document.getElementById('expQ').value;
+  let list=projects;
+  if(yr!=='all')list=list.filter(p=>(p.deadline||'').startsWith(yr));
+  if(qf!=='all')list=list.filter(p=>(p.quarter||getQ(p.deadline))===qf);
+  const rows=[['ID','ชื่องาน','Brand','Requester','Designer','ประเภท','Man-days','Weight','Points','Status','Priority','Deadline','Actual Finish','On-time','Quarter','Progress%','Revision','Brief Score','หมายเหตุ']];
+  list.forEach(p=>{const d=getDes(p.designerId);const ot=isOT(p);rows.push([p.id,p.name,p.brand,p.requester,d?d.name:'',p.type,p.mandays||1,TYPE_W[p.type]||1,calcPts(p).toFixed(2),p.status,p.priority,p.deadline,p.finish,ot===null?'':ot?'Y':'N',p.quarter||getQ(p.deadline),p.progress||0,p.revision||0,p.briefScore||'',(p.note||'').replace(/,/g,'；')]);});
+  dl('\uFEFF'+rows.map(r=>r.map(c=>`"${c||''}"`).join(',')).join('\n'),`DHA_${yr}_${qf}.csv`,'text/csv');
+  showToast('Export CSV สำเร็จ');
+}
+function exportJSON(){dl(JSON.stringify({projects,designers,exportDate:new Date().toISOString()},null,2),`DHA_Backup_${new Date().toISOString().split('T')[0]}.json`,'application/json');showToast('Backup สำเร็จ');}
+function dl(c,f,t){const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:t}));a.download=f;a.click();}
+function handleImport(e){const file=e.target.files[0];if(!file)return;const r=new FileReader();r.onload=ev=>{try{const data=JSON.parse(ev.target.result);if(data.projects)projects=data.projects;if(data.designers)designers=data.designers;save();localStorage.setItem('dha_v4_des',JSON.stringify(designers));renderProjects();showToast('Restore สำเร็จ');}catch{showToast('ไฟล์ไม่ถูกต้อง');}};r.readAsText(file);}
+
+// ════════════════════════════════════════════════
+// MODAL: PROJECT
+// ════════════════════════════════════════════════
+function populateModal(){
+  document.getElementById('fDesigner').innerHTML='<option value="">— เลือก —</option>'+designers.map(d=>`<option value="${d.id}">${d.name}</option>`).join('');
+  const brands=[...new Set(projects.map(p=>p.brand).filter(Boolean))];
+  const reqs=[...new Set(projects.map(p=>p.requester).filter(Boolean))];
+  document.getElementById('brandList').innerHTML=brands.map(b=>`<option value="${b}">`).join('');
+  document.getElementById('reqList').innerHTML=reqs.map(r=>`<option value="${r}">`).join('');
+}
+function autoQ(){const dl=document.getElementById('fDeadline').value;if(dl)document.getElementById('fQuarter').value=getQ(dl)||'Q1';}
+function openModal(id=null){
+  editId=id;populateModal();
+  if(id){
+    const p=projects.find(x=>x.id===id);
+    document.getElementById('modalTitle').textContent=`EDIT — ${p.id}`;
+    document.getElementById('fId').value=p.id;
+    document.getElementById('fName').value=p.name||'';
+    document.getElementById('fType').value=p.type;
+    document.getElementById('fBrand').value=p.brand||'';
+    document.getElementById('fRequester').value=p.requester||'';
+    document.getElementById('fDesigner').value=p.designerId||'';
+    document.getElementById('fStatus').value=p.status;
+    document.getElementById('fPriority').value=p.priority;
+    document.getElementById('fDeadline').value=p.deadline||'';
+    document.getElementById('fFinish').value=p.finish||'';
+    document.getElementById('fMandays').value=p.mandays||1;
+    document.getElementById('fProgress').value=p.progress||0;
+    document.getElementById('fRevision').value=p.revision||0;
+    document.getElementById('fQuarter').value=p.quarter||getQ(p.deadline)||'Q1';
+    document.getElementById('fFile').value=p.fileUrl||'';
+    document.getElementById('fNote').value=p.note||'';
+    // file versions
+    document.getElementById('fVersions').value=(p.fileVersions||[]).map(v=>`${v.ver}:${v.url}`).join('\n');
+    // approval
+    const ap=p.approval||[false,false,false,false];
+    ['apv1','apv2','apv3','apv4'].forEach((id,i)=>document.getElementById(id).checked=!!ap[i]);
+  } else {
+    document.getElementById('modalTitle').textContent='NEW PROJECT';
+    document.getElementById('fId').value=genId();
+    ['fName','fBrand','fRequester','fFile','fNote','fVersions'].forEach(i=>document.getElementById(i).value='');
+    document.getElementById('fType').value='Packaging Design';
+    document.getElementById('fDesigner').value='';
+    document.getElementById('fStatus').value='brief';
+    document.getElementById('fPriority').value='mid';
+    document.getElementById('fDeadline').value='';
+    document.getElementById('fFinish').value='';
+    document.getElementById('fMandays').value=1;
+    document.getElementById('fProgress').value=0;
+    document.getElementById('fRevision').value=0;
+    ['apv1','apv2','apv3','apv4'].forEach(id=>document.getElementById(id).checked=false);
+    const m=new Date().getMonth()+1;
+    document.getElementById('fQuarter').value=m<=3?'Q1':m<=6?'Q2':m<=9?'Q3':'Q4';
+  }
+  document.getElementById('overlay').classList.add('open');
+}
+function openEdit(id){openModal(id);}
+function closeModal(){document.getElementById('overlay').classList.remove('open');editId=null;}
+function closeOverlay(e){if(e.target===document.getElementById('overlay'))closeModal();}
+function saveProject(){
+  const name=document.getElementById('fName').value.trim();
+  if(!name){showToast('กรุณาใส่ชื่อโปรเจกต์');return;}
+  // parse file versions
+  const versRaw=document.getElementById('fVersions').value.trim();
+  const fileVersions=versRaw?versRaw.split('\n').map(l=>{const [ver,...rest]=l.split(':');return{ver:ver.trim(),url:rest.join(':').trim()};}).filter(v=>v.ver&&v.url):[];
+  // approval
+  const approval=['apv1','apv2','apv3','apv4'].map(id=>document.getElementById(id).checked);
+  const data={
+    id:document.getElementById('fId').value,name,
+    type:document.getElementById('fType').value,
+    brand:document.getElementById('fBrand').value.trim(),
+    requester:document.getElementById('fRequester').value.trim(),
+    designerId:document.getElementById('fDesigner').value,
+    status:document.getElementById('fStatus').value,
+    priority:document.getElementById('fPriority').value,
+    deadline:document.getElementById('fDeadline').value,
+    finish:document.getElementById('fFinish').value,
+    mandays:parseFloat(document.getElementById('fMandays').value)||1,
+    progress:parseInt(document.getElementById('fProgress').value)||0,
+    revision:parseInt(document.getElementById('fRevision').value)||0,
+    quarter:document.getElementById('fQuarter').value,
+    fileUrl:document.getElementById('fFile').value.trim(),
+    fileVersions,approval,
+    note:document.getElementById('fNote').value.trim(),
+    updatedAt:new Date().toISOString()
+  };
+  if(editId){const idx=projects.findIndex(p=>p.id===editId);projects[idx]={...projects[idx],...data};showToast('บันทึกแล้ว');}
+  else{data.createdAt=data.updatedAt;data.log=[];projects.unshift(data);showToast('เพิ่มโปรเจกต์ใหม่');}
+  save();closeModal();renderProjects();
+}
+function delProj(id){if(!confirm('ลบโปรเจกต์นี้?'))return;projects=projects.filter(p=>p.id!==id);save();renderProjects();showToast('ลบแล้ว');}
+
+// TOAST
+function showToast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2500);}
+
+// ════════════════════════════════════════════════
+// SEED DATA
+// ════════════════════════════════════════════════
+if(!projects){
+  projects=[
+    {id:'DHA-2025-001',name:'Packaging Redesign – MASTER ART A4 80g',type:'Packaging Design',brand:'MASTER ART',requester:'กนกวรรณ มาลี',designerId:'D001',status:'active',priority:'high',deadline:'2025-06-10',finish:'',mandays:5,progress:65,fileUrl:'',note:'รอ confirm สีจาก Flexo',revision:2,quarter:'Q2',log:[{ts:'2025-05-10T09:00:00Z',by:'กนกวรรณ มาลี',type:'activity',text:'เปิด Brief แล้ว'},{ts:'2025-05-14T10:00:00Z',by:'สมชาย ใจดี',type:'revision',text:'Revision ครั้งที่ 1',revWho:'กนกวรรณ มาลี',revReason:'สีพื้นหลังไม่ตรง CI'}],createdAt:'2025-05-01T00:00:00Z',updatedAt:'2025-05-14T00:00:00Z'},
+    {id:'DHA-2025-002',name:'Label Update – ปากกา OEM Q3',type:'Label Design',brand:'OEM',requester:'ธนพล วงษ์สุวรรณ',designerId:'D002',status:'review',priority:'mid',deadline:'2025-06-20',finish:'',mandays:2,progress:90,fileUrl:'',note:'ส่ง proof ครั้งที่ 2',revision:3,quarter:'Q2',log:[{ts:'2025-05-15T10:00:00Z',by:'นารี สวัสดี',type:'status',text:'เปลี่ยน Status เป็น Review แล้ว'}],createdAt:'2025-05-05T00:00:00Z',updatedAt:'2025-05-15T00:00:00Z'},
+    {id:'DHA-2025-003',name:'Catalog ครึ่งปีหลัง 2025',type:'Catalog / Brochure',brand:'DHA',requester:'กนกวรรณ มาลี',designerId:'D001',status:'brief',priority:'mid',deadline:'2025-07-01',finish:'',mandays:8,progress:10,fileUrl:'',note:'รอ content',revision:0,quarter:'Q3',log:[],createdAt:'2025-05-10T00:00:00Z',updatedAt:'2025-05-10T00:00:00Z'},
+    {id:'DHA-2025-004',name:'Brand Guidelines Update',type:'Brand Identity',brand:'DHA',requester:'สุภาพ รัตนชัย',designerId:'D003',status:'hold',priority:'low',deadline:'',finish:'',mandays:10,progress:30,fileUrl:'',note:'รอ MD approve',revision:1,quarter:'Q2',log:[{ts:'2025-05-01T00:00:00Z',by:'สุภาพ รัตนชัย',type:'activity',text:'พักไว้ก่อน รอ Director'}],createdAt:'2025-04-20T00:00:00Z',updatedAt:'2025-05-01T00:00:00Z'},
+    {id:'DHA-2025-005',name:'Packaging – กล่องดินสอ 12 แท่ง รีแบรนด์',type:'Packaging Design',brand:'MASTER ART',requester:'ธนพล วงษ์สุวรรณ',designerId:'D002',status:'done',priority:'high',deadline:'2025-05-15',finish:'2025-05-13',mandays:4,progress:100,fileUrl:'',note:'ส่ง Production แล้ว ✓',revision:1,briefScore:4,briefNote:'Brief ดี มี reference ชัด',quarter:'Q2',log:[{ts:'2025-05-13T16:00:00Z',by:'นารี สวัสดี',type:'status',text:'งานเสร็จ ✓'}],createdAt:'2025-04-01T00:00:00Z',updatedAt:'2025-05-13T00:00:00Z'},
+    {id:'DHA-2025-006',name:'Product Label – ไส้ดินสอ HB',type:'Label Design',brand:'MASTER ART',requester:'กนกวรรณ มาลี',designerId:'D004',status:'done',priority:'mid',deadline:'2025-04-30',finish:'2025-04-28',mandays:1.5,progress:100,fileUrl:'',note:'',revision:0,briefScore:3,quarter:'Q2',log:[],createdAt:'2025-04-10T00:00:00Z',updatedAt:'2025-04-28T00:00:00Z'},
+    {id:'DHA-2025-007',name:'นิทรรศการ BIG+BIH – Booth Design',type:'Print Production',brand:'DHA',requester:'สุภาพ รัตนชัย',designerId:'D003',status:'done',priority:'high',deadline:'2025-03-20',finish:'2025-03-18',mandays:6,progress:100,fileUrl:'',note:'',revision:2,briefScore:5,briefNote:'Brief ดีมาก ครบถ้วน',quarter:'Q1',log:[{ts:'2025-03-18T16:00:00Z',by:'วิชัย รักดี',type:'status',text:'งานเสร็จ ส่งแล้ว ✓'}],createdAt:'2025-03-01T00:00:00Z',updatedAt:'2025-03-18T00:00:00Z'},
+  ];
+  save();
+}
+
+// INIT
+renderProjects();
+</script>
+</body>
+</html>
